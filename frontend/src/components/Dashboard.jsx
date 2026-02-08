@@ -10,9 +10,14 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
-export default function Sidebar() {
+function Dashboard() {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(true); // Sidebar open/close state
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
@@ -27,11 +32,28 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70 backdrop-blur-md border-r border-white/20 shadow-lg p-6 flex flex-col text-white z-50">
-      
+    <aside
+      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70 backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
+        isOpen ? "w-64" : "w-20"
+      }`}
+    >
+      {/* Toggle Button */}
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={toggleSidebar}
+          className="text-white p-2 rounded-md hover:bg-white/20 transition"
+        >
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
+
       {/* Logo */}
-      <div className="text-center mb-8">
-        <Wallet size={36} className="mx-auto mb-2" />
+      <div
+        className={`flex flex-col items-center mb-8 transition-all duration-300 ${
+          isOpen ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <Wallet size={36} className="mb-2" />
         <h2 className="text-lg font-semibold">SBI Banking</h2>
       </div>
 
@@ -48,10 +70,12 @@ export default function Sidebar() {
             }`}
           >
             {item.icon}
-            <span>{item.name}</span>
+            {isOpen && <span>{item.name}</span>}
           </Link>
         ))}
       </nav>
     </aside>
   );
 }
+
+export default Dashboard;

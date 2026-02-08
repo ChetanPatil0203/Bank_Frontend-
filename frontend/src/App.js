@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import HeaderSection from "./components/HeaderSection.jsx";
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "./components/Dashboard.jsx";
 
-// simple pages (तात्पुरते)
 const Home = () => <h2 className="p-6">Dashboard Page</h2>;
 const Profile = () => <h2 className="p-6">My Profile Page</h2>;
 const Accounts = () => <h2 className="p-6">Accounts Page</h2>;
