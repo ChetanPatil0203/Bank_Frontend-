@@ -3,7 +3,7 @@ import { LogOut, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function Logout({ sidebarOpen = true }) {
-  const [showPopup, setShowPopup] = useState(false); // ✅ FIX HERE
+  const [showPopup, setShowPopup] = useState(false); //FIX HERE
   const navigate = useNavigate();
 
   const handleLogout = () => {
