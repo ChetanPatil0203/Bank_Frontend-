@@ -1,14 +1,15 @@
 import { useState } from "react";
 
-export default function BalanceCheck() {
+export default function HelpSupport() {
 
   const [formData, setFormData] = useState({
+    fullName: "",
     accountNumber: "",
-    accountHolder: "",
-    accountType: "",
+    contactNumber: "",
+    issueType: "",
+    subject: "",
+    description: "",
   });
-
-  const [balance, setBalance] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -19,9 +20,7 @@ export default function BalanceCheck() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Dummy Balance (Backend नंतर येईल)
-    setBalance("₹ 45,250.00");
+    alert("Support Request Submitted ✅");
   };
 
   return (
@@ -32,18 +31,24 @@ export default function BalanceCheck() {
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
           <h2 className="text-4xl font-bold text-blue-900">
-            Balance Check
+            Help & Support
           </h2>
 
           <p className="text-gray-500 mt-2">
-            View Your Account Balance Securely
+            Customer Assistance & Issue Resolution Portal
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-10">
 
-          {/* ACCOUNT DETAILS */}
-          <Section title="Account Details">
+          {/* CUSTOMER DETAILS */}
+          <Section title="Customer Details">
+
+            <Input
+              name="fullName"
+              placeholder="Full Name"
+              handleChange={handleChange}
+            />
 
             <Input
               name="accountNumber"
@@ -52,46 +57,54 @@ export default function BalanceCheck() {
             />
 
             <Input
-              name="accountHolder"
-              placeholder="Account Holder Name"
+              name="contactNumber"
+              placeholder="Contact Number"
               handleChange={handleChange}
             />
 
+          </Section>
+
+
+          {/* ISSUE DETAILS */}
+          <Section title="Issue Details">
+
             <select
-              name="accountType"
+              name="issueType"
               onChange={handleChange}
               className="input-style"
               required
             >
-              <option value="">Select Account Type</option>
-              <option>Saving Account</option>
-              <option>Current Account</option>
+              <option value="">Select Issue Type</option>
+              <option>Login Problem</option>
+              <option>Transaction Issue</option>
+              <option>Deposit Issue</option>
+              <option>Account Problem</option>
+              <option>Technical Error</option>
             </select>
+
+            <Input
+              name="subject"
+              placeholder="Issue Subject"
+              handleChange={handleChange}
+            />
+
+            <textarea
+              name="description"
+              placeholder="Describe Your Issue"
+              onChange={handleChange}
+              className="input-style md:col-span-2 h-28"
+              required
+            />
 
           </Section>
 
+
           {/* SUBMIT BUTTON */}
           <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
-            Check Balance
+            Submit Request
           </button>
 
         </form>
-
-        {/* BALANCE DISPLAY CARD */}
-        {balance && (
-          <div className="mt-10 border rounded-xl p-8 bg-green-50 text-center">
-
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              Available Balance
-            </h3>
-
-            <p className="text-4xl font-bold text-green-700">
-              {balance}
-            </p>
-
-          </div>
-        )}
-
       </div>
     </div>
   );

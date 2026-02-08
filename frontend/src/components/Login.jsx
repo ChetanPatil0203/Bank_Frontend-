@@ -1,97 +1,128 @@
 import { useState } from "react";
-import { Eye, EyeOff, LogIn } from "lucide-react";
 
-export default function Login({ sidebarOpen = true }) {
-  const [showPassword, setShowPassword] = useState(false);
+export default function LoginPage() {
+
   const [formData, setFormData] = useState({
     accountNumber: "",
     password: "",
+    remember: false
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log(formData);
+    alert("Login Successful ✅");
   };
 
   return (
-    <div
-      className={`flex justify-center mt-16 px-4 transition-all duration-300 ${
-        sidebarOpen ? "ml-64" : "ml-20"
-      }`}
-    >
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/80 backdrop-blur-lg border border-blue-200 shadow-2xl rounded-2xl p-10 w-full max-w-lg space-y-6"
-      >
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-blue-900">Bank Login</h2>
-          <p className="text-gray-600 text-sm">Login with Account Number</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+
+      <div className="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8">
+
+        {/* HEADER */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-blue-900">
+            Secure Bank Login
+          </h2>
+          <p className="text-gray-500 mt-2">
+            Access your banking dashboard safely
+          </p>
         </div>
 
-        {/* Account Number */}
-        <div>
-          <label className="block text-gray-800 font-medium mb-1">
-            Account Number
-          </label>
-          <input
-            type="number"
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Account Number */}
+          <Input
+            label="Account Number"
             name="accountNumber"
-            value={formData.accountNumber}
-            onChange={handleChange}
-            placeholder="Enter your account number"
-            required
-            className="w-full border border-blue-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-lg bg-white/90"
+            placeholder="Enter Account Number"
+            handleChange={handleChange}
           />
-        </div>
 
-        {/* Password with Show/Hide */}
-        <div>
-          <label className="block text-gray-800 font-medium mb-1">
-            Password
-          </label>
+          {/* Password Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
 
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter password"
-              required
-              className="w-full border border-blue-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-lg bg-white/90 pr-12"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter Password"
+                onChange={handleChange}
+                className="w-full border rounded-xl p-3 pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-blue-700"
-            >
-              {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-            </button>
+              {/* Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-500"
+              >
+                {showPassword ? "🙈" : "👁"}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Login Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white rounded-2xl py-3 font-medium hover:bg-blue-700 transition shadow-lg"
-        >
-          Login
-        </button>
+          {/* Remember + Forgot */}
+          <div className="flex justify-between items-center text-sm">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="remember"
+                onChange={handleChange}
+              />
+              Remember Me
+            </label>
 
-        <p className="text-center text-sm text-gray-600">
-          Forgot Password?{" "}
-          <span className="text-blue-600 font-medium cursor-pointer">
-            Reset Here
-          </span>
-        </p>
-      </form>
+            <span className="text-blue-900 cursor-pointer hover:underline">
+              Forgot Password?
+            </span>
+          </div>
+
+          {/* Login Button */}
+          <button className="w-full bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-800 transition">
+            Login
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+  );
+}
+
+
+/* ---------- Reusable Input ---------- */
+
+function Input({ label, name, type="text", placeholder, handleChange }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
     </div>
   );
 }

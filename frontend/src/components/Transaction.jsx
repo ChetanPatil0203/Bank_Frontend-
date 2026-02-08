@@ -1,124 +1,105 @@
-import { FileDown, Clock, CreditCard } from "lucide-react";
+export default function TransactionHistory() {
 
-export default function Transactions({ sidebarOpen = true }) {
+  const currentBalance = "₹45,800";
 
-  // 5 Dummy Real-Time Records
   const transactions = [
     {
-      id: "TXN1001",
-      date: "08-02-2026",
-      time: "10:32 AM",
+      id: 1,
       type: "Deposit",
-      amount: 5000,
-      balance: 15000,
+      amount: "₹10,000",
+      date: "05 Feb 2026",
+      time: "10:45 AM",
       status: "Success",
     },
     {
-      id: "TXN1002",
-      date: "08-02-2026",
+      id: 2,
+      type: "Withdraw",
+      amount: "₹2,500",
+      date: "04 Feb 2026",
+      time: "03:20 PM",
+      status: "Success",
+    },
+    {
+      id: 3,
+      type: "Deposit",
+      amount: "₹5,000",
+      date: "02 Feb 2026",
       time: "11:10 AM",
-      type: "Withdraw",
-      amount: 2000,
-      balance: 13000,
-      status: "Success",
-    },
-    {
-      id: "TXN1003",
-      date: "08-02-2026",
-      time: "12:05 PM",
-      type: "Deposit",
-      amount: 3000,
-      balance: 16000,
-      status: "Success",
-    },
-    {
-      id: "TXN1004",
-      date: "08-02-2026",
-      time: "01:20 PM",
-      type: "Withdraw",
-      amount: 1000,
-      balance: 15000,
-      status: "Success",
-    },
-    {
-      id: "TXN1005",
-      date: "08-02-2026",
-      time: "02:45 PM",
-      type: "Deposit",
-      amount: 4000,
-      balance: 19000,
       status: "Success",
     },
   ];
 
-  const downloadPDF = () => {
-    alert("PDF Download will be generated here (Backend integration needed)");
-  };
-
   return (
-    <div
-      className={`mt-12 px-6 transition-all duration-300 ${
-        sidebarOpen ? "ml-64" : "ml-20"
-      }`}
-    >
-      <div className="bg-white/80 backdrop-blur-lg border border-blue-200 shadow-2xl rounded-2xl p-8">
-        
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-3">
-            <CreditCard size={32} className="text-blue-700" />
-            <h2 className="text-2xl font-bold text-blue-900">
-              Transaction Statement
-            </h2>
+    <div className="min-h-screen bg-gray-100 py-12 px-4">
+
+      <div className="max-w-5xl mx-auto space-y-8">
+
+        {/* HEADER */}
+        <div className="bg-white shadow-xl rounded-2xl p-8 text-center">
+          <h2 className="text-3xl font-bold text-blue-900">
+            Transaction History
+          </h2>
+          <p className="text-gray-500 mt-2">
+            View all your account transactions
+          </p>
+        </div>
+
+        {/* CURRENT BALANCE CARD */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-xl rounded-2xl p-6">
+          <h3 className="text-lg">Current Balance</h3>
+          <p className="text-3xl font-bold mt-2">{currentBalance}</p>
+        </div>
+
+        {/* TRANSACTION LIST */}
+        <div className="bg-white shadow-xl rounded-2xl p-6">
+
+          <h3 className="text-xl font-semibold text-blue-900 mb-6 border-b pb-3">
+            Recent Transactions
+          </h3>
+
+          <div className="space-y-4">
+
+            {transactions.map((txn) => (
+              <div
+                key={txn.id}
+                className="border rounded-xl p-4 flex justify-between items-center hover:shadow-md transition"
+              >
+
+                {/* LEFT */}
+                <div>
+                  <p className="font-semibold text-gray-800">
+                    {txn.type}
+                  </p>
+
+                  <p className="text-sm text-gray-500">
+                    {txn.date} • {txn.time}
+                  </p>
+
+                  <p className="text-sm text-gray-500">
+                    Status: {txn.status}
+                  </p>
+                </div>
+
+                {/* RIGHT */}
+                <div
+                  className={`text-lg font-bold ${
+                    txn.type === "Deposit"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {txn.type === "Deposit" ? "+" : "-"} {txn.amount}
+                </div>
+
+              </div>
+            ))}
+
           </div>
 
-          <button
-            onClick={downloadPDF}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition shadow-lg"
-          >
-            <FileDown size={20} />
-            Download PDF
-          </button>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-            <thead className="bg-blue-50">
-              <tr>
-                <th className="p-3 text-left">Txn ID</th>
-                <th className="p-3 text-left">Date</th>
-                <th className="p-3 text-left">Time</th>
-                <th className="p-3 text-left">Type</th>
-                <th className="p-3 text-left">Amount (₹)</th>
-                <th className="p-3 text-left">Balance (₹)</th>
-                <th className="p-3 text-left">Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {transactions.map((txn) => (
-                <tr key={txn.id} className="border-t hover:bg-blue-50">
-                  <td className="p-3 font-medium">{txn.id}</td>
-                  <td className="p-3">{txn.date}</td>
-                  <td className="p-3 flex items-center gap-1">
-                    <Clock size={16} className="text-gray-500" />
-                    {txn.time}
-                  </td>
-                  <td className="p-3">{txn.type}</td>
-                  <td className="p-3 font-semibold">₹ {txn.amount}</td>
-                  <td className="p-3 font-semibold">₹ {txn.balance}</td>
-                  <td>
-                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                      {txn.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
+
     </div>
   );
 }

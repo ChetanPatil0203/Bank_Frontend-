@@ -1,108 +1,140 @@
 import { useState } from "react";
-import { Wallet } from "lucide-react";
 
-export default function Withdraw({ sidebarOpen = true }) {
+export default function Withdraw() {
+
   const [formData, setFormData] = useState({
     accountNumber: "",
+    holderName: "",
+    balance: "₹50,000",
     amount: "",
-    remark: "",
+    mobile: "",
+    receipt: "",
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Withdraw Data:", formData);
+    alert("Withdrawal Successful 💸");
   };
 
   return (
-    <div
-      className={`flex justify-center mt-16 px-4 transition-all duration-300 ${
-        sidebarOpen ? "ml-64" : "ml-20"
-      }`}
-    >
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/80 backdrop-blur-lg border border-blue-200 shadow-2xl rounded-2xl p-10 w-full max-w-2xl space-y-6"
-      >
-        {/* Header */}
-        <div className="text-center">
-          <Wallet size={40} className="mx-auto text-blue-700 mb-2" />
-          <h2 className="text-2xl font-bold text-blue-900">
+    <div className="min-h-screen bg-gray-100 py-12 px-4">
+
+      <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+
+        {/* HEADER */}
+        <div className="text-center mb-10 border-b pb-6">
+          <h2 className="text-4xl font-bold text-blue-900">
             Cash Withdrawal
           </h2>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-500 mt-2">
             Withdraw money securely from your account
           </p>
         </div>
 
-        {/* Account Number */}
-        <div>
-          <label className="block text-gray-800 font-medium mb-1">
-            Account Number
-          </label>
-          <input
-            type="number"
-            name="accountNumber"
-            value={formData.accountNumber}
-            onChange={handleChange}
-            placeholder="Enter account number"
-            required
-            className="w-full border border-blue-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-lg bg-white/90"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
 
-        {/* Amount */}
-        <div>
-          <label className="block text-gray-800 font-medium mb-1">
-            Withdraw Amount (₹)
-          </label>
-          <input
-            type="number"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            placeholder="Minimum ₹100"
-            required
-            className="w-full border border-blue-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-lg bg-white/90"
-          />
-        </div>
+          {/* Account Details */}
+          <Section title="Account Details">
 
-        {/* Remark */}
-        <div>
-          <label className="block text-gray-800 font-medium mb-1">
-            Remark (Optional)
-          </label>
-          <textarea
-            name="remark"
-            value={formData.remark}
-            onChange={handleChange}
-            placeholder="Enter remark (if any)"
-            rows="3"
-            className="w-full border border-blue-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition shadow-lg bg-white/90"
-          />
-        </div>
+            <Input
+              name="accountNumber"
+              placeholder="Account Number"
+              handleChange={handleChange}
+            />
 
-        {/* Buttons */}
-        <div className="flex gap-4">
-          <button
-            type="reset"
-            className="flex-1 bg-gray-200 text-gray-700 rounded-2xl py-3 font-medium hover:bg-gray-300 transition"
-          >
-            Clear
+            <Input
+              name="holderName"
+              placeholder="Account Holder Name"
+              handleChange={handleChange}
+            />
+
+            {/* Balance Display */}
+            <div className="border rounded-xl p-3 bg-gray-50">
+              <p className="text-gray-500 text-sm">Available Balance</p>
+              <p className="text-lg font-semibold text-green-600">
+                {formData.balance}
+              </p>
+            </div>
+
+          </Section>
+
+          {/* Withdrawal Details */}
+          <Section title="Withdrawal Details">
+
+            <Input
+              name="amount"
+              placeholder="Enter Withdrawal Amount"
+              handleChange={handleChange}
+            />
+
+            <Input
+              name="mobile"
+              placeholder="Mobile Number"
+              handleChange={handleChange}
+            />
+
+          </Section>
+
+          {/* Receipt Preference */}
+          <Section title="Receipt Preference">
+
+            <select
+              name="receipt"
+              onChange={handleChange}
+              className="input-style"
+            >
+              <option value="">Select Receipt Option</option>
+              <option>SMS Receipt</option>
+              <option>Email Receipt</option>
+              <option>Printed Receipt</option>
+              <option>No Receipt</option>
+            </select>
+
+          </Section>
+
+          {/* Submit Button */}
+          <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
+            Withdraw Money
           </button>
 
-          <button
-            type="submit"
-            className="flex-1 bg-red-600 text-white rounded-2xl py-3 font-medium hover:bg-red-700 transition shadow-lg"
-          >
-            Withdraw Now
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
+  );
+}
+
+/* ---------- Reusable Components ---------- */
+
+function Section({ title, children }) {
+  return (
+    <div className="border rounded-xl p-6 bg-white">
+      <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
+        {title}
+      </h3>
+
+      <div className="grid md:grid-cols-2 gap-5">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Input({ type = "text", name, placeholder, handleChange }) {
+  return (
+    <input
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      onChange={handleChange}
+      className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+      required
+    />
   );
 }

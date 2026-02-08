@@ -10,6 +10,10 @@ import Withdraw from "./components/Withdraw.jsx";
 import BalanceCheck from "./components/BalanceCheck.jsx";
 import Transactions from "./components/Transaction.jsx";
 import Logout from "./components/Logout.jsx";
+import OpenAccount from "./components/OpenAccount.jsx";
+import ProfilePage from "./components/Profile.jsx";
+import HelpSupport from "./components/HelpSupport.jsx"
+
 
 const Home = () => <h2 className="p-6">Dashboard Page</h2>;
 
@@ -32,6 +36,9 @@ function App() {
             <Route path="/balance" element={<BalanceCheck/>} />
             <Route path="/transactions" element={<Transactions/>} />
             <Route path="/logout" element={<Logout/>} />
+            <Route path="/open-account" element={<OpenAccount/>}/>
+            <Route path="/profile" element={<ProfilePage/>}/>
+            <Route path="/helpsupport" element={<HelpSupport/>}/>
           </Routes>
         </div>
       </div>

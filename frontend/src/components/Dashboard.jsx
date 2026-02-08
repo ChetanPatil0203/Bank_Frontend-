@@ -8,6 +8,7 @@ import {
   CheckCircle,
   LogIn,
   LogOut,
+  CircleUserRound,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -21,13 +22,13 @@ function Dashboard() {
 
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
-    { name: "Create Account", icon: <UserPlus size={20} />, path: "/create-account" },
+    { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
     { name: "Open Account", icon: <UserCheck size={20} />, path: "/open-account" },
-    { name: "Deposit", icon: <CreditCard size={20} />, path: "/deposit" },
-    { name: "Withdraw", icon: <Activity size={20} />, path: "/withdraw" },
-    { name: "Transactions", icon: <Activity size={20} />, path: "/transactions" },
-    { name: "Balance Check", icon: <CheckCircle size={20} />, path: "/balance" },
-    { name: "Login", icon: <LogIn size={20} />, path: "/login" },
+    { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
+    { name: "Withdraw Money", icon: <Activity size={20} />, path: "/withdraw" },
+    { name: "Transaction History", icon: <Activity size={20} />, path: "/transactions" },
+    { name: "Account Balance", icon: <CheckCircle size={20} />, path: "/balance" },
+    { name: "Help & Support", icon: <LayoutDashboard size={20} />, path: "/helpsupport" },
     { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
   ];
 
@@ -72,6 +73,7 @@ function Dashboard() {
             {item.icon}
             {isOpen && <span>{item.name}</span>}
           </Link>
+          
         ))}
       </nav>
     </aside>
