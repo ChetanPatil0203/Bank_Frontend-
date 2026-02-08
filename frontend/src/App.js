@@ -8,6 +8,8 @@ import Login from "./components/Login.jsx";
 import Deposit from "./components/Deposite.jsx";
 import Withdraw from "./components/Withdraw.jsx";
 import BalanceCheck from "./components/BalanceCheck.jsx";
+import Transactions from "./components/Transaction.jsx";
+import Logout from "./components/Logout.jsx";
 
 const Home = () => <h2 className="p-6">Dashboard Page</h2>;
 
@@ -27,7 +29,9 @@ function App() {
             <Route path ="/login" element={<Login/>} />
             <Route path ="/deposit" element={<Deposit/>} />
             <Route path="/withdraw" element={<Withdraw/>} />
-            <Route path="balance" element={<BalanceCheck/>} />
+            <Route path="/balance" element={<BalanceCheck/>} />
+            <Route path="/transactions" element={<Transactions/>} />
+            <Route path="/logout" element={<Logout/>} />
           </Routes>
         </div>
       </div>
