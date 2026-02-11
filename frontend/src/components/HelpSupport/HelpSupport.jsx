@@ -26,7 +26,11 @@ export default function HelpSupport() {
   return (
     <div className="min-h-screen py-12 px-4">
 
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+      <div 
+        className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10
+        transform transition-all duration-700 
+        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
+      >
 
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
@@ -69,14 +73,16 @@ export default function HelpSupport() {
           {/* ISSUE DETAILS */}
           <Section title="Issue Details">
 
-            <div>
+            <div className="transition-all duration-300 hover:-translate-y-1">
               <label className="block mb-1 font-medium text-gray-700">
                 Issue Type <span className="text-red-500">*</span>
               </label>
               <select
                 name="issueType"
                 onChange={handleChange}
-                className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+                className="border rounded-xl p-3 w-full bg-gray-50
+                  focus:ring-2 focus:ring-blue-500 outline-none
+                  transition-all duration-300"
                 required
               >
                 <option value="">Select Issue Type</option>
@@ -95,7 +101,7 @@ export default function HelpSupport() {
               handleChange={handleChange}
             />
 
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 transition-all duration-300 hover:-translate-y-1">
               <label className="block mb-1 font-medium text-gray-700">
                 Issue Description <span className="text-red-500">*</span>
               </label>
@@ -103,7 +109,9 @@ export default function HelpSupport() {
                 name="description"
                 placeholder="Describe your issue"
                 onChange={handleChange}
-                className="input-style border rounded-xl p-3 w-full h-28 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="border rounded-xl p-3 w-full h-28 bg-gray-50
+                  focus:ring-2 focus:ring-blue-500 outline-none
+                  transition-all duration-300"
                 required
               />
             </div>
@@ -111,26 +119,47 @@ export default function HelpSupport() {
           </Section>
 
           {/* SUBMIT */}
-<div className="flex justify-center pt-4">
-  <button className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
-                shadow-md hover:shadow-lg 
-                transition-all  tracking-wide">
-    Submit Request
-  </button>
-</div>
+          <div className="flex justify-center pt-4">
+            <button 
+              className="px-12 py-3 bg-blue-800 text-white rounded-full 
+                font-medium text-base shadow-md  
+                transition-all duration-300 tracking-wide"
+            >
+              Submit Request
+            </button>
+          </div>
 
         </form>
       </div>
+
+      {/* Tailwind Animation */}
+      <style>
+        {`
+        @keyframes slideUp {
+          from {
+            transform: translateY(40px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        `}
+      </style>
+
     </div>
   );
 }
-
 
 /* ---------- Section Component ---------- */
 
 function Section({ title, children }) {
   return (
-    <div className="border rounded-xl p-6 bg-white">
+    <div 
+      className="border rounded-xl p-6 bg-white
+      transition-all duration-300 hover:shadow-lg"
+    >
       <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
         {title}
       </h3>
@@ -141,12 +170,11 @@ function Section({ title, children }) {
   );
 }
 
-
-/* ---------- Input Component with Label ---------- */
+/* ---------- Input Component ---------- */
 
 function Input({ type = "text", label, name, placeholder, handleChange }) {
   return (
-    <div>
+    <div className="transition-all duration-300 hover:-translate-y-1">
       <label className="block mb-1 font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
       </label>
@@ -155,7 +183,9 @@ function Input({ type = "text", label, name, placeholder, handleChange }) {
         name={name}
         placeholder={placeholder}
         onChange={handleChange}
-        className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        className="border rounded-xl p-3 w-full bg-gray-50
+          focus:ring-2 focus:ring-blue-500 outline-none
+          transition-all duration-300"
         required
       />
     </div>
