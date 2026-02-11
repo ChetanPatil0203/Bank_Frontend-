@@ -49,7 +49,7 @@ export default function KYCPage() {
 
       <div className="max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl p-8">
 
-        <h2 className="text-3xl font-bold text-center text-blue-900 mb-8">
+        <h2 className="text-2xl font-medium text-center text-blue-900 mb-8">
           KYC Verification
         </h2>
 

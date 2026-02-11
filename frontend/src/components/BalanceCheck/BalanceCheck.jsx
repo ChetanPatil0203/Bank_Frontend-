@@ -31,7 +31,7 @@ export default function BalanceCheck() {
 
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
-          <h2 className="text-4xl font-bold text-blue-900">
+          <h2 className="text-2xl font-medium text-blue-900">
             Balance Check
           </h2>
 

@@ -32,7 +32,7 @@ export default function ProfilePage() {
             />
 
             <div>
-              <h2 className="text-2xl font-bold text-blue-900">
+              <h2 className="text-2xl font-medium text-blue-900">
                 {profile.fullName}
               </h2>
               <p className="text-gray-500">

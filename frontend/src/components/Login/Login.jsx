@@ -1,4 +1,4 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Landmark } from "lucide-react";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -32,14 +32,16 @@ export default function LoginPage() {
       <div className="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8">
 
         {/* HEADER */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-blue-900">
-            User Login
-          </h2>
-          <p className="text-gray-500 mt-2">
-            Access your banking dashboard safely
-          </p>
-        </div>
+        <div className="text-center mb-8 flex flex-col items-center">
+  <h2 className="text-2xl font-medium text-blue-900">
+    User Login
+  </h2>
+
+  <p className="text-gray-500 mt-2">
+    Access your banking dashboard safely
+  </p>
+</div>
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
