@@ -30,25 +30,24 @@ function App() {
 
         {/* Main content area */}
         <div className="ml-64 w-full p-6">
-          <Routes>
-  <Route path="/" element={<DashboardHome />} />
-  <Route path="/create-account" element={<CreateAccount />} />
-  <Route path="/login" element={<Login/>} />
-  <Route path="/deposit" element={<Deposit/>} />
-  <Route path="/withdraw" element={<Withdraw/>} />
-  <Route path="/balance" element={<BalanceCheck/>} />
-  <Route path="/transactions" element={<Transactions/>} />
-  <Route path="/logout" element={<Logout/>} />
-  <Route path="/open-account" element={<OpenAccount/>}/>
-  <Route path="/profile" element={<ProfilePage/>}/>
-  <Route path="/helpsupport" element={<HelpSupport/>}/>
-  <Route path="/kyc" element={<KYCPage/>}/>
-  <Route path="/flights" element={<h2>Flights Page</h2>} />
-  <Route path="/hotels" element={<h2>Hotels Page</h2>} />
-  <Route path="/shop" element={<h2>Shop & Earn Page</h2>} />  
-  <Route path="/entertainment" element={<h2>Entertainment Page</h2>} />
-
-</Routes>
+    <Routes>
+      <Route path="/" element={<DashboardHome />} />
+      <Route path="/create-account" element={<CreateAccount />} />
+      <Route path="/login" element={<Login/>} />
+      <Route path="/deposit" element={<Deposit/>} />
+      <Route path="/withdraw" element={<Withdraw/>} />
+      <Route path="/balance" element={<BalanceCheck/>} />
+      <Route path="/transactions" element={<Transactions/>} />
+      <Route path="/logout" element={<Logout/>} />
+      <Route path="/open-account" element={<OpenAccount/>}/>
+      <Route path="/profile" element={<ProfilePage/>}/>
+      <Route path="/helpsupport" element={<HelpSupport/>}/>
+      <Route path="/kyc" element={<KYCPage/>}/>
+      <Route path="/flights" element={<h2>Flights Page</h2>} />
+      <Route path="/hotels" element={<h2>Hotels Page</h2>} />
+      <Route path="/shop" element={<h2>Shop & Earn Page</h2>} />  
+      <Route path="/entertainment" element={<h2>Entertainment Page</h2>} />
+    </Routes>
 
         </div>
       </div>

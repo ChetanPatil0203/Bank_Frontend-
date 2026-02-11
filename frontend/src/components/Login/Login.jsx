@@ -27,14 +27,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
 
       <div className="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8">
 
         {/* HEADER */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-blue-900">
-            Secure Bank Login
+            User Login
           </h2>
           <p className="text-gray-500 mt-2">
             Access your banking dashboard safely

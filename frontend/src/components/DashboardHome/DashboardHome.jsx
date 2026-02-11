@@ -30,7 +30,7 @@ function DashboardHome() {
   ];
 
   return (
-    <div className="min-h-screen p-8 flex justify-center bg-gray-50">
+    <div className="min-h-screen p-8 flex justify-center">
       <div className="w-full max-w-4xl">
 
         <h1 className="text-2xl font-semibold mb-6">
@@ -38,7 +38,7 @@ function DashboardHome() {
         </h1>
 
         {/* ===== BANK CARD (UNCHANGED) ===== */}
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 
+        <div className="bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70  
                         rounded-2xl shadow-xl p-6 text-white mb-8">
 
           <div className="mb-6">

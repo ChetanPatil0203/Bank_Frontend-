@@ -19,7 +19,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8">
 
         {/* HEADER */}

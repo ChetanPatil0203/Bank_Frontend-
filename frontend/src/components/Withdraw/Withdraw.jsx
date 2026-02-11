@@ -24,7 +24,7 @@ export default function Withdraw() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
 
       <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
 
