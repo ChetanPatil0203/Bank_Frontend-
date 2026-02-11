@@ -165,12 +165,16 @@ export default function KYCPage() {
           />
         </div>
 
-        <button
-          onClick={generateOtp}
-          className="w-full mt-5 bg-blue-900 text-white py-3 rounded-xl"
-        >
-          Generate OTP
-        </button>
+        <div className="flex justify-center mt-5">
+  <button
+    onClick={generateOtp}
+    className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
+                shadow-md hover:shadow-lg 
+               transition-all tracking-wide"
+  >
+    Generate OTP
+  </button>
+</div>
 
         {/* OTP */}
         {showOtp && (

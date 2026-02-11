@@ -26,7 +26,7 @@ function Dashboard() {
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
     { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
-    { name: "Open Account", icon: <UserCheck size={20} />, path: "/open-account" },
+    { name: "Open New Account", icon: <UserCheck size={20} />, path: "/open-account" },
     { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
     { name: "Withdraw Money", icon: < Wallet size={20} />, path: "/withdraw" },
     { name: "KYC Verification", icon: <BadgeCheckIcon size={20} />, path:"/kyc"},

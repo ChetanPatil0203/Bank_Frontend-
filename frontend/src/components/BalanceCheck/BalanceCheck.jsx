@@ -25,7 +25,7 @@ export default function BalanceCheck() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
 
       <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
 
@@ -80,9 +80,13 @@ export default function BalanceCheck() {
           </Section>
 
           {/* SUBMIT BUTTON */}
-          <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
-            Check Balance
-          </button>
+<div className="flex justify-center pt-4">
+  <button className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
+                 shadow-md hover:shadow-lg 
+                transition-all  tracking-wide">
+    Check Balance
+  </button>
+</div>
 
         </form>
 

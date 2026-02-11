@@ -110,10 +110,14 @@ export default function HelpSupport() {
 
           </Section>
 
-          {/* SUBMIT BUTTON */}
-          <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
-            Submit Request
-          </button>
+          {/* SUBMIT */}
+<div className="flex justify-center pt-4">
+  <button className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
+                shadow-md hover:shadow-lg 
+                transition-all  tracking-wide">
+    Submit Request
+  </button>
+</div>
 
         </form>
       </div>

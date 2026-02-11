@@ -1,3 +1,4 @@
+import { Check, Pencil, Save } from "lucide-react";
 import { useState } from "react";
 
 export default function ProfilePage() {
@@ -42,11 +43,20 @@ export default function ProfilePage() {
           </div>
 
           <button
-            onClick={() => setEdit(!edit)}
-            className="bg-blue-900 text-white px-5 py-2 rounded-lg hover:bg-blue-800"
-          >
-            {edit ? "Save" : "Edit Profile"}
-          </button>
+  onClick={() => setEdit(!edit)}
+  className={`px-3 py-3 flex items-center gap-2 justify-center 
+    font-medium text-base rounded-md shadow-md hover:shadow-lg 
+    transition-all tracking-wide ${
+      edit
+        ? "bg-green-600 hover:bg-green-700 text-white"
+        : "bg-blue-800 hover:bg-blue-900 text-white"
+    }`}
+>
+  {edit ? <Save size={18} /> : <Pencil size={18} />}
+  {edit ? "Save Changes" : "Edit Profile"}
+</button>
+
+
         </div>
 
         {/* PERSONAL DETAILS */}
