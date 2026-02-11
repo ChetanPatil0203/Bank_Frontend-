@@ -24,7 +24,7 @@ function Dashboard() {
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/" },
+    { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/dashboard" },
     { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
     { name: "Open New Account", icon: <UserCheck size={20} />, path: "/open-account" },
     { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },

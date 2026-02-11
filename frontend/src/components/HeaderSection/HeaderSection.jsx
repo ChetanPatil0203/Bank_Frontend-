@@ -44,19 +44,6 @@
           {/* RIGHT - Login + Bell */}
           <div className="flex items-center gap-4">
 
-        <div
-    onClick={() => navigate("/login")}
-    className="flex items-center gap-2 cursor-pointer
-              text-[#0047AB] px-4 py-2 rounded-full
-              bg-[#0047AB]/10 transition"
-  >
-    <User size={18} />
-    <span className="text-sm font-semibold hidden md:block">
-      Login
-    </span>
-  </div>
-
-
             <div className="relative">
               <Bell
                 size={22}

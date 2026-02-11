@@ -1,7 +1,10 @@
 import { Eye, EyeOff, Landmark } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     accountNumber: "",
@@ -101,7 +104,10 @@ export default function LoginPage() {
           </div>
 
           {/* Login Button */}
-          <button className="w-full bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-800 transition">
+          <button 
+          onClick={() => navigate("/dashboard")}
+          className="w-full bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-800 transition">
+            
             Login
           </button>
 
