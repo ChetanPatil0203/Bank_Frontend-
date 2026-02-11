@@ -24,9 +24,13 @@ export default function Withdraw() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen py-12 px-4 bg-gray-50">
 
-      <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+      <div
+        className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10
+        transform transition-all duration-700
+        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
+      >
 
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
@@ -56,9 +60,10 @@ export default function Withdraw() {
             />
 
             {/* Balance Display */}
-            <div className="border rounded-xl p-3 bg-gray-50 md:col-span-2">
+            <div className="border rounded-xl p-4 bg-gray-50 md:col-span-2
+              transition-all duration-300 hover:-translate-y-1">
               <p className="text-gray-500 text-sm">Available Balance</p>
-              <p className="text-lg font-semibold text-green-600">
+              <p className="text-xl font-bold text-green-600">
                 {formData.balance}
               </p>
             </div>
@@ -85,15 +90,17 @@ export default function Withdraw() {
           {/* RECEIPT */}
           <Section title="Receipt Preference">
 
-            <div className="flex flex-col gap-1">
-              <label className="label-style">
+            <div className="transition-all duration-300 hover:-translate-y-1">
+              <label className="block font-semibold mb-1">
                 Receipt Option <span className="text-red-500">*</span>
               </label>
 
               <select
                 name="receipt"
                 onChange={handleChange}
-                className="input-style"
+                className="border rounded-xl p-3 w-full bg-gray-50
+                  focus:ring-2 focus:ring-blue-500 outline-none
+                  transition-all duration-300"
                 required
               >
                 <option value="">Select Receipt Option</option>
@@ -106,17 +113,36 @@ export default function Withdraw() {
 
           </Section>
 
-          {/* SUBMIT */}
-<div className="flex justify-center pt-4">
-  <button className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
-                 shadow-md hover:shadow-lg 
-                transition-all  tracking-wide">
-    Withdraw
-  </button>
-</div>
+          {/* SUBMIT BUTTON */}
+          <div className="flex justify-center pt-4">
+            <button
+              className="px-12 py-3 bg-blue-800 text-white rounded-full
+                font-medium shadow-md hover:shadow-xl
+                 transition-all duration-300 tracking-wide"
+            >
+              Withdraw
+            </button>
+          </div>
 
         </form>
       </div>
+
+      {/* Tailwind animation */}
+      <style>
+        {`
+        @keyframes slideUp {
+          from {
+            transform: translateY(40px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        `}
+      </style>
+
     </div>
   );
 }
@@ -139,17 +165,18 @@ function Section({ title, children }) {
 
 function Input({ label, type = "text", name, handleChange }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="label-style">
+    <div className="transition-all duration-300 hover:-translate-y-1">
+      <label className="block font-semibold mb-1">
         {label} <span className="text-red-500">*</span>
       </label>
 
       <input
-        id={name}
         type={type}
         name={name}
         onChange={handleChange}
-        className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        className="border rounded-xl p-3 w-full bg-gray-50
+          focus:ring-2 focus:ring-blue-500 outline-none
+          transition-all duration-300"
         required
       />
     </div>
