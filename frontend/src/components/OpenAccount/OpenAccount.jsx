@@ -25,7 +25,6 @@ export default function OpenAccount() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
@@ -34,12 +33,7 @@ export default function OpenAccount() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!formData.agree) {
-      alert("Accept Terms & Conditions");
-      return;
-    }
-
+    if (!formData.agree) return alert("Accept Terms & Conditions");
     alert("Account Application Submitted ✅");
   };
 
@@ -47,16 +41,15 @@ export default function OpenAccount() {
 
   return (
     <div className="min-h-screen py-12 px-4">
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+
+      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10
+                      transform transition-all duration-700
+                      translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]">
 
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
-          <h2 className="text-2xl font-medium text-blue-900">
-             Open New Account
-          </h2>
-          <p className="text-gray-500 mt-2">
-            Secure Banking Registration Portal
-          </p>
+          <h2 className="text-2xl font-medium text-blue-900">Open New Account</h2>
+          <p className="text-gray-500 mt-2">Secure Banking Registration Portal</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-10">
@@ -66,32 +59,14 @@ export default function OpenAccount() {
             <Input label="Full Name" name="fullName" handleChange={handleChange}/>
             <Input label="Father Name" name="fatherName" handleChange={handleChange}/>
             <Input label="Date of Birth" type="date" name="dob" handleChange={handleChange}/>
-
-            <Select
-              label="Gender"
-              name="gender"
-              handleChange={handleChange}
-              options={["Male","Female","Other"]}
-            />
+            <Select label="Gender" name="gender" options={["Male","Female","Other"]} handleChange={handleChange}/>
           </Section>
 
           {/* CONTACT DETAILS */}
           <Section title="Contact Details">
             <Input label="Mobile Number" name="mobile" handleChange={handleChange}/>
             <Input label="Email Address" type="email" name="email" handleChange={handleChange}/>
-
-            <div className="flex flex-col gap-1 md:col-span-2">
-              <label className="label-style">
-                Residential Address <span className="text-red-500">*</span>
-              </label>
-
-              <textarea
-                name="address"
-                onChange={handleChange}
-                className="input-style h-24"
-                required
-              />
-            </div>
+            <Textarea label="Residential Address" name="address" handleChange={handleChange}/>
           </Section>
 
           {/* KYC */}
@@ -100,50 +75,36 @@ export default function OpenAccount() {
             <Input label="PAN Number" name="pan" handleChange={handleChange}/>
           </Section>
 
-         {/* PHOTO/PDF */}
-<div className="border rounded-xl p-6 bg-white">
-  <h3 className="section-title">
-    Upload Photo / Document <span className="text-red-500">*</span>
-  </h3>
+          {/* PHOTO/PDF UPLOAD */}
+          <div className="border rounded-xl p-6 bg-white transition-all duration-300 hover:-translate-y-1">
+            <h3 className="section-title">Upload Photo / Document <span className="text-red-500">*</span></h3>
+            <div className="relative flex items-center">
+              <input
+                type="file"
+                accept="image/*,application/pdf"
+                onChange={(e) => setPhoto(e.target.files[0])}
+                className="input-style pr-20"
+                required
+              />
+              {photo && (
+                <button
+                  type="button"
+                  onClick={() => setShowImageModal(true)}
+                  className="absolute right-4 text-blue-700 font-medium hover:text-blue-900"
+                >
+                  View
+                </button>
+              )}
+            </div>
+          </div>
 
-  <div className="relative flex items-center">
-
-    {/* File Input */}
-    <input
-      type="file"
-      accept="image/*,application/pdf"
-      onChange={(e) => setPhoto(e.target.files[0])}
-      className="input-style pr-20"
-      required
-    />
-
-    {/* View Link Inside Input Section */}
-    {photo && (
-      <button
-        type="button"
-        onClick={() => setShowImageModal(true)}
-        className="absolute right-4 text-blue-700 font-medium hover:text-blue-900"
-      >
-        View
-      </button>
-    )}
-
-  </div>
-</div>
-
-          {/* ACCOUNT */}
+          {/* ACCOUNT DETAILS */}
           <Section title="Account Details">
-            <Select
-              label="Account Type"
-              name="accountType"
-              handleChange={handleChange}
-              options={["Saving Account","Current Account"]}
-            />
-
+            <Select label="Account Type" name="accountType" options={["Saving Account","Current Account"]} handleChange={handleChange}/>
             <Input label="Preferred Branch" name="branch" handleChange={handleChange}/>
           </Section>
 
-          {/* NOMINEE */}
+          {/* NOMINEE DETAILS */}
           <Section title="Nominee Details">
             <Input label="Nominee Name" name="nomineeName" handleChange={handleChange}/>
             <Input label="Relation with Nominee" name="nomineeRelation" handleChange={handleChange}/>
@@ -157,17 +118,16 @@ export default function OpenAccount() {
             </p>
           </div>
 
-         {/* SUBMIT */}
-<div className="flex justify-center pt-4">
-  <button 
-    type="submit"
-    className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
-                shadow-md hover:shadow-lg 
-               transition-all tracking-wide"
-  >
-    Open New Account
-  </button>
-</div>
+          {/* SUBMIT */}
+          <div className="flex justify-center pt-4">
+            <button 
+              type="submit"
+              className="px-10 py-3 bg-blue-800 text-white rounded-full font-medium 
+                         shadow-md hover:shadow-xl transition-all duration-300 tracking-wide"
+            >
+              Open New Account
+            </button>
+          </div>
 
         </form>
       </div>
@@ -182,7 +142,6 @@ export default function OpenAccount() {
             className="relative w-full max-w-5xl h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={() => setShowImageModal(false)}
               className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-10"
@@ -190,7 +149,6 @@ export default function OpenAccount() {
               <X size={24} className="text-gray-800" />
             </button>
 
-            {/* Content with Scroll */}
             <div className="w-full h-full overflow-auto p-8">
               {isPDF ? (
                 <iframe
@@ -209,60 +167,55 @@ export default function OpenAccount() {
           </div>
         </div>
       )}
+
+      {/* Tailwind animation */}
+      <style>{`
+        @keyframes slideUp {
+          from { transform: translateY(40px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-[slideUp_0.7s_forwards] { animation: slideUp 0.7s forwards; }
+      `}</style>
     </div>
   );
 }
 
-/* ---------- Components ---------- */
-
+/* ---------- Reusable Components ---------- */
 function Section({ title, children }) {
   return (
-    <div className="border rounded-xl p-6 bg-white">
-      <h3 className="section-title">{title}</h3>
-
-      <div className="grid md:grid-cols-2 gap-5">
-        {children}
-      </div>
+    <div className="border rounded-xl p-6 bg-white transition-all duration-300 hover:-translate-y-1">
+      <h3 className="section-title text-xl font-semibold text-blue-900 mb-5 border-b pb-2">{title}</h3>
+      <div className="grid md:grid-cols-2 gap-5">{children}</div>
     </div>
   );
 }
 
 function Input({ label, type="text", name, handleChange }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="label-style">
-        {label} <span className="text-red-500">*</span>
-      </label>
-
-      <input
-        type={type}
-        name={name}
-        onChange={handleChange}
-        className="input-style"
-        required
-      />
+    <div className="flex flex-col gap-1 transition-all duration-300 hover:-translate-y-1">
+      <label className="label-style">{label} <span className="text-red-500">*</span></label>
+      <input type={type} name={name} onChange={handleChange} className="input-style bg-gray-50 rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300" required/>
     </div>
   );
 }
 
 function Select({ label, name, options, handleChange }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="label-style">
-        {label} <span className="text-red-500">*</span>
-      </label>
-
-      <select
-        name={name}
-        onChange={handleChange}
-        className="input-style"
-        required
-      >
+    <div className="flex flex-col gap-1 transition-all duration-300 hover:-translate-y-1">
+      <label className="label-style">{label} <span className="text-red-500">*</span></label>
+      <select name={name} onChange={handleChange} className="input-style bg-gray-50 rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300" required>
         <option value="">Select {label}</option>
-        {options.map((opt) => (
-          <option key={opt}>{opt}</option>
-        ))}
+        {options.map((opt) => <option key={opt}>{opt}</option>)}
       </select>
+    </div>
+  );
+}
+
+function Textarea({ label, name, handleChange }) {
+  return (
+    <div className="flex flex-col gap-1 md:col-span-2 transition-all duration-300 hover:-translate-y-1">
+      <label className="label-style">{label} <span className="text-red-500">*</span></label>
+      <textarea name={name} onChange={handleChange} className="input-style bg-gray-50 rounded-xl p-3 w-full h-24 focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300" required/>
     </div>
   );
 }
