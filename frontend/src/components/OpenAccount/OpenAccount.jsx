@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 
 export default function OpenAccount() {
 
@@ -20,6 +21,7 @@ export default function OpenAccount() {
   });
 
   const [photo, setPhoto] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,6 +42,8 @@ export default function OpenAccount() {
 
     alert("Account Application Submitted ✅");
   };
+
+  const isPDF = photo && photo.type === "application/pdf";
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -96,10 +100,10 @@ export default function OpenAccount() {
             <Input label="PAN Number" name="pan" handleChange={handleChange}/>
           </Section>
 
-         {/* PHOTO */}
+         {/* PHOTO/PDF */}
 <div className="border rounded-xl p-6 bg-white">
   <h3 className="section-title">
-    Upload Photo <span className="text-red-500">*</span>
+    Upload Photo / Document <span className="text-red-500">*</span>
   </h3>
 
   <div className="relative flex items-center">
@@ -107,7 +111,7 @@ export default function OpenAccount() {
     {/* File Input */}
     <input
       type="file"
-      accept="image/*"
+      accept="image/*,application/pdf"
       onChange={(e) => setPhoto(e.target.files[0])}
       className="input-style pr-20"
       required
@@ -115,14 +119,13 @@ export default function OpenAccount() {
 
     {/* View Link Inside Input Section */}
     {photo && (
-      <a
-        href={URL.createObjectURL(photo)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute right-4 text-blue-700 underline font-semibold"
+      <button
+        type="button"
+        onClick={() => setShowImageModal(true)}
+        className="absolute right-4 text-blue-700 font-medium hover:text-blue-900"
       >
         View
-      </a>
+      </button>
     )}
 
   </div>
@@ -161,6 +164,44 @@ export default function OpenAccount() {
 
         </form>
       </div>
+
+      {/* IMAGE/PDF MODAL */}
+      {showImageModal && photo && (
+        <div 
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowImageModal(false)}
+        >
+          <div 
+            className="relative w-full max-w-5xl h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowImageModal(false)}
+              className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition z-10"
+            >
+              <X size={24} className="text-gray-800" />
+            </button>
+
+            {/* Content with Scroll */}
+            <div className="w-full h-full overflow-auto p-8">
+              {isPDF ? (
+                <iframe
+                  src={URL.createObjectURL(photo)}
+                  className="w-full h-full min-h-[800px] border-0"
+                  title="PDF Document"
+                />
+              ) : (
+                <img
+                  src={URL.createObjectURL(photo)}
+                  alt="Uploaded Photo"
+                  className="w-full h-auto object-contain"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
