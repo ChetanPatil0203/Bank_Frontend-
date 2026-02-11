@@ -38,7 +38,7 @@ function Dashboard() {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70 backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen bg-blue-900 text-white px-5 py-2 rounded-lg backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
         isOpen ? "w-64" : "w-20"
       }`}
     >
