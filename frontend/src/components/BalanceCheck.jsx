@@ -46,27 +46,36 @@ export default function BalanceCheck() {
           <Section title="Account Details">
 
             <Input
+              label="Account Number"
               name="accountNumber"
-              placeholder="Account Number"
+              placeholder="Enter Account Number"
               handleChange={handleChange}
             />
 
             <Input
+              label="Account Holder Name"
               name="accountHolder"
-              placeholder="Account Holder Name"
+              placeholder="Enter Account Holder Name"
               handleChange={handleChange}
             />
 
-            <select
-              name="accountType"
-              onChange={handleChange}
-              className="input-style"
-              required
-            >
-              <option value="">Select Account Type</option>
-              <option>Saving Account</option>
-              <option>Current Account</option>
-            </select>
+            {/* Account Type */}
+            <div>
+              <label className="block font-medium mb-1">
+                Account Type <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="accountType"
+                onChange={handleChange}
+                className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              >
+                <option value="">Select Account Type</option>
+                <option>Saving Account</option>
+                <option>Current Account</option>
+              </select>
+            </div>
 
           </Section>
 
@@ -119,15 +128,21 @@ function Section({ title, children }) {
 
 /* ---------- Input Component ---------- */
 
-function Input({ type="text", name, placeholder, handleChange }) {
+function Input({ label, type="text", name, placeholder, handleChange }) {
   return (
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      onChange={handleChange}
-      className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
-      required
-    />
+    <div>
+      <label className="block font-medium mb-1">
+        {label} <span className="text-red-500">*</span>
+      </label>
+
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+    </div>
   );
 }

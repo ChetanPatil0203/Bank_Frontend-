@@ -13,6 +13,8 @@ import Logout from "./components/Logout.jsx";
 import OpenAccount from "./components/OpenAccount.jsx";
 import ProfilePage from "./components/Profile.jsx";
 import HelpSupport from "./components/HelpSupport.jsx"
+import KYCPage from "./components/kyc.jsx";
+
 
 
 const Home = () => <h2 className="p-6">Dashboard Page</h2>;
@@ -39,6 +41,7 @@ function App() {
             <Route path="/open-account" element={<OpenAccount/>}/>
             <Route path="/profile" element={<ProfilePage/>}/>
             <Route path="/helpsupport" element={<HelpSupport/>}/>
+            <Route path="/kyc" element={<KYCPage/>}/>
           </Routes>
         </div>
       </div>

@@ -33,7 +33,6 @@ export default function HelpSupport() {
           <h2 className="text-4xl font-bold text-blue-900">
             Help & Support
           </h2>
-
           <p className="text-gray-500 mt-2">
             Customer Assistance & Issue Resolution Portal
           </p>
@@ -45,59 +44,71 @@ export default function HelpSupport() {
           <Section title="Customer Details">
 
             <Input
+              label="Full Name"
               name="fullName"
-              placeholder="Full Name"
+              placeholder="Enter full name"
               handleChange={handleChange}
             />
 
             <Input
+              label="Account Number"
               name="accountNumber"
-              placeholder="Account Number"
+              placeholder="Enter account number"
               handleChange={handleChange}
             />
 
             <Input
+              label="Contact Number"
               name="contactNumber"
-              placeholder="Contact Number"
+              placeholder="Enter contact number"
               handleChange={handleChange}
             />
 
           </Section>
-
 
           {/* ISSUE DETAILS */}
           <Section title="Issue Details">
 
-            <select
-              name="issueType"
-              onChange={handleChange}
-              className="input-style"
-              required
-            >
-              <option value="">Select Issue Type</option>
-              <option>Login Problem</option>
-              <option>Transaction Issue</option>
-              <option>Deposit Issue</option>
-              <option>Account Problem</option>
-              <option>Technical Error</option>
-            </select>
+            <div>
+              <label className="block mb-1 font-medium text-gray-700">
+                Issue Type <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="issueType"
+                onChange={handleChange}
+                className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              >
+                <option value="">Select Issue Type</option>
+                <option>Login Problem</option>
+                <option>Transaction Issue</option>
+                <option>Deposit Issue</option>
+                <option>Account Problem</option>
+                <option>Technical Error</option>
+              </select>
+            </div>
 
             <Input
+              label="Issue Subject"
               name="subject"
-              placeholder="Issue Subject"
+              placeholder="Enter issue subject"
               handleChange={handleChange}
             />
 
-            <textarea
-              name="description"
-              placeholder="Describe Your Issue"
-              onChange={handleChange}
-              className="input-style md:col-span-2 h-28"
-              required
-            />
+            <div className="md:col-span-2">
+              <label className="block mb-1 font-medium text-gray-700">
+                Issue Description <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="description"
+                placeholder="Describe your issue"
+                onChange={handleChange}
+                className="input-style border rounded-xl p-3 w-full h-28 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
+            </div>
 
           </Section>
-
 
           {/* SUBMIT BUTTON */}
           <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
@@ -116,31 +127,33 @@ export default function HelpSupport() {
 function Section({ title, children }) {
   return (
     <div className="border rounded-xl p-6 bg-white">
-
       <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
         {title}
       </h3>
-
       <div className="grid md:grid-cols-2 gap-5">
         {children}
       </div>
-
     </div>
   );
 }
 
 
-/* ---------- Input Component ---------- */
+/* ---------- Input Component with Label ---------- */
 
-function Input({ type="text", name, placeholder, handleChange }) {
+function Input({ type = "text", label, name, placeholder, handleChange }) {
   return (
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      onChange={handleChange}
-      className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
-      required
-    />
+    <div>
+      <label className="block mb-1 font-medium text-gray-700">
+        {label} <span className="text-red-500">*</span>
+      </label>
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+    </div>
   );
 }

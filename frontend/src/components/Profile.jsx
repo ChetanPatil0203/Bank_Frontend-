@@ -12,9 +12,6 @@ export default function ProfilePage() {
     accountType: "Saving",
     branch: "Jalgaon Main Branch",
     ifsc: "SBIN0001234",
-    aadhaar: "XXXX-XXXX-1234",
-    pan: "ABCDE1234F",
-    nominee: "Rahul Patil",
   });
 
   const handleChange = (e) => {
@@ -23,7 +20,6 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-8">
 
         {/* HEADER */}
@@ -67,17 +63,6 @@ export default function ProfilePage() {
           <Input label="Account Type" value={profile.accountType}/>
           <Input label="Branch" value={profile.branch}/>
           <Input label="IFSC Code" value={profile.ifsc}/>
-        </Section>
-
-        {/* KYC DETAILS */}
-        <Section title="KYC Details">
-          <Input label="Aadhaar" value={profile.aadhaar}/>
-          <Input label="PAN" value={profile.pan}/>
-        </Section>
-
-        {/* NOMINEE */}
-        <Section title="Nominee Details">
-          <Input label="Nominee Name" name="nominee" value={profile.nominee} edit={edit} handleChange={handleChange}/>
         </Section>
 
       </div>

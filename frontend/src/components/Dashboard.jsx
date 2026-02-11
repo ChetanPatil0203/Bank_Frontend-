@@ -9,6 +9,9 @@ import {
   LogIn,
   LogOut,
   CircleUserRound,
+  ArrowLeftRight,
+  Headphones,
+  BadgeCheckIcon,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -25,10 +28,11 @@ function Dashboard() {
     { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
     { name: "Open Account", icon: <UserCheck size={20} />, path: "/open-account" },
     { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
-    { name: "Withdraw Money", icon: <Activity size={20} />, path: "/withdraw" },
-    { name: "Transaction History", icon: <Activity size={20} />, path: "/transactions" },
+    { name: "Withdraw Money", icon: < Wallet size={20} />, path: "/withdraw" },
+    { name: "KYC Verification", icon: <BadgeCheckIcon size={20} />, path:"/kyc"},
+    { name: "Transaction History", icon: <ArrowLeftRight size={20} />, path: "/transactions" },
     { name: "Account Balance", icon: <CheckCircle size={20} />, path: "/balance" },
-    { name: "Help & Support", icon: <LayoutDashboard size={20} />, path: "/helpsupport" },
+    { name: "Help & Support", icon: <Headphones size={20} />, path: "/helpsupport" },
     { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
   ];
 

@@ -40,23 +40,23 @@ export default function Withdraw() {
 
         <form onSubmit={handleSubmit} className="space-y-8">
 
-          {/* Account Details */}
+          {/* ACCOUNT DETAILS */}
           <Section title="Account Details">
 
             <Input
+              label="Account Number"
               name="accountNumber"
-              placeholder="Account Number"
               handleChange={handleChange}
             />
 
             <Input
+              label="Account Holder Name"
               name="holderName"
-              placeholder="Account Holder Name"
               handleChange={handleChange}
             />
 
             {/* Balance Display */}
-            <div className="border rounded-xl p-3 bg-gray-50">
+            <div className="border rounded-xl p-3 bg-gray-50 md:col-span-2">
               <p className="text-gray-500 text-sm">Available Balance</p>
               <p className="text-lg font-semibold text-green-600">
                 {formData.balance}
@@ -65,41 +65,48 @@ export default function Withdraw() {
 
           </Section>
 
-          {/* Withdrawal Details */}
+          {/* WITHDRAWAL DETAILS */}
           <Section title="Withdrawal Details">
 
             <Input
+              label="Withdrawal Amount"
               name="amount"
-              placeholder="Enter Withdrawal Amount"
               handleChange={handleChange}
             />
 
             <Input
+              label="Mobile Number"
               name="mobile"
-              placeholder="Mobile Number"
               handleChange={handleChange}
             />
 
           </Section>
 
-          {/* Receipt Preference */}
+          {/* RECEIPT */}
           <Section title="Receipt Preference">
 
-            <select
-              name="receipt"
-              onChange={handleChange}
-              className="input-style"
-            >
-              <option value="">Select Receipt Option</option>
-              <option>SMS Receipt</option>
-              <option>Email Receipt</option>
-              <option>Printed Receipt</option>
-              <option>No Receipt</option>
-            </select>
+            <div className="flex flex-col gap-1">
+              <label className="label-style">
+                Receipt Option <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="receipt"
+                onChange={handleChange}
+                className="input-style"
+                required
+              >
+                <option value="">Select Receipt Option</option>
+                <option>SMS Receipt</option>
+                <option>Email Receipt</option>
+                <option>Printed Receipt</option>
+                <option>No Receipt</option>
+              </select>
+            </div>
 
           </Section>
 
-          {/* Submit Button */}
+          {/* SUBMIT */}
           <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
             Withdraw Money
           </button>
@@ -126,15 +133,21 @@ function Section({ title, children }) {
   );
 }
 
-function Input({ type = "text", name, placeholder, handleChange }) {
+function Input({ label, type = "text", name, handleChange }) {
   return (
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      onChange={handleChange}
-      className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
-      required
-    />
+    <div className="flex flex-col gap-1">
+      <label htmlFor={name} className="label-style">
+        {label} <span className="text-red-500">*</span>
+      </label>
+
+      <input
+        id={name}
+        type={type}
+        name={name}
+        onChange={handleChange}
+        className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        required
+      />
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -67,14 +68,18 @@ export default function LoginPage() {
               />
 
               {/* Toggle Button */}
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-gray-500"
-              >
-                {showPassword ? "🙈" : "👁"}
-              </button>
-            </div>
+             <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-3 flex items-center gap-1 text-gray-500 hover:text-gray-700"
+    >
+      <span className="text-xs font-medium">
+        {showPassword ? "Hide" : "Show"}
+      </span>
+      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </button>
+
+                </div>
           </div>
 
           {/* Remember + Forgot */}

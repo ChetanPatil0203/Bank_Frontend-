@@ -1,3 +1,4 @@
+import { RotateCw } from "lucide-react";
 import { useState } from "react";
 
 export default function DepositMoney() {
@@ -59,66 +60,79 @@ export default function DepositMoney() {
           <h2 className="text-4xl font-bold text-blue-900">
             Deposit Money
           </h2>
-          <p className="text-gray-500 mt-2">
-            Secure Transaction Portal
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-10">
 
           {/* ACCOUNT DETAILS */}
           <Section title="Account Details">
-            <Input name="accountNumber" placeholder="Account Number" handleChange={handleChange}/>
-            <Input name="accountHolder" placeholder="Account Holder Name" handleChange={handleChange}/>
 
-            <select name="accountType" onChange={handleChange} className="input-style">
-              <option value="">Select Account Type</option>
-              <option>Saving</option>
-              <option>Current</option>
-            </select>
+            <Input label="Account Number" name="accountNumber" handleChange={handleChange}/>
+            <Input label="Account Holder Name" name="accountHolder" handleChange={handleChange}/>
 
-            <Input name="branch" placeholder="Branch Name" handleChange={handleChange}/>
+            <Select
+              label="Account Type"
+              name="accountType"
+              options={["Saving","Current"]}
+              handleChange={handleChange}
+            />
+
+            <Input label="Branch Name" name="branch" handleChange={handleChange}/>
+
           </Section>
 
           {/* DEPOSIT DETAILS */}
           <Section title="Deposit Details">
-            <Input name="amount" placeholder="Deposit Amount" handleChange={handleChange}/>
 
-            <select name="depositMode" onChange={handleChange} className="input-style">
-              <option value="">Deposit Mode</option>
-              <option>Cash</option>
-              <option>UPI</option>
-              <option>Online Transfer</option>
-            </select>
+            <Input label="Deposit Amount" name="amount" handleChange={handleChange}/>
 
-            <Input type="date" name="depositDate" handleChange={handleChange}/>
+            <Select
+              label="Deposit Mode"
+              name="depositMode"
+              options={["Cash","UPI","Online Transfer"]}
+              handleChange={handleChange}
+            />
+
+            <Input
+              label="Deposit Date"
+              type="date"
+              name="depositDate"
+              handleChange={handleChange}
+            />
+
           </Section>
 
           {/* CONTACT */}
           <Section title="Depositor Contact">
-            <Input name="depositorMobile" placeholder="Mobile Number" handleChange={handleChange}/>
+            <Input
+              label="Mobile Number"
+              name="depositorMobile"
+              handleChange={handleChange}
+            />
           </Section>
 
           {/* ADDITIONAL DETAILS */}
           <Section title="Additional Details">
 
-            <select
+            <Select
+              label="Receipt Preference"
               name="receiptPreference"
-              onChange={handleChange}
-              className="input-style"
-            >
-              <option value="">Receipt Preference</option>
-              <option>SMS</option>
-              <option>Email</option>
-              <option>Printed Receipt</option>
-            </select>
-
-            <textarea
-              name="remark"
-              placeholder="Remark (Optional)"
-              onChange={handleChange}
-              className="input-style md:col-span-2 h-24"
+              options={["SMS","Email","Printed Receipt"]}
+              handleChange={handleChange}
             />
+
+            <div className="flex flex-col gap-1 md:col-span-2">
+              <label className="label-style">
+                Remark <span className="text-red-500">*</span>
+              </label>
+
+              <textarea
+                name="remark"
+                onChange={handleChange}
+                className="input-style h-24"
+                required
+              />
+            </div>
 
           </Section>
 
@@ -138,18 +152,26 @@ export default function DepositMoney() {
                 onClick={() => setCaptcha(generateCaptcha())}
                 className="text-blue-600 font-medium"
               >
-                Refresh
+                
+                <RotateCw/>
+                
+        
               </button>
             </div>
 
-            <input
-              type="text"
-              name="captchaInput"
-              placeholder="Enter Captcha"
-              onChange={handleChange}
-              className="input-style mt-4"
-              required
-            />
+            <div className="mt-4">
+              <label className="label-style">
+                Enter Captcha <span className="text-red-500">*</span>
+              </label>
+
+              <input
+                type="text"
+                name="captchaInput"
+                onChange={handleChange}
+                className="input-style"
+                required
+              />
+            </div>
           </div>
 
           {/* TERMS */}
@@ -161,7 +183,7 @@ export default function DepositMoney() {
           </div>
 
           {/* SUBMIT */}
-          <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800 transition">
+          <button className="w-full bg-blue-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-800">
             Submit Deposit
           </button>
 
@@ -187,15 +209,43 @@ function Section({ title, children }) {
   );
 }
 
-function Input({ type="text", name, placeholder, handleChange }) {
+function Input({ label, type="text", name, handleChange }) {
   return (
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      onChange={handleChange}
-      className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
-      required
-    />
+    <div className="flex flex-col gap-1">
+      <label className="label-style">
+        {label} <span className="text-red-500">*</span>
+      </label>
+
+      <input
+        type={type}
+        name={name}
+        onChange={handleChange}
+        className="input-style"
+        required
+      />
+    </div>
+  );
+}
+
+function Select({ label, name, options, handleChange }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="label-style">
+        {label} <span className="text-red-500">*</span>
+      </label>
+
+      <select
+        name={name}
+        onChange={handleChange}
+        className="input-style"
+        required
+      >
+        <option value="">Select {label}</option>
+
+        {options.map((opt) => (
+          <option key={opt}>{opt}</option>
+        ))}
+      </select>
+    </div>
   );
 }

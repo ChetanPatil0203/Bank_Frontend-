@@ -1,3 +1,5 @@
+import { Wallet } from "lucide-react";
+
 export default function TransactionHistory() {
 
   const currentBalance = "₹45,800";
@@ -45,9 +47,17 @@ export default function TransactionHistory() {
         </div>
 
         {/* CURRENT BALANCE CARD */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-xl rounded-2xl p-6">
-          <h3 className="text-lg">Current Balance</h3>
-          <p className="text-3xl font-bold mt-2">{currentBalance}</p>
+        <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-xl rounded-2xl p-6 flex justify-between items-center">
+
+          {/* Balance Text */}
+          <div>
+            <h3 className="text-lg">Current Balance</h3>
+            <p className="text-3xl font-bold mt-2">{currentBalance}</p>
+          </div>
+
+          {/* Icon */}
+          <Wallet size={40} className="opacity-80" />
+
         </div>
 
         {/* TRANSACTION LIST */}
