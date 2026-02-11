@@ -19,15 +19,17 @@ export default function BalanceCheck() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Dummy Balance (Backend नंतर येईल)
     setBalance("₹ 45,250.00");
   };
 
   return (
     <div className="min-h-screen py-12 px-4">
 
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10">
+      <div 
+        className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10
+        transform transition-all duration-700 
+        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
+      >
 
         {/* HEADER */}
         <div className="text-center mb-10 border-b pb-6">
@@ -60,7 +62,7 @@ export default function BalanceCheck() {
             />
 
             {/* Account Type */}
-            <div>
+            <div className="transition-all duration-300 hover:-translate-y-1">
               <label className="block font-medium mb-1">
                 Account Type <span className="text-red-500">*</span>
               </label>
@@ -68,7 +70,9 @@ export default function BalanceCheck() {
               <select
                 name="accountType"
                 onChange={handleChange}
-                className="input-style border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+                className="border rounded-xl p-3 w-full 
+                  focus:ring-2 focus:ring-blue-500 outline-none
+                  transition-all duration-300 bg-gray-50"
                 required
               >
                 <option value="">Select Account Type</option>
@@ -80,19 +84,26 @@ export default function BalanceCheck() {
           </Section>
 
           {/* SUBMIT BUTTON */}
-<div className="flex justify-center pt-4">
-  <button className="px-10 py-3 bg-blue-800 text-white rounded-md font-medium text-base 
-                 shadow-md hover:shadow-lg 
-                transition-all  tracking-wide">
-    Check Balance
-  </button>
-</div>
+          <div className="flex justify-center pt-4">
+            <button 
+              className="px-12 py-3 bg-blue-800 text-white rounded-full 
+                font-medium text-base shadow-md 
+                
+                transition-all duration-300 tracking-wide"
+            >
+              Check Balance
+            </button>
+          </div>
 
         </form>
 
         {/* BALANCE DISPLAY CARD */}
         {balance && (
-          <div className="mt-10 border rounded-xl p-8 bg-green-50 text-center">
+          <div 
+            className="mt-10 border rounded-xl p-8 bg-green-50 text-center
+            transform transition-all duration-700 
+            translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
+          >
 
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               Available Balance
@@ -106,16 +117,35 @@ export default function BalanceCheck() {
         )}
 
       </div>
+
+      {/* Tailwind Custom Animation */}
+      <style>
+        {`
+        @keyframes slideUp {
+          from {
+            transform: translateY(40px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        `}
+      </style>
+
     </div>
   );
 }
-
 
 /* ---------- Section Component ---------- */
 
 function Section({ title, children }) {
   return (
-    <div className="border rounded-xl p-6 bg-white">
+    <div 
+      className="border rounded-xl p-6 bg-white
+      transition-all duration-300 hover:shadow-lg"
+    >
 
       <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
         {title}
@@ -129,12 +159,11 @@ function Section({ title, children }) {
   );
 }
 
-
 /* ---------- Input Component ---------- */
 
 function Input({ label, type="text", name, placeholder, handleChange }) {
   return (
-    <div>
+    <div className="transition-all duration-300 hover:-translate-y-1">
       <label className="block font-medium mb-1">
         {label} <span className="text-red-500">*</span>
       </label>
@@ -144,7 +173,9 @@ function Input({ label, type="text", name, placeholder, handleChange }) {
         name={name}
         placeholder={placeholder}
         onChange={handleChange}
-        className="border rounded-xl p-3 w-full focus:ring-2 focus:ring-blue-500 outline-none"
+        className="border rounded-xl p-3 w-full bg-gray-50
+          focus:ring-2 focus:ring-blue-500 outline-none
+          transition-all duration-300"
         required
       />
     </div>
