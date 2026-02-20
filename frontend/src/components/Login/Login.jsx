@@ -30,9 +30,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#0D0D11] flex items-center justify-center px-4">
 
-      <div className="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8">
+      <div className="max-w-md w-full bg-[#18181b]/50 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl p-8">
 
         {/* HEADER */}
         <div className="text-center mb-8 flex flex-col items-center">
@@ -54,11 +54,12 @@ export default function LoginPage() {
             name="accountNumber"
             placeholder="Enter Account Number"
             handleChange={handleChange}
+            className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
           />
 
           {/* Password Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-400 mb-1">
               Password
             </label>
 
@@ -68,7 +69,7 @@ export default function LoginPage() {
                 name="password"
                 placeholder="Enter Password"
                 onChange={handleChange}
-                className="w-full border rounded-xl p-3 pr-12 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
                 required
               />
 
@@ -89,7 +90,7 @@ export default function LoginPage() {
 
           {/* Remember + Forgot */}
           <div className="flex justify-between items-center text-sm">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-zinc-400">
               <input
                 type="checkbox"
                 name="remember"
@@ -106,7 +107,7 @@ export default function LoginPage() {
           {/* Login Button */}
           <button 
           onClick={() => navigate("/dashboard")}
-          className="w-full bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-800 transition">
+          className="w-full md:w-64 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed">
             
             Login
           </button>

@@ -6,7 +6,7 @@
 
     return (
       <header
-        className={`bg-white text-black shadow-md sticky top-0 z-40 border-b
+        className={`bg-[#f8f4e8] text-black shadow-md sticky top-0 z-40 border-b
         transition-all duration-300 ${
           sidebarOpen ? "ml-[240px]" : "ml-0"
         }`}
