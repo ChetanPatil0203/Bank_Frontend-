@@ -24,27 +24,22 @@ export default function Withdraw() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 bg-gray-50">
+    <div className="min-h-screen py-6 px-4 bg-gray-50">
 
-      <div
-        className="max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-10
-        transform transition-all duration-700
-        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
-      >
+      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
         {/* HEADER */}
-        <div className="text-center mb-10 border-b pb-6">
-          <h2 className="text-2xl font-medium text-blue-900">
+        <div className="text-center mb-2">
+          <h2 className="text-xl font-semibold text-blue-900 leading-tight">
             Cash Withdrawal
           </h2>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 text-sm leading-tight">
             Withdraw money securely from your account
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* ACCOUNT DETAILS */}
           <Section title="Account Details">
 
             <Input
@@ -60,17 +55,15 @@ export default function Withdraw() {
             />
 
             {/* Balance Display */}
-            <div className="border rounded-xl p-4 bg-gray-50 md:col-span-2
-              transition-all duration-300 hover:-translate-y-1">
-              <p className="text-gray-500 text-sm">Available Balance</p>
-              <p className="text-xl font-bold text-green-600">
+            <div className="rounded-xl p-3 bg-gray-50 md:col-span-2">
+              <p className="text-xs text-gray-500">Available Balance</p>
+              <p className="text-lg font-bold text-green-600">
                 {formData.balance}
               </p>
             </div>
 
           </Section>
 
-          {/* WITHDRAWAL DETAILS */}
           <Section title="Withdrawal Details">
 
             <Input
@@ -87,20 +80,18 @@ export default function Withdraw() {
 
           </Section>
 
-          {/* RECEIPT */}
           <Section title="Receipt Preference">
 
-            <div className="transition-all duration-300 hover:-translate-y-1">
-              <label className="block font-semibold mb-1">
+            <div>
+              <label className="text-sm font-medium text-gray-700">
                 Receipt Option <span className="text-red-500">*</span>
               </label>
 
               <select
                 name="receipt"
                 onChange={handleChange}
-                className="border rounded-xl p-3 w-full bg-gray-50
-                  focus:ring-2 focus:ring-blue-500 outline-none
-                  transition-all duration-300"
+                className="rounded-xl p-2 w-full bg-white border
+                  focus:ring-2 focus:ring-blue-500 outline-none"
                 required
               >
                 <option value="">Select Receipt Option</option>
@@ -113,12 +104,10 @@ export default function Withdraw() {
 
           </Section>
 
-          {/* SUBMIT BUTTON */}
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center">
             <button
-              className="px-12 py-3 bg-blue-800 text-white rounded-full
-                font-medium shadow-md hover:shadow-xl
-                 transition-all duration-300 tracking-wide"
+              className="px-8 py-2 bg-blue-800 text-white rounded-full
+                text-sm font-medium shadow-md hover:shadow-lg transition"
             >
               Withdraw
             </button>
@@ -126,22 +115,6 @@ export default function Withdraw() {
 
         </form>
       </div>
-
-      {/* Tailwind animation */}
-      <style>
-        {`
-        @keyframes slideUp {
-          from {
-            transform: translateY(40px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        `}
-      </style>
 
     </div>
   );
@@ -151,12 +124,11 @@ export default function Withdraw() {
 
 function Section({ title, children }) {
   return (
-    <div className="border rounded-xl p-6 bg-white">
-      <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
+    <div className="rounded-xl p-3 bg-gray-50">
+      <h3 className="text-base font-semibold text-blue-900 mb-1 leading-tight">
         {title}
       </h3>
-
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-2 gap-3">
         {children}
       </div>
     </div>
@@ -165,8 +137,8 @@ function Section({ title, children }) {
 
 function Input({ label, type = "text", name, handleChange }) {
   return (
-    <div className="transition-all duration-300 hover:-translate-y-1">
-      <label className="block font-semibold mb-1">
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
       </label>
 
@@ -174,9 +146,8 @@ function Input({ label, type = "text", name, handleChange }) {
         type={type}
         name={name}
         onChange={handleChange}
-        className="border rounded-xl p-3 w-full bg-gray-50
-          focus:ring-2 focus:ring-blue-500 outline-none
-          transition-all duration-300"
+        className="rounded-xl p-2 w-full bg-white border
+          focus:ring-2 focus:ring-blue-500 outline-none"
         required
       />
     </div>

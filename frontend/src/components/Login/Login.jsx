@@ -1,10 +1,26 @@
-import { Eye, EyeOff, Landmark } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  /* ------------------ COMMON STYLES ------------------ */
+
+  const inputClass =
+    "w-full bg-white/5 text-white text-sm border border-white/10 rounded-xl px-4 py-3 md:py-3.5 " +
+    "placeholder:text-zinc-400 transition-all duration-300 " +
+    "outline-none focus:outline-none focus:ring-0 " +
+    "focus:border-[#3B82F6] focus:bg-white/10";
+
+  const labelClass =
+    "text-xs font-medium text-zinc-400 ml-1 mb-1 block";
+
+  const buttonClass =
+    "w-full bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3 md:py-3.5 " +
+    "transition-all transform active:scale-[0.98] shadow-lg";
+
+  /* ------------------ STATE ------------------ */
 
   const [formData, setFormData] = useState({
     accountNumber: "",
@@ -13,6 +29,8 @@ export default function LoginPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
+  /* ------------------ HANDLE CHANGE ------------------ */
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -23,30 +41,31 @@ export default function LoginPage() {
     });
   };
 
+  /* ------------------ HANDLE SUBMIT ------------------ */
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
     alert("Login Successful ✅");
+    navigate("/dashboard");
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0D11] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#021029] via-[#051e47] to-[#0A2A66] flex items-center justify-center px-4 sm:px-6">
 
-      <div className="max-w-md w-full bg-[#18181b]/50 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl p-8">
+      <div className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
 
         {/* HEADER */}
-        <div className="text-center mb-8 flex flex-col items-center">
-  <h2 className="text-2xl font-medium text-blue-900">
-    User Login
-  </h2>
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            User Login
+          </h2>
+          <p className="text-zinc-400 text-sm mt-2">
+            Access your banking dashboard safely
+          </p>
+        </div>
 
-  <p className="text-gray-500 mt-2">
-    Access your banking dashboard safely
-  </p>
-</div>
-
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
 
           {/* Account Number */}
           <Input
@@ -54,38 +73,32 @@ export default function LoginPage() {
             name="accountNumber"
             placeholder="Enter Account Number"
             handleChange={handleChange}
-            className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+            inputClass={inputClass}
+            labelClass={labelClass}
           />
 
-          {/* Password Field */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-400 mb-1">
+          {/* Password */}
+          <div className="relative">
+            <label className={labelClass}>
               Password
             </label>
 
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Enter Password"
-                onChange={handleChange}
-                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
-                required
-              />
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Enter Password"
+              onChange={handleChange}
+              className={inputClass}
+              required
+            />
 
-              {/* Toggle Button */}
-             <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-3 flex items-center gap-1 text-gray-500 hover:text-gray-700"
-    >
-      <span className="text-xs font-medium">
-        {showPassword ? "Hide" : "Show"}
-      </span>
-      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-    </button>
-
-                </div>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-[34px] sm:top-[38px] text-gray-400 hover:text-white"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </div>
 
           {/* Remember + Forgot */}
@@ -95,20 +108,21 @@ export default function LoginPage() {
                 type="checkbox"
                 name="remember"
                 onChange={handleChange}
+                className="accent-[#6F5FE7]"
               />
               Remember Me
             </label>
 
-            <span className="text-blue-900 cursor-pointer hover:underline">
+            <span className="text-[#6F5FE7] cursor-pointer hover:underline">
               Forgot Password?
             </span>
           </div>
 
           {/* Login Button */}
-          <button 
-          onClick={() => navigate("/dashboard")}
-          className="w-full md:w-64 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed">
-            
+          <button
+            type="submit"
+            className={buttonClass}
+          >
             Login
           </button>
 
@@ -120,12 +134,20 @@ export default function LoginPage() {
 }
 
 
-/* ---------- Reusable Input ---------- */
+/* ------------------ REUSABLE INPUT ------------------ */
 
-function Input({ label, name, type="text", placeholder, handleChange }) {
+function Input({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  handleChange,
+  inputClass,
+  labelClass
+}) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className={labelClass}>
         {label}
       </label>
 
@@ -134,7 +156,7 @@ function Input({ label, name, type="text", placeholder, handleChange }) {
         name={name}
         placeholder={placeholder}
         onChange={handleChange}
-        className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+        className={inputClass}
         required
       />
     </div>

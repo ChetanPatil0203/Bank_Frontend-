@@ -2,6 +2,8 @@ import { useState } from "react";
 
 export default function HelpSupport() {
 
+  /* ---------------- STATE ---------------- */
+
   const [formData, setFormData] = useState({
     fullName: "",
     accountNumber: "",
@@ -11,38 +13,66 @@ export default function HelpSupport() {
     description: "",
   });
 
+  const [error, setError] = useState("");
+
+  /* ---------------- HANDLE INPUT ---------------- */
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Only digits for account number & contact number
+    if (name === "accountNumber" && !/^\d*$/.test(value)) return;
+    if (name === "contactNumber" && !/^\d*$/.test(value)) return;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
+  /* ---------------- SUBMIT ---------------- */
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.contactNumber.length !== 10) {
+      setError("Contact number must be 10 digits.");
+      return;
+    }
+
+    if (!formData.issueType || !formData.description) {
+      setError("Please fill all required fields.");
+      return;
+    }
+
+    setError("");
     alert("Support Request Submitted ✅");
   };
 
-  return (
-    <div className="min-h-screen py-12 px-4">
+  /* ---------------- UI ---------------- */
 
-      <div 
-        className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-10
-        transform transition-all duration-700 
-        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
-      >
+  return (
+    <div className="min-h-screen py-6 px-4 bg-gray-100">
+
+      <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
         {/* HEADER */}
-        <div className="text-center mb-10 border-b pb-6">
-          <h2 className="text-2xl font-medium text-blue-900">
+        <div className="text-center mb-4">
+          <h2 className="text-xl font-semibold text-blue-900">
             Help & Support
           </h2>
-          <p className="text-gray-500 mt-2">
-            Customer Assistance & Issue Resolution Portal
+          <p className="text-sm text-gray-500">
+            Customer Assistance & Issue Resolution
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        {error && (
+          <p className="text-red-600 text-center mb-3 text-sm font-medium">
+            {error}
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
 
           {/* CUSTOMER DETAILS */}
           <Section title="Customer Details">
@@ -52,6 +82,7 @@ export default function HelpSupport() {
               name="fullName"
               placeholder="Enter full name"
               handleChange={handleChange}
+              required
             />
 
             <Input
@@ -59,13 +90,16 @@ export default function HelpSupport() {
               name="accountNumber"
               placeholder="Enter account number"
               handleChange={handleChange}
+              required
             />
 
             <Input
               label="Contact Number"
               name="contactNumber"
               placeholder="Enter contact number"
+              maxLength={10}
               handleChange={handleChange}
+              required
             />
 
           </Section>
@@ -73,26 +107,19 @@ export default function HelpSupport() {
           {/* ISSUE DETAILS */}
           <Section title="Issue Details">
 
-            <div className="transition-all duration-300 hover:-translate-y-1">
-              <label className="block mb-1 font-medium text-gray-700">
-                Issue Type <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="issueType"
-                onChange={handleChange}
-                className="border rounded-xl p-3 w-full bg-gray-50
-                  focus:ring-2 focus:ring-blue-500 outline-none
-                  transition-all duration-300"
-                required
-              >
-                <option value="">Select Issue Type</option>
-                <option>Login Problem</option>
-                <option>Transaction Issue</option>
-                <option>Deposit Issue</option>
-                <option>Account Problem</option>
-                <option>Technical Error</option>
-              </select>
-            </div>
+            <SelectInput
+              label="Issue Type"
+              name="issueType"
+              options={[
+                "Login Problem",
+                "Transaction Issue",
+                "Deposit Issue",
+                "Account Problem",
+                "Technical Error"
+              ]}
+              handleChange={handleChange}
+              required
+            />
 
             <Input
               label="Issue Subject"
@@ -101,17 +128,16 @@ export default function HelpSupport() {
               handleChange={handleChange}
             />
 
-            <div className="md:col-span-2 transition-all duration-300 hover:-translate-y-1">
-              <label className="block mb-1 font-medium text-gray-700">
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium text-gray-700">
                 Issue Description <span className="text-red-500">*</span>
               </label>
               <textarea
                 name="description"
                 placeholder="Describe your issue"
                 onChange={handleChange}
-                className="border rounded-xl p-3 w-full h-28 bg-gray-50
-                  focus:ring-2 focus:ring-blue-500 outline-none
-                  transition-all duration-300"
+                className="border rounded-xl p-2 w-full h-24 bg-white
+                  focus:ring-2 focus:ring-blue-500 outline-none mt-1"
                 required
               />
             </div>
@@ -119,75 +145,80 @@ export default function HelpSupport() {
           </Section>
 
           {/* SUBMIT */}
-          <div className="flex justify-center pt-4">
-            <button 
-              className="px-12 py-3 bg-blue-800 text-white rounded-full 
-                font-medium text-base shadow-md  
-                transition-all duration-300 tracking-wide"
+          <div className="flex justify-center pt-2">
+            <button
+              className="px-8 py-2 bg-blue-800 text-white rounded-full
+                text-sm font-medium shadow-md hover:shadow-lg
+                transition"
             >
               Submit Request
             </button>
           </div>
 
         </form>
+
       </div>
-
-      {/* Tailwind Animation */}
-      <style>
-        {`
-        @keyframes slideUp {
-          from {
-            transform: translateY(40px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        `}
-      </style>
-
     </div>
   );
 }
 
-/* ---------- Section Component ---------- */
+/* ---------- SECTION COMPONENT ---------- */
 
 function Section({ title, children }) {
   return (
-    <div 
-      className="border rounded-xl p-6 bg-white
-      transition-all duration-300 hover:shadow-lg"
-    >
-      <h3 className="text-xl font-semibold text-blue-900 mb-5 border-b pb-2">
+    <div className="rounded-xl p-4 bg-gray-50">
+      <h3 className="text-base font-semibold text-blue-900 mb-3">
         {title}
       </h3>
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {children}
       </div>
     </div>
   );
 }
 
-/* ---------- Input Component ---------- */
+/* ---------- INPUT COMPONENT ---------- */
 
-function Input({ type = "text", label, name, placeholder, handleChange }) {
+function Input({ type = "text", label, name, placeholder, handleChange, maxLength, required }) {
   return (
-    <div className="transition-all duration-300 hover:-translate-y-1">
-      <label className="block mb-1 font-medium text-gray-700">
-        {label} <span className="text-red-500">*</span>
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-gray-700">
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
       <input
         type={type}
         name={name}
         placeholder={placeholder}
+        maxLength={maxLength}
         onChange={handleChange}
-        className="border rounded-xl p-3 w-full bg-gray-50
-          focus:ring-2 focus:ring-blue-500 outline-none
-          transition-all duration-300"
-        required
+        className="border rounded-xl p-2 bg-white
+          focus:ring-2 focus:ring-blue-500 outline-none"
+        required={required}
       />
+    </div>
+  );
+}
+
+/* ---------- SELECT COMPONENT ---------- */
+
+function SelectInput({ label, name, options, handleChange, required }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-gray-700">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <select
+        name={name}
+        onChange={handleChange}
+        className="border rounded-xl p-2 bg-white
+          focus:ring-2 focus:ring-blue-500 outline-none"
+        required={required}
+      >
+        <option value="">Select {label}</option>
+        {options.map((opt, index) => (
+          <option key={index}>{opt}</option>
+        ))}
+      </select>
     </div>
   );
 }

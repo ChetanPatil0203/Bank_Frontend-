@@ -1,4 +1,4 @@
-import { Check, Pencil, Save } from "lucide-react";
+import { Pencil, Save } from "lucide-react";
 import { useState } from "react";
 
 export default function ProfilePage() {
@@ -20,35 +20,38 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
 
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-8 
-                      transform transition-all duration-700
-                      translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]">
+      <div className="w-full max-w-6xl bg-white shadow-xl rounded-2xl p-6">
 
         {/* HEADER */}
-        <div className="flex flex-col md:flex-row justify-between items-center border-b pb-5 mb-6 gap-4">
-          <div className="flex items-center gap-4">
+        <div className="flex justify-between items-center border-b pb-4 mb-4">
+
+          <div className="flex items-center gap-3">
             <img
               src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="profile"
-              className="w-20 h-20 rounded-full border shadow-md"
+              className="w-16 h-16 rounded-full border shadow-sm"
             />
-            <div>
-              <h2 className="text-2xl font-semibold text-blue-900">{profile.fullName}</h2>
-              <p className="text-gray-500 text-sm">Account No: {profile.accountNumber}</p>
+            <div className="leading-tight">
+              <h2 className="text-xl font-semibold text-blue-900">
+                {profile.fullName}
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Account No: {profile.accountNumber}
+              </p>
             </div>
           </div>
 
           <button
             onClick={() => setEdit(!edit)}
-            className={`px-5 py-2 flex items-center gap-2 justify-center 
-                        font-medium text-base rounded-full shadow-md hover:shadow-xl 
-                        transition-all tracking-wide
+            className={`px-4 py-2 flex items-center gap-2 
+                        text-sm font-medium rounded-lg shadow 
+                        transition-all
                         ${edit ? "bg-green-600 text-white" : "bg-blue-800 text-white"}`}
           >
-            {edit ? <Save size={18} /> : <Pencil size={18} />}
-            {edit ? "Save Changes" : "Edit Profile"}
+            {edit ? <Save size={16} /> : <Pencil size={16} />}
+            {edit ? "Save" : "Edit"}
           </button>
         </div>
 
@@ -69,15 +72,6 @@ export default function ProfilePage() {
         </Section>
 
       </div>
-
-      {/* Tailwind animation */}
-      <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(40px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        .animate-[slideUp_0.7s_forwards] { animation: slideUp 0.7s forwards; }
-      `}</style>
     </div>
   );
 }
@@ -86,9 +80,13 @@ export default function ProfilePage() {
 
 function Section({ title, children }) {
   return (
-    <div className="mt-6 border rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-all duration-300">
-      <h3 className="text-xl font-semibold text-blue-900 mb-4">{title}</h3>
-      <div className="grid md:grid-cols-2 gap-4">{children}</div>
+    <div className="mb-4">
+      <h3 className="text-base font-semibold text-blue-900 mb-3 border-b pb-1">
+        {title}
+      </h3>
+      <div className="grid md:grid-cols-2 gap-3">
+        {children}
+      </div>
     </div>
   );
 }
@@ -96,16 +94,19 @@ function Section({ title, children }) {
 function Input({ label, name, value, edit, handleChange }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-600">{label}</label>
+      <label className="text-xs text-gray-600">{label}</label>
       {edit ? (
         <input
           name={name}
           value={value}
           onChange={handleChange}
-          className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300"
+          className="border rounded-lg px-3 py-2 text-sm 
+                     focus:ring-1 focus:ring-blue-500 outline-none"
         />
       ) : (
-        <p className="bg-gray-50 border rounded-xl p-3">{value}</p>
+        <p className="bg-gray-50 border rounded-lg px-3 py-2 text-sm">
+          {value}
+        </p>
       )}
     </div>
   );
@@ -114,8 +115,10 @@ function Input({ label, name, value, edit, handleChange }) {
 function DisplayInput({ label, value }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-600">{label}</label>
-      <p className="bg-gray-50 border rounded-xl p-3">{value}</p>
+      <label className="text-xs text-gray-600">{label}</label>
+      <p className="bg-gray-50 border rounded-lg px-3 py-2 text-sm">
+        {value}
+      </p>
     </div>
   );
 }
@@ -123,16 +126,19 @@ function DisplayInput({ label, value }) {
 function Textarea({ label, name, value, edit, handleChange }) {
   return (
     <div className="flex flex-col gap-1 md:col-span-2">
-      <label className="text-sm text-gray-600">{label}</label>
+      <label className="text-xs text-gray-600">{label}</label>
       {edit ? (
         <textarea
           name={name}
           value={value}
           onChange={handleChange}
-          className="w-full border rounded-xl p-3 h-24 focus:ring-2 focus:ring-blue-500 outline-none transition-all duration-300"
+          className="border rounded-lg px-3 py-2 text-sm h-20 
+                     focus:ring-1 focus:ring-blue-500 outline-none"
         />
       ) : (
-        <p className="bg-gray-50 border rounded-xl p-3">{value}</p>
+        <p className="bg-gray-50 border rounded-lg px-3 py-2 text-sm">
+          {value}
+        </p>
       )}
     </div>
   );

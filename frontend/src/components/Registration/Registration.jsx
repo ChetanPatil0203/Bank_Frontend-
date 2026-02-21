@@ -5,11 +5,23 @@ import { useNavigate } from "react-router-dom";
 export default function RegistrationPage() {
   const navigate = useNavigate();
 
+  /* ------------------ COMMON INPUT CLASS (Reusable) ------------------ */
+ const inputClass =
+  "w-full bg-white/5 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 " +
+  "placeholder:text-zinc-400 transition-all duration-300 " +
+  "outline-none focus:outline-none focus:ring-0 " +
+  "focus:border-[#3B82F6]";
+
+  const labelClass =
+    "text-xs font-medium text-zinc-400 ml-1 mb-1 block";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     mobile: "",
     gender: "",
+    dob: "",
+    address: "",
     password: "",
     confirmPassword: ""
   });
@@ -18,6 +30,7 @@ export default function RegistrationPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
 
+  /* ------------------ HANDLE CHANGE ------------------ */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,6 +39,7 @@ export default function RegistrationPage() {
     setError("");
   };
 
+  /* ------------------ HANDLE SUBMIT ------------------ */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -40,19 +54,16 @@ export default function RegistrationPage() {
     }
 
     const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
-    const userExists = existingUsers.find(user => user.email === formData.email);
+    const userExists = existingUsers.find(
+      (user) => user.email === formData.email
+    );
 
     if (userExists) {
       setError("This email is already registered! Please login instead.");
       return;
     }
 
-    existingUsers.push({
-      name: formData.name,
-      email: formData.email,
-      mobile: formData.mobile,
-      gender: formData.gender
-    });
+    existingUsers.push(formData);
     localStorage.setItem("users", JSON.stringify(existingUsers));
 
     alert("Registration Successful ✅");
@@ -60,51 +71,62 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0D11] flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#021029] via-[#051e47] to-[#0A2A66] flex items-center justify-center px-4 py-10">
 
-      {/* Form Container */}
-      <div className="w-full max-w-3xl bg-[#18181b]/50 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl">
+      {/* Form Card */}
+      <div className="w-full max-w-3xl bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
 
         {/* Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-4xl font-bold text-white">Registration</h2>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-white">Create Account</h2>
+          <p className="text-zinc-400 text-sm mt-2">
+            Fill All Details Carefully To Register
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Row 1: Full Name + Email */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Full Name" name="name" handleChange={handleChange} />
-            <Input label="Email" name="email" type="email" handleChange={handleChange} />
+          {/* Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input label="Full Name" name="name" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
+            <Input label="Email Address" name="email" type="email" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
           </div>
 
-          {/* Row 2: Mobile + Gender */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Mobile Number" name="mobile" handleChange={handleChange} />
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input label="Mobile Number" name="mobile" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
+            
             <div>
-              <label className="text-xs font-medium text-zinc-400 ml-1 mb-1 block">
+              <label className={labelClass}>
                 Gender <span className="text-red-500">*</span>
               </label>
               <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+                className={inputClass}
                 required
               >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="" className="text-black">Select Gender</option>
+                <option value="Male" className="text-black">Male</option>
+                <option value="Female" className="text-black">Female</option>
+                <option value="Other" className="text-black">Other</option>
               </select>
             </div>
           </div>
 
-          {/* Row 3: Password + Confirm Password */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Input label="Date of Birth" name="dob" type="date" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
+            <Input label="Address" name="address" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
+          </div>
+
+          {/* Password Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
             {/* Password */}
             <div className="relative">
-              <label className="text-xs font-medium text-zinc-400 ml-1 mb-1 block">
+              <label className={labelClass}>
                 Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -112,22 +134,22 @@ export default function RegistrationPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+                className={inputClass}
                 placeholder="Enter Password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-[38px] text-gray-400 hover:text-gray-200"
+                className="absolute right-4 top-[38px] text-gray-400 hover:text-white"
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
             </div>
 
             {/* Confirm Password */}
             <div className="relative">
-              <label className="text-xs font-medium text-zinc-400 ml-1 mb-1 block">
+              <label className={labelClass}>
                 Confirm Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -135,55 +157,48 @@ export default function RegistrationPage() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+                className={inputClass}
                 placeholder="Confirm Password"
                 required
               />
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-[38px] text-gray-400 hover:text-gray-200"
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
+                className="absolute right-4 top-[38px] text-gray-400 hover:text-white"
               >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
             </div>
           </div>
 
-          {/* Error Message */}
+          {/* Error */}
           {error && (
-            <div className="mt-2 p-3 bg-red-50/20 border border-red-200/30 rounded-lg">
-              <p className="text-red-600 text-sm font-medium">{error}</p>
-              {error.includes("already registered") && (
-                <button
-                  type="button"
-                  onClick={() => navigate("/login")}
-                  className="text-blue-200 underline text-sm mt-1 hover:text-white"
-                >
-                  Go to Login →
-                </button>
-              )}
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+              {error}
             </div>
           )}
 
-          {/* Submit Button */}
-          <div className="flex justify-center pt-2">
+          {/* Submit */}
+          <div className="flex justify-center pt-3">
             <button
               type="submit"
-              className="w-full md:w-64 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full md:w-72 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg"
             >
-              Register
+              Create Account
             </button>
           </div>
 
         </form>
 
-        {/* Login Link */}
+        {/* Login */}
         <div className="mt-6 text-center">
           <p className="text-zinc-400 text-sm">
             Already have an account?{" "}
             <button
               onClick={() => navigate("/login")}
-              className="text-blue-600 font-semibold"
+              className="text-[#6F5FE7] font-semibold"
             >
               Login here
             </button>
@@ -195,18 +210,18 @@ export default function RegistrationPage() {
   );
 }
 
-/* ---------- Reusable Input Component ---------- */
-function Input({ label, name, handleChange, type = "text" }) {
+/* ------------------ REUSABLE INPUT ------------------ */
+function Input({ label, name, handleChange, type = "text", inputClass, labelClass }) {
   return (
     <div>
-      <label className="text-xs font-medium text-zinc-400 ml-1 mb-1 block">
+      <label className={labelClass}>
         {label} <span className="text-red-500">*</span>
       </label>
       <input
         type={type}
         name={name}
         onChange={handleChange}
-        className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+        className={inputClass}
         placeholder={label}
         required
       />
