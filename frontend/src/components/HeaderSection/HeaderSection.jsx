@@ -1,61 +1,92 @@
-  import { Bell, User, Menu } from "lucide-react";
-  import { useNavigate } from "react-router-dom";
+import { Bell, Menu, X } from "lucide-react";
 
-  function HeaderSection({ onMenuClick, sidebarOpen }) {
-    const navigate = useNavigate();
+function HeaderSection({ onMenuClick, sidebarOpen }) {
+  return (
+    <header
+      style={{
+        background: "linear-gradient(90deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.3)",
+        position: "sticky",
+        top: 0,
+        zIndex: 40,
+        marginLeft: sidebarOpen ? 230 : 60,
+        width: `calc(100% - ${sidebarOpen ? 230 : 60}px)`,
+        transition: "margin-left 0.28s ease",
+        fontFamily: "'Inter', sans-serif",
+      }}
+    >
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    return (
-      <header
-        className={`bg-[#f8f4e8] text-black shadow-md sticky top-0 z-40 border-b
-        transition-all duration-300 ${
-          sidebarOpen ? "ml-[240px]" : "ml-0"
-        }`}
-        
-      >
-        <div className="w-full px-8 py-4 flex items-center justify-between">
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 28px",
+        height: 62,
+      }}>
 
-          {/* LEFT - Menu + Profile */}
-          <div className="flex items-center gap-3">
-            <Menu 
-              size={24} 
-              className="cursor-pointer text-[#0047AB]"
-              onClick={onMenuClick} 
-            />
+        {/* LEFT — Hamburger */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}></div>
+
+        {/* CENTER — Bank Title */}
+        <div style={{ textAlign: "center", position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+          <div style={{
+            color: "#ffffff",
+            fontSize: 17,
+            fontWeight: 700,
+            letterSpacing: 0.3,
+            whiteSpace: "nowrap",
+          }}>
+            State Bank Of India
           </div>
-          
-            <div className="flex items-center gap-2">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500/75 to-purple-700/85 text-white 
-                            flex items-center justify-center font-semibold text-base shadow-xl border border-white/30 backdrop-blur-sm">
-              BP
-            </div>
-              <span className="font-medium text-gray-800">
-                Hello, Bhushan
-              </span>
-            </div>
-    
-
-          {/* CENTER TITLE */}
-          <div className="text-center">
-            <h1 className="text-xl md:text-2xl font-bold text-[#0047AB]">
-              State Bank Of India
-            </h1>
-          </div>
-
-          {/* RIGHT - Login + Bell */}
-          <div className="flex items-center gap-4">
-
-            <div className="relative">
-              <Bell
-                size={22}
-                className="cursor-pointer text-gray-700 hover:text-[#0047AB] transition"
-              />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </div>
-
+          <div style={{
+            color: "rgba(255,255,255,0.35)",
+            fontSize: 11,
+            marginTop: 1,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}>
+            Secure Banking Portal
           </div>
         </div>
-      </header>
-    );
-  }
 
-  export default HeaderSection;
+        {/* RIGHT — Bell */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button
+            style={{
+              position: "relative",
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 8,
+              padding: "7px 9px",
+              cursor: "pointer",
+              color: "rgba(255,255,255,0.75)",
+              display: "flex",
+              alignItems: "center",
+              transition: "background 0.2s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+            onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
+          >
+            <Bell size={18} />
+            {/* Red dot */}
+            <span style={{
+              position: "absolute",
+              top: 7,
+              right: 7,
+              width: 7,
+              height: 7,
+              background: "#f87171",
+              borderRadius: "50%",
+              border: "1.5px solid #0f1f4d",
+            }} />
+          </button>
+        </div>
+
+      </div>
+    </header>
+  );
+}
+
+export default HeaderSection;
