@@ -1,12 +1,9 @@
 import {
   LayoutDashboard,
-  UserPlus,
   UserCheck,
   Wallet,
   CreditCard,
-  Activity,
   CheckCircle,
-  LogIn,
   LogOut,
   CircleUserRound,
   ArrowLeftRight,
@@ -15,73 +12,189 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 
-function Dashboard() {
+function Sidebar() {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(true); // Sidebar open/close state
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/dashboard" },
-    { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
-    { name: "Open New Account", icon: <UserCheck size={20} />, path: "/open-account" },
-    { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
-    { name: "Withdraw Money", icon: < Wallet size={20} />, path: "/withdraw" },
-    { name: "KYC Verification", icon: <BadgeCheckIcon size={20} />, path:"/kyc"},
-    { name: "Transaction History", icon: <ArrowLeftRight size={20} />, path: "/transactions" },
-    { name: "Account Balance", icon: <CheckCircle size={20} />, path: "/balance" },
-    { name: "Help & Support", icon: <Headphones size={20} />, path: "/helpsupport" },
-    { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
+    { name: "Dashboard",          icon: <LayoutDashboard size={19} />, path: "/dashboard" },
+    { name: "My Profile",         icon: <CircleUserRound size={19} />, path: "/profile" },
+    { name: "Open New Account",   icon: <UserCheck size={19} />,       path: "/open-account" },
+    { name: "Deposit Money",      icon: <CreditCard size={19} />,      path: "/deposit" },
+    { name: "Withdraw Money",     icon: <Wallet size={19} />,          path: "/withdraw" },
+    { name: "KYC Verification",   icon: <BadgeCheckIcon size={19} />,  path: "/kyc" },
+    { name: "Transaction History",icon: <ArrowLeftRight size={19} />,  path: "/transactions" },
+    { name: "Account Balance",    icon: <CheckCircle size={19} />,     path: "/balance" },
+    { name: "Help & Support",     icon: <Headphones size={19} />,      path: "/helpsupport" },
+    { name: "Logout",             icon: <LogOut size={19} />,          path: "/logout" },
   ];
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen bg-blue-900 text-white px-5 py-2 rounded-lg backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
-        isOpen ? "w-64" : "w-20"
-      }`}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100vh",
+        width: isOpen ? 230 : 60,
+        background: "linear-gradient(180deg, #1e3a7b 0%, #152d68 40%, #0f1f4d 100%)",
+        borderRight: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "4px 0 20px rgba(0,0,0,0.35)",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 50,
+        transition: "width 0.28s ease",
+        overflow: "hidden",
+        fontFamily: "'Inter', sans-serif",
+      }}
     >
-      {/* Toggle Button */}
-      <div className="flex justify-end mb-6">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+      {/* Close / Toggle Button — top right */}
+      <div style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: "14px 12px 8px",
+      }}>
         <button
-          onClick={toggleSidebar}
-          className="text-white p-2 rounded-md hover:bg-white/20 transition"
+          onClick={() => setIsOpen(!isOpen)}
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            border: "none",
+            borderRadius: 6,
+            padding: "6px 8px",
+            color: "rgba(255,255,255,0.7)",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
+          {isOpen ? <X size={17} /> : <Menu size={17} />}
         </button>
       </div>
 
-      {/* Logo */}
-      <div
-        className={`flex flex-col items-center mb-8 transition-all duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <Wallet size={36} className="mb-2" />
-        <h2 className="text-lg font-semibold">SBI Banking</h2>
+      {/* Logo / Brand */}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "10px 16px 24px",
+        opacity: isOpen ? 1 : 0,
+        transition: "opacity 0.2s",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+      }}>
+        {/* Wallet Icon */}
+        <div style={{
+          width: 52,
+          height: 52,
+          borderRadius: 14,
+          background: "rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 10,
+        }}>
+          <Wallet size={26} color="#ffffff" strokeWidth={1.8} />
+        </div>
+        <span style={{
+          color: "#ffffff",
+          fontWeight: 700,
+          fontSize: 15,
+          letterSpacing: 0.2,
+        }}>
+          SBI Banking
+        </span>
       </div>
 
+      {/* Divider */}
+      <div style={{
+        height: 1,
+        background: "rgba(255,255,255,0.1)",
+        margin: "0 16px 12px",
+        opacity: isOpen ? 1 : 0,
+      }} />
+
       {/* Menu Items */}
-      <nav className="flex flex-col gap-3">
-        {menuItems.map((item, index) => (
-          <Link
-            key={index}
-            to={item.path}
-            className={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 transform hover:scale-105 ${
-              location.pathname === item.path
-                ? "bg-white/20 text-white font-semibold"
-                : "text-white hover:bg-white/10"
-            }`}
-          >
-            {item.icon}
-            {isOpen && <span>{item.name}</span>}
-          </Link>
-          
-        ))}
+      <nav style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        padding: "4px 10px",
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}>
+        {menuItems.map((item, index) => {
+          const active = location.pathname === item.path;
+          const isLogout = item.path === "/logout";
+
+          return (
+            <Link
+              key={index}
+              to={item.path}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: "10px 12px",
+                borderRadius: 8,
+                textDecoration: "none",
+                color: isLogout
+                  ? "rgba(255,180,180,0.85)"
+                  : active
+                  ? "#ffffff"
+                  : "rgba(255,255,255,0.72)",
+                background: active
+                  ? "rgba(255,255,255,0.15)"
+                  : "transparent",
+                fontWeight: active ? 600 : 400,
+                fontSize: 13.5,
+                transition: "background 0.18s, color 0.18s",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => {
+                if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+              }}
+              onMouseLeave={e => {
+                if (!active) e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {/* Icon */}
+              <span style={{
+                flexShrink: 0,
+                color: isLogout
+                  ? "rgba(255,180,180,0.85)"
+                  : active
+                  ? "#ffffff"
+                  : "rgba(255,255,255,0.6)",
+                display: "flex",
+                alignItems: "center",
+              }}>
+                {item.icon}
+              </span>
+
+              {/* Label */}
+              {isOpen && (
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {item.name}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
+
+      {/* Bottom padding */}
+      <div style={{ height: 16 }} />
     </aside>
   );
 }
 
-export default Dashboard;
+export default Sidebar;
