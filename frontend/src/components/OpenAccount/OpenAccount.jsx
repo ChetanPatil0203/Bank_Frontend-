@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { X, PenLine } from "lucide-react";
 
 export default function OpenAccount() {
 
@@ -23,6 +23,12 @@ export default function OpenAccount() {
   const [photo, setPhoto] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
 
+  // Signature states
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [savedSignature, setSavedSignature] = useState(null);
+  const canvasRef = useRef(null);
+  const isDrawing = useRef(false);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -38,6 +44,76 @@ export default function OpenAccount() {
   };
 
   const isPDF = photo && photo.type === "application/pdf";
+
+  // ---- Signature Canvas Logic ----
+  useEffect(() => {
+    if (showSignatureModal && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#1d4ed8";
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+    }
+  }, [showSignatureModal]);
+
+  const getPos = (e, canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY,
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
+    };
+  };
+
+  const startDrawing = (e) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const pos = getPos(e, canvas);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    isDrawing.current = true;
+  };
+
+  const draw = (e) => {
+    e.preventDefault();
+    if (!isDrawing.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const pos = getPos(e, canvas);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  };
+
+  const stopDrawing = () => {
+    isDrawing.current = false;
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const saveSignature = () => {
+    const canvas = canvasRef.current;
+    const dataUrl = canvas.toDataURL("image/png");
+    setSavedSignature(dataUrl);
+    setShowSignatureModal(false);
+  };
+
+  const cancelSignature = () => {
+    setShowSignatureModal(false);
+  };
 
   return (
     <div className="min-h-screen py-6 px-4 bg-gray-50">
@@ -111,8 +187,35 @@ export default function OpenAccount() {
             </p>
           </div>
 
-          <div className="flex justify-center">
-            <button 
+          {/* BOTTOM: Submit + Signature */}
+          <div className="flex items-center justify-between pt-2">
+
+            {/* Signature area - bottom left */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowSignatureModal(true)}
+                className="flex items-center gap-2 px-5 py-2 bg-white border border-blue-700 text-blue-800 rounded-full text-sm font-medium shadow-sm hover:bg-blue-50 transition"
+              >
+                <PenLine size={15} />
+                {savedSignature ? "Edit Signature" : "Add Signature"}
+              </button>
+              {savedSignature && (
+                <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-1 bg-white shadow-sm">
+                  <img src={savedSignature} alt="Signature" className="h-8 w-auto object-contain" />
+                  <button
+                    type="button"
+                    onClick={() => setSavedSignature(null)}
+                    className="text-gray-400 hover:text-red-500 transition ml-1"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Submit - bottom right */}
+            <button
               type="submit"
               className="px-8 py-2 bg-blue-800 text-white rounded-full text-sm font-medium shadow-md hover:shadow-lg transition"
             >
@@ -125,11 +228,11 @@ export default function OpenAccount() {
 
       {/* IMAGE/PDF MODAL */}
       {showImageModal && photo && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImageModal(false)}
         >
-          <div 
+          <div
             className="relative w-full max-w-4xl h-[85vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
@@ -139,7 +242,6 @@ export default function OpenAccount() {
             >
               <X size={22} className="text-gray-800" />
             </button>
-
             <div className="w-full h-full overflow-auto p-6">
               {isPDF ? (
                 <iframe
@@ -154,6 +256,82 @@ export default function OpenAccount() {
                   className="w-full h-auto object-contain"
                 />
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SIGNATURE MODAL */}
+      {showSignatureModal && (
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+          onClick={cancelSignature}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <PenLine size={18} className="text-blue-800" />
+                <h3 className="text-base font-semibold text-blue-900">Draw Your Signature</h3>
+              </div>
+              <button
+                onClick={cancelSignature}
+                className="text-gray-400 hover:text-gray-600 transition"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-3">Use your mouse or finger to sign below</p>
+
+            {/* Canvas */}
+            <div className="border-2 border-dashed border-blue-200 rounded-xl overflow-hidden bg-gray-50 relative">
+              <canvas
+                ref={canvasRef}
+                width={460}
+                height={180}
+                className="w-full touch-none cursor-crosshair"
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={stopDrawing}
+                onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+              />
+              <span className="absolute bottom-2 right-3 text-xs text-gray-300 select-none">Sign here</span>
+            </div>
+
+            {/* Clear */}
+            <div className="flex justify-end mt-2 mb-4">
+              <button
+                type="button"
+                onClick={clearCanvas}
+                className="text-xs text-gray-400 hover:text-red-500 transition underline"
+              >
+                Clear
+              </button>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={cancelSignature}
+                className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={saveSignature}
+                className="px-6 py-2 rounded-full bg-blue-800 text-white text-sm font-medium shadow hover:shadow-md hover:bg-blue-900 transition"
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
