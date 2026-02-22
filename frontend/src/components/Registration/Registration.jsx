@@ -78,7 +78,7 @@ export default function RegistrationPage() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-white">Create Account</h2>
+          <h2 className="text-3xl font-bold text-white">Registration</h2>
           <p className="text-zinc-400 text-sm mt-2">
             Fill All Details Carefully To Register
           </p>
@@ -113,12 +113,6 @@ export default function RegistrationPage() {
                 <option value="Other" className="text-black">Other</option>
               </select>
             </div>
-          </div>
-
-          {/* Row 3 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Input label="Date of Birth" name="dob" type="date" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
-            <Input label="Address" name="address" handleChange={handleChange} inputClass={inputClass} labelClass={labelClass} />
           </div>
 
           {/* Password Row */}
@@ -186,7 +180,7 @@ export default function RegistrationPage() {
               type="submit"
               className="w-full md:w-72 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg"
             >
-              Create Account
+              Register
             </button>
           </div>
 

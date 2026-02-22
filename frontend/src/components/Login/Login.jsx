@@ -66,21 +66,26 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-
-          {/* Account Number */}
+          {/* Email Address */}
           <Input
-            label="Account Number"
+            label={
+              <>
+                Email Address <span className="text-red-500">*</span>
+              </>
+            }
             name="accountNumber"
-            placeholder="Enter Account Number"
+            placeholder="Email Address"
             handleChange={handleChange}
             inputClass={inputClass}
             labelClass={labelClass}
+            required
           />
+
 
           {/* Password */}
           <div className="relative">
             <label className={labelClass}>
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
 
             <input
@@ -113,7 +118,7 @@ export default function LoginPage() {
               Remember Me
             </label>
 
-            <span className="text-[#6F5FE7] cursor-pointer hover:underline">
+            <span className="text-[#6F5FE7] cursor-pointer">
               Forgot Password?
             </span>
           </div>
