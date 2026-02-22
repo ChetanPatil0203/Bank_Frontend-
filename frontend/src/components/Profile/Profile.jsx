@@ -43,17 +43,30 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <button
-            onClick={() => setEdit(!edit)}
-            className={`px-4 py-2 flex items-center gap-2 
-                        text-sm font-medium rounded-lg shadow 
-                        transition-all
-                        ${edit ? "bg-green-600 text-white" : "bg-blue-800 text-white"}`}
-          >
-            {edit ? <Save size={16} /> : <Pencil size={16} />}
-            {edit ? "Save" : "Edit"}
-          </button>
-        </div>
+        <button
+          type="button"   
+          onClick={() => setEdit(!edit)}
+          className={`
+            w-full md:w-32 
+            bg-[#6F5FE7] 
+            hover:bg-[#5b4ec2] 
+            text-white 
+            font-semibold 
+            rounded-xl 
+            py-3.5 
+            flex items-center 
+            justify-center 
+            gap-2 
+            transition-all 
+            transform 
+            active:scale-[0.98] 
+            shadow-lg
+          `}
+        >
+          {edit ? <Save size={18} /> : <Pencil size={18} />}
+          {edit ? "Save" : "Edit"}
+        </button>
+      </div>
 
         {/* PERSONAL DETAILS */}
         <Section title="Personal Details">
