@@ -129,7 +129,7 @@ export default function DashboardHome() {
        : "bg-white/[.62] shadow-sm shadow-blue-900/[.07]"}`;
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
+    <div className="min-h-screen relative overflow-hidden bg-[#f0f4ff]" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
 
       {/* ── Ambient blobs ── */}
       <div className="fixed -top-32 left-[8%]  w-[520px] h-[520px] rounded-full bg-indigo-400/10  blur-3xl pointer-events-none -z-10" />
@@ -346,35 +346,117 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* ── RECENT TRANSACTIONS — full width ── */}
+        {/* ── RECENT TRANSACTIONS — professional table ── */}
         <div className="anim-fade-up-3 pb-8">
-          <div className="txns-wrap backdrop-blur-[18px] rounded-[22px] border border-white/80 p-8">
-            <div className="flex justify-between items-center mb-5">
+          <div className="txns-wrap backdrop-blur-[18px] rounded-[22px] border border-white/80 overflow-hidden">
+
+            {/* Title bar */}
+            <div className="flex justify-between items-center px-8 py-5 border-b border-slate-100/80">
               <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Recent Transactions</h3>
               <button onClick={()=>navigate("/transactions")}
                 className="text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
                 View All <ChevronRight size={14}/>
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {recentTxns.map((txn,i) => {
-                const Icon = txn.icon; const isC = txn.type==="credit";
-                return (
-                  <div key={i} className="txn-card flex items-center gap-4 rounded-[14px] px-4 py-4 border border-white/80 hover:bg-white/80 transition-all duration-200">
-                    <div className={`${isC?"txn-icon-credit":"txn-icon-debit"} w-11 h-11 rounded-[13px] flex items-center justify-center flex-shrink-0`}>
-                      <Icon size={20} className={isC?"text-emerald-600":"text-red-600"} strokeWidth={2}/>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[14px] font-bold text-slate-800 truncate">{txn.name}</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{txn.date}</p>
-                    </div>
-                    <span className={`${isC?"txn-badge-credit text-emerald-600":"txn-badge-debit text-red-600"} text-[15px] font-extrabold px-3 py-1 rounded-lg flex-shrink-0`}>
-                      {txn.amount}
-                    </span>
+
+      {/* Scrollable */}
+<div className="overflow-x-auto overflow-y-auto max-h-[340px]">
+  <table className="w-full min-w-[620px] text-center">
+
+    {/* ── TABLE HEADER ── */}
+    <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
+      <tr>
+        <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">SR NO</th>
+        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Transaction</th>
+        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Type</th>
+        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Date & Time</th>
+        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Status</th>
+        <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Amount</th>
+      </tr>
+    </thead>
+
+    {/* ── TABLE BODY ── */}
+    <tbody>
+      {recentTxns.map((txn, i) => {
+        const Icon = txn.icon;
+        const isC = txn.type === "credit";
+
+        return (
+          <tr
+            key={i}
+            className="border-b border-slate-200 hover:bg-blue-50 transition"
+          >
+            {/* Sr No */}
+            <td className="px-6 py-4 text-[13px] font-bold text-black">
+              {String(i + 1).padStart(2)}
+            </td>
+
+                {/* Transaction */}
+              <td className="px-4 py-4 text-center">
+                <div className="flex items-center justify-center gap-3">
+                  
+                  {/* Icon */}
+                  <div
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0
+                    ${isC ? "bg-emerald-100" : "bg-red-100"}`}
+                  >
+                    <Icon
+                      size={16}
+                      className={isC ? "text-emerald-600" : "text-red-600"}
+                      strokeWidth={2}
+                    />
                   </div>
-                );
-              })}
+
+                  {/* Transaction Name */}
+                  <span className="text-[14px] font-semibold text-slate-800 whitespace-nowrap">
+                    {txn.name}
+                  </span>
+
+                </div>
+              </td>
+            {/* Type */}
+            <td className="px-4 py-4">
+              <span
+                className={`text-[12px] font-semibold px-3 py-1 rounded-full
+                ${isC
+                  ? "bg-emerald-100 text-emerald-600"
+                  : "bg-red-100 text-red-600"}`}
+              >
+                {isC ? "▲ Credit" : "▼ Debit"}
+              </span>
+            </td>
+
+            {/* Date */}
+            <td className="px-4 py-4 text-[13px] text-slate-500 font-medium">
+              {txn.date}
+            </td>
+
+            {/* Status */}
+            <td className="px-4 py-4">
+              <span className="text-[12px] font-semibold text-emerald-600">
+                Success
+              </span>
+            </td>
+
+            {/* Amount */}
+            <td className={`px-6 py-4 text-[15px] font-bold
+              ${isC ? "text-emerald-600" : "text-red-600"}`}>
+              {txn.amount}
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>
+
+            {/* Footer */}
+            <div className="flex justify-between items-center px-8 py-3 border-t border-slate-100/80"
+                 style={{ background:"rgba(241,245,255,0.70)" }}>
+              <span className="text-[12px] text-slate-400 font-medium">Showing {recentTxns.length} of {recentTxns.length} records</span>
+              <span className="text-[12px] text-slate-400 font-medium">Last updated: Today</span>
             </div>
+
           </div>
         </div>
 
