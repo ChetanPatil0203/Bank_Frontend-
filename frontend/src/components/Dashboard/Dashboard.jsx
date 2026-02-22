@@ -9,6 +9,8 @@ import {
   ArrowLeftRight,
   Headphones,
   BadgeCheckIcon,
+  Landmark,
+  Settings,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -26,8 +28,9 @@ function Sidebar() {
     { name: "Withdraw Money", icon: <Wallet size={23} />, path: "/withdraw" },
     { name: "KYC Verification", icon: <BadgeCheckIcon size={23} />, path: "/kyc" },
     { name: "Transaction History", icon: <ArrowLeftRight size={23} />, path: "/transactions" },
-    { name: "Account Balance", icon: <CheckCircle size={23} />, path: "/balance" },
+    { name: "Account Details", icon: <Landmark size={23} />, path: "/details" },
     { name: "Help & Support", icon: <Headphones size={23} />, path: "/helpsupport" },
+    { name: "Setting", icon: <Settings  size={23} />, path: "/setting" },
     { name: "LogOut", icon: <LogOut size={23} />, path: "/logout" },
   ];
 
