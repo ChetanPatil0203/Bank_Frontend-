@@ -19,16 +19,16 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
-    { name: "Dashboard",          icon: <LayoutDashboard size={19} />, path: "/dashboard" },
-    { name: "My Profile",         icon: <CircleUserRound size={19} />, path: "/profile" },
-    { name: "Open New Account",   icon: <UserCheck size={19} />,       path: "/open-account" },
-    { name: "Deposit Money",      icon: <CreditCard size={19} />,      path: "/deposit" },
-    { name: "Withdraw Money",     icon: <Wallet size={19} />,          path: "/withdraw" },
-    { name: "KYC Verification",   icon: <BadgeCheckIcon size={19} />,  path: "/kyc" },
-    { name: "Transaction History",icon: <ArrowLeftRight size={19} />,  path: "/transactions" },
-    { name: "Account Balance",    icon: <CheckCircle size={19} />,     path: "/balance" },
-    { name: "Help & Support",     icon: <Headphones size={19} />,      path: "/helpsupport" },
-    { name: "Logout",             icon: <LogOut size={19} />,          path: "/logout" },
+    { name: "Dashboard", icon: <LayoutDashboard size={23} />, path: "/dashboard" },
+    { name: "My Profile", icon: <CircleUserRound size={23} />, path: "/profile" },
+    { name: "Open New Account", icon: <UserCheck size={23} />, path: "/open-account" },
+    { name: "Deposit Money", icon: <CreditCard size={23} />, path: "/deposit" },
+    { name: "Withdraw Money", icon: <Wallet size={23} />, path: "/withdraw" },
+    { name: "KYC Verification", icon: <BadgeCheckIcon size={23} />, path: "/kyc" },
+    { name: "Transaction History", icon: <ArrowLeftRight size={23} />, path: "/transactions" },
+    { name: "Account Balance", icon: <CheckCircle size={23} />, path: "/balance" },
+    { name: "Help & Support", icon: <Headphones size={23} />, path: "/helpsupport" },
+    { name: "LogOut", icon: <LogOut size={23} />, path: "/logout" },
   ];
 
   return (
@@ -50,14 +50,8 @@ function Sidebar() {
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-      {/* Close / Toggle Button — top right */}
-      <div style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        padding: "14px 12px 8px",
-      }}>
+      {/* Toggle Button */}
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "14px 12px 8px" }}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           style={{
@@ -76,59 +70,61 @@ function Sidebar() {
         </button>
       </div>
 
-      {/* Logo / Brand */}
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "10px 16px 24px",
-        opacity: isOpen ? 1 : 0,
-        transition: "opacity 0.2s",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-      }}>
-        {/* Wallet Icon */}
-        <div style={{
-          width: 52,
-          height: 52,
-          borderRadius: 14,
-          background: "rgba(255,255,255,0.1)",
-          border: "1px solid rgba(255,255,255,0.15)",
+      {/* Logo */}
+      <div
+        style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 10,
-        }}>
+          padding: "10px 16px 24px",
+          opacity: isOpen ? 1 : 0,
+          transition: "opacity 0.2s",
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <div
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 14,
+            background: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 10,
+          }}
+        >
           <Wallet size={26} color="#ffffff" strokeWidth={1.8} />
         </div>
-        <span style={{
-          color: "#ffffff",
-          fontWeight: 700,
-          fontSize: 15,
-          letterSpacing: 0.2,
-        }}>
+
+        <span style={{ color: "#ffffff", fontWeight: 700, fontSize: 15 }}>
           SBI Banking
         </span>
       </div>
 
       {/* Divider */}
-      <div style={{
-        height: 1,
-        background: "rgba(255,255,255,0.1)",
-        margin: "0 16px 12px",
-        opacity: isOpen ? 1 : 0,
-      }} />
+      <div
+        style={{
+          height: 1,
+          background: "rgba(255,255,255,0.1)",
+          margin: "0 16px 12px",
+          opacity: isOpen ? 1 : 0,
+        }}
+      />
 
-      {/* Menu Items */}
-      <nav style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        padding: "4px 10px",
-        overflowY: "auto",
-        overflowX: "hidden",
-      }}>
+      {/* Menu Items (Scroll Removed) */}
+      <nav
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          padding: "4px 10px",
+          overflow: "hidden",   // ✅ Scroll bar removed
+        }}
+      >
         {menuItems.map((item, index) => {
           const active = location.pathname === item.path;
           const isLogout = item.path === "/logout";
@@ -144,54 +140,57 @@ function Sidebar() {
                 padding: "10px 12px",
                 borderRadius: 8,
                 textDecoration: "none",
-                color: isLogout
-                  ? "rgba(255,180,180,0.85)"
+                color: isLogout   
+                  ? "#ff1b1e"     // 🔴 Red text
                   : active
                   ? "#ffffff"
                   : "rgba(255,255,255,0.72)",
-                background: active
+                background: isLogout
+                  ? ""  
+                  : active
                   ? "rgba(255,255,255,0.15)"
                   : "transparent",
-                fontWeight: active ? 600 : 400,
+                fontWeight: active ? 600 : 500,
                 fontSize: 13.5,
-                transition: "background 0.18s, color 0.18s",
+                transition: "all 0.18s ease",
                 whiteSpace: "nowrap",
-                overflow: "hidden",
-                flexShrink: 0,
               }}
-              onMouseEnter={e => {
-                if (!active) e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+              onMouseEnter={(e) => {
+                if (isLogout) {
+                  e.currentTarget.style.background = "rgba(255,77,79,0.22)";
+                } else if (!active) {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+                }
               }}
-              onMouseLeave={e => {
-                if (!active) e.currentTarget.style.background = "transparent";
+              onMouseLeave={(e) => {
+                if (isLogout) {
+                  e.currentTarget.style.background = "";
+                } else if (!active) {
+                  e.currentTarget.style.background = "transparent";
+                }
               }}
             >
               {/* Icon */}
-              <span style={{
-                flexShrink: 0,
-                color: isLogout
-                  ? "rgba(255,180,180,0.85)"
-                  : active
-                  ? "#ffffff"
-                  : "rgba(255,255,255,0.6)",
-                display: "flex",
-                alignItems: "center",
-              }}>
+              <span
+                style={{
+                  color: isLogout
+                    ? "#ff1b1e"   // 🔴 Red icon
+                    : active
+                    ? "#ffffff"
+                    : "rgba(255,255,255,0.6)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 {item.icon}
               </span>
 
-              {/* Label */}
-              {isOpen && (
-                <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {item.name}
-                </span>
-              )}
+              {isOpen && <span>{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
-      {/* Bottom padding */}
       <div style={{ height: 16 }} />
     </aside>
   );
