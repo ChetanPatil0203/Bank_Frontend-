@@ -77,11 +77,12 @@ function DashboardHome() {
         position:"sticky", top:0, zIndex:100,
         boxShadow:"0 1px 0 rgba(30,64,175,0.06)",
       }}>
-        
-
+       
         <h2 style={{ margin:0, fontSize:"16px", fontWeight:"800", color:"#1e3a8a", letterSpacing:"0.10em", textTransform:"uppercase" }}>
           Account Overview
         </h2>
+
+  
       </div>
 
       {/* ── CONTENT ── */}
@@ -93,7 +94,7 @@ function DashboardHome() {
         {/* ── BANK CARD ── */}
         <div style={{
           borderRadius:"26px", padding:"36px 44px", marginBottom:"32px",
-          background:"linear-gradient(125deg, #1d4ed8 0%, #3b82f6 48%, #60a5fa 100%)",
+         background: "linear-gradient(90deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%)",
           position:"relative", overflow:"hidden",
           boxShadow:"0 18px 64px rgba(29,78,216,0.28), 0 0 0 1.5px rgba(255,255,255,0.18)",
           opacity: animIn ? 1 : 0,
@@ -113,7 +114,9 @@ function DashboardHome() {
               {/* Account number — transparent pill */}
               <div style={{
                 display:"inline-block", marginTop:"10px",
+             
                 backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)",
+               
                 borderRadius:"10px", padding:"8px 18px",
               }}>
                 <p style={{ margin:0, fontSize:"15px", color:"rgba(255,255,255,0.92)", fontWeight:"700", letterSpacing:"0.18em" }}>
@@ -127,7 +130,9 @@ function DashboardHome() {
                 {/* Balance — transparent pill */}
                 <div style={{
                   display:"inline-block", marginTop:"10px",
+                
                   backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)",
+                
                   borderRadius:"14px", padding:"12px 24px",
                   boxShadow:"0 4px 20px rgba(0,0,0,0.08)",
                 }}>
