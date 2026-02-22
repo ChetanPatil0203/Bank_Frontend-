@@ -1,4 +1,4 @@
-import { Landmark } from "lucide-react";
+import { ArrowDownToLine, ArrowDownToLineIcon, Landmark } from "lucide-react";
 import jsPDF from "jspdf";
 
 export default function AccountDetails() {
@@ -64,17 +64,21 @@ export default function AccountDetails() {
         <div className="relative mb-6">
 
           {/* Center Title */}
-          <h2 className="text-2xl font-bold text-blue-900 text-center">
+          <h2 className="text-2xl font-semibold text-blue-900 text-center">
             Account Details
           </h2>
 
           {/* Download Button */}
-          <button
-            onClick={downloadPDF}
-            className="absolute right-0 top-0 bg-blue-900 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-800 transition"
-          >
-            Download
-          </button>
+        <button
+  onClick={downloadPDF}
+  className="absolute right-0 top-0 w-full md:w-40 bg-[#6F5FE7] 
+             hover:bg-[#5b4ec2] text-white font-semibold 
+             rounded-xl py-3.5 transition-all 
+             transform active:scale-[0.98] shadow-lg"
+>
+  <ArrowDownToLineIcon className="w-5 h-5 inline mr-2" />
+  Download PDF
+</button>
         </div>
 
         {/* Basic Info */}
