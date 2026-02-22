@@ -222,7 +222,7 @@ export default function DashboardHome() {
                     <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Holder</p>
                     <p className="m-0 text-[15px] font-extrabold text-white tracking-widest uppercase"
                        style={{ textShadow:"0 1px 12px rgba(255,255,255,.25)" }}>
-                      Rahul Sharma
+                      Bhushan Patil
                     </p>
                   </div>
                   <div>
