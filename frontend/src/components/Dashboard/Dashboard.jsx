@@ -144,7 +144,7 @@ function Sidebar() {
                 borderRadius: 8,
                 textDecoration: "none",
                 color: isLogout   
-                  ? "#ff1b1e"     // 🔴 Red text
+                  ? "#ff1b1e"    
                   : active
                   ? "#ffffff"
                   : "rgba(255,255,255,0.72)",
