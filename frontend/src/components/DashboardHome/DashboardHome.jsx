@@ -1,245 +1,323 @@
 import {
   Eye, EyeOff, ArrowDownToLine, ArrowUpFromLine, UserCircle, BookUser,
   CheckCircle, Receipt, Headset, Wallet, Plane, Hotel, ShoppingBag,
-  TvMinimal, TrendingUp, Bell, Settings, ChevronRight
+  TvMinimal, TrendingUp, ChevronRight
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function DashboardHome() {
+/* ── Keyframes — only animations that Tailwind cannot generate ── */
+const STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  @keyframes shimmerSlide {
+    0%   { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(300%) skewX(-15deg); }
+  }
+  @keyframes chipShine {
+    0%,100% { opacity:0.7; }
+    50%      { opacity:1; }
+  }
+  @keyframes cardIn {
+    from { opacity:0; transform: translateY(24px) scale(0.98); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .anim-card-in    { animation: cardIn  0.65s cubic-bezier(0.34,1.3,0.64,1) both; }
+  .anim-shimmer    { animation: shimmerSlide 4s ease-in-out infinite; }
+  .anim-chip       { animation: chipShine   3s ease-in-out infinite; }
+  .anim-fade-up-1  { animation: fadeUp 0.5s ease 0.20s both; }
+  .anim-fade-up-2  { animation: fadeUp 0.5s ease 0.30s both; }
+  .anim-fade-up-3  { animation: fadeUp 0.5s ease 0.40s both; }
+
+  .action-tile {
+    transition: all 0.22s cubic-bezier(.4,0,.2,1);
+  }
+  .action-tile:hover {
+    transform: translateY(-4px) scale(1.03);
+    background: rgba(255,255,255,0.90) !important;
+    box-shadow: 0 12px 36px rgba(30,64,175,0.14), 0 2px 8px rgba(0,0,0,0.06) !important;
+  }
+
+  /* card bg + diagonal texture — cannot do in Tailwind */
+  .bank-card-body {
+    background: linear-gradient(135deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%);
+    background-image:
+      repeating-linear-gradient(
+        110deg,
+        transparent, transparent 28px,
+        rgba(255,255,255,0.018) 28px,
+        rgba(255,255,255,0.018) 29px
+      ),
+      linear-gradient(135deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%);
+  }
+  .bank-card-outer {
+    background: linear-gradient(135deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0.05) 50%,rgba(100,140,255,0.20) 100%);
+  }
+  .chip-body {
+    background: linear-gradient(135deg,#d4a843 0%,#f0c55a 30%,#c49530 60%,#e8b840 100%);
+    box-shadow: 0 2px 10px rgba(212,168,67,0.45), inset 0 1px 0 rgba(255,255,255,0.30);
+  }
+  .chip-cell { background: rgba(180,130,20,0.45); }
+  .chip-contact { border-color: rgba(180,130,20,0.80); }
+  .mc-red    { background: rgba(235,57,57,0.88);  box-shadow: 0 2px 12px rgba(235,57,57,0.50); }
+  .mc-orange { background: rgba(255,153,0,0.88);  box-shadow: 0 2px 12px rgba(255,153,0,0.50); }
+  .show-btn  { background: rgba(255,255,255,0.10); box-shadow: 0 2px 12px rgba(0,0,0,0.20); }
+  .show-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.40) !important; }
+  .badge-ac  { background: rgba(255,255,255,0.07); }
+  .glow-tr   { background: radial-gradient(circle,rgba(100,160,255,0.12) 0%,transparent 65%); }
+  .glow-bl   { background: radial-gradient(circle,rgba(80,120,255,0.14) 0%,transparent 70%); }
+  .shimmer-sweep { background: linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.045) 50%,transparent 100%); }
+  .logo-icon { background: linear-gradient(135deg,#3b82f6,#6366f1); box-shadow: 0 4px 14px rgba(99,102,241,0.45); }
+  .txn-card  { background: rgba(255,255,255,0.58); }
+  .txn-badge-credit { background: rgba(5,150,105,0.09); }
+  .txn-badge-debit  { background: rgba(220,38,38,0.09); }
+  .txn-icon-credit  { background: rgba(5,150,105,0.11); }
+  .txn-icon-debit   { background: rgba(220,38,38,0.10); }
+  .txns-wrap { background: rgba(255,255,255,0.62); box-shadow: 0 4px 26px rgba(30,64,175,0.08); }
+  .balance-text { text-shadow: 0 2px 20px rgba(255,255,255,0.20); }
+  .trend-badge { background: rgba(134,239,172,0.15); border-color: rgba(134,239,172,0.30); }
+`;
+
+export default function DashboardHome() {
   const [showDetails, setShowDetails] = useState(false);
   const [activeCard, setActiveCard]   = useState(null);
-  const [animIn, setAnimIn]           = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => { setTimeout(() => setAnimIn(true), 80); }, []);
+  useEffect(() => {
+    const el = document.createElement("style");
+    el.textContent = STYLES;
+    document.head.appendChild(el);
+    return () => document.head.removeChild(el);
+  }, []);
 
   const quickActions = [
-    { name: "Deposit Money",    icon: ArrowDownToLine, path: "/deposit",      color: "#059669", bg: "rgba(5,150,105,0.11)",   glow: "rgba(5,150,105,0.22)" },
-    { name: "Withdraw",         icon: ArrowUpFromLine, path: "/withdraw",     color: "#dc2626", bg: "rgba(220,38,38,0.10)",   glow: "rgba(220,38,38,0.20)" },
-    { name: "My Profile",       icon: UserCircle,      path: "/profile",      color: "#7c3aed", bg: "rgba(124,58,237,0.10)",  glow: "rgba(124,58,237,0.20)" },
-    { name: "View Account",     icon: BookUser,        path: "/balance",      color: "#0369a1", bg: "rgba(3,105,161,0.10)",   glow: "rgba(3,105,161,0.20)" },
-    { name: "KYC Verification", icon: CheckCircle,     path: "/kyc",          color: "#16a34a", bg: "rgba(22,163,74,0.10)",   glow: "rgba(22,163,74,0.20)" },
-    { name: "Transactions",     icon: Receipt,         path: "/transactions", color: "#b45309", bg: "rgba(180,83,9,0.10)",    glow: "rgba(180,83,9,0.20)" },
-    { name: "Help & Support",   icon: Headset,         path: "/helpsupport",  color: "#0891b2", bg: "rgba(8,145,178,0.10)",   glow: "rgba(8,145,178,0.20)" },
-    { name: "My Wallet",        icon: Wallet,          path: "/wallet",       color: "#9333ea", bg: "rgba(147,51,234,0.10)",  glow: "rgba(147,51,234,0.20)" },
+    { name:"Deposit Money",    icon:ArrowDownToLine, path:"/deposit",      iconColor:"text-emerald-600", bg:"bg-emerald-500/10", hbg:"bg-emerald-500/20", glow:"shadow-emerald-400/30" },
+    { name:"Withdraw",         icon:ArrowUpFromLine, path:"/withdraw",     iconColor:"text-red-600",     bg:"bg-red-500/10",     hbg:"bg-red-500/20",     glow:"shadow-red-400/30"     },
+    { name:"My Profile",       icon:UserCircle,      path:"/profile",      iconColor:"text-violet-600",  bg:"bg-violet-500/10",  hbg:"bg-violet-500/20",  glow:"shadow-violet-400/30"  },
+    { name:"View Account",     icon:BookUser,        path:"/balance",      iconColor:"text-sky-700",     bg:"bg-sky-500/10",     hbg:"bg-sky-500/20",     glow:"shadow-sky-400/30"     },
+    { name:"KYC Verification", icon:CheckCircle,     path:"/kyc",          iconColor:"text-green-600",   bg:"bg-green-500/10",   hbg:"bg-green-500/20",   glow:"shadow-green-400/30"   },
+    { name:"Transactions",     icon:Receipt,         path:"/transactions", iconColor:"text-amber-600",   bg:"bg-amber-500/10",   hbg:"bg-amber-500/20",   glow:"shadow-amber-400/30"   },
+    { name:"Help & Support",   icon:Headset,         path:"/helpsupport",  iconColor:"text-cyan-600",    bg:"bg-cyan-500/10",    hbg:"bg-cyan-500/20",    glow:"shadow-cyan-400/30"    },
+    { name:"My Wallet",        icon:Wallet,          path:"/wallet",       iconColor:"text-purple-600",  bg:"bg-purple-500/10",  hbg:"bg-purple-500/20",  glow:"shadow-purple-400/30"  },
   ];
 
   const shoppingActions = [
-    { name: "Book Flights",  icon: Plane,       path: "/flights",       color: "#0369a1", bg: "rgba(3,105,161,0.10)",   glow: "rgba(3,105,161,0.20)",   desc: "Travel deals" },
-    { name: "Book Hotels",   icon: Hotel,       path: "/hotels",        color: "#7c3aed", bg: "rgba(124,58,237,0.10)",  glow: "rgba(124,58,237,0.20)",  desc: "Top stays" },
-    { name: "Shop & Earn",   icon: ShoppingBag, path: "/shop",          color: "#059669", bg: "rgba(5,150,105,0.10)",   glow: "rgba(5,150,105,0.20)",   desc: "Cashback" },
-    { name: "Entertainment", icon: TvMinimal,   path: "/entertainment", color: "#dc2626", bg: "rgba(220,38,38,0.10)",   glow: "rgba(220,38,38,0.20)",   desc: "Stream & play" },
+    { name:"Book Flights",  icon:Plane,       path:"/flights",       desc:"Travel deals",  iconColor:"text-sky-700",    bg:"bg-sky-500/10",     hbg:"bg-sky-500/20",     glow:"shadow-sky-400/30"     },
+    { name:"Book Hotels",   icon:Hotel,       path:"/hotels",        desc:"Top stays",     iconColor:"text-violet-600", bg:"bg-violet-500/10",  hbg:"bg-violet-500/20",  glow:"shadow-violet-400/30"  },
+    { name:"Shop & Earn",   icon:ShoppingBag, path:"/shop",          desc:"Cashback",      iconColor:"text-emerald-600",bg:"bg-emerald-500/10", hbg:"bg-emerald-500/20", glow:"shadow-emerald-400/30" },
+    { name:"Entertainment", icon:TvMinimal,   path:"/entertainment", desc:"Stream & play", iconColor:"text-red-600",    bg:"bg-red-500/10",     hbg:"bg-red-500/20",     glow:"shadow-red-400/30"     },
   ];
 
   const recentTxns = [
-    { name: "Amazon Purchase", amount: "−₹2,450",  date: "Today, 2:34 PM", type: "debit",  icon: ShoppingBag },
-    { name: "Salary Credit",   amount: "+₹85,000", date: "Yesterday",      type: "credit", icon: ArrowDownToLine },
-    { name: "Hotel Booking",   amount: "−₹6,200",  date: "Feb 20",         type: "debit",  icon: Hotel },
-    { name: "Flight Ticket",   amount: "−₹12,800", date: "Feb 18",         type: "debit",  icon: Plane },
+    { name:"Amazon Purchase", amount:"−₹2,450",  date:"Today, 2:34 PM", type:"debit",  icon:ShoppingBag    },
+    { name:"Salary Credit",   amount:"+₹85,000", date:"Yesterday",      type:"credit", icon:ArrowDownToLine},
+    { name:"Hotel Booking",   amount:"−₹6,200",  date:"Feb 20",         type:"debit",  icon:Hotel          },
+    { name:"Flight Ticket",   amount:"−₹12,800", date:"Feb 18",         type:"debit",  icon:Plane          },
   ];
 
-  const cardStyle = (id) => ({
-    background: activeCard === id ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.62)",
-    backdropFilter: "blur(18px)",
-    WebkitBackdropFilter: "blur(18px)",
-    border: "1.5px solid rgba(255,255,255,0.82)",
-    borderRadius: "18px",
-    cursor: "pointer",
-    transition: "all 0.22s cubic-bezier(.4,0,.2,1)",
-    transform: activeCard === id ? "translateY(-4px) scale(1.03)" : "translateY(0) scale(1)",
-    boxShadow: activeCard === id
-      ? "0 12px 36px rgba(30,64,175,0.14), 0 2px 8px rgba(0,0,0,0.06)"
-      : "0 2px 14px rgba(30,64,175,0.07), 0 1px 3px rgba(0,0,0,0.04)",
-  });
+  /* shared tile classes */
+  const tileBase = (id) =>
+    `action-tile flex flex-col items-center text-center py-7 px-4 rounded-[18px] cursor-pointer
+     border border-white/80 backdrop-blur-[18px]
+     ${activeCard === id
+       ? "bg-white/90 shadow-xl shadow-blue-900/[.14]"
+       : "bg-white/[.62] shadow-sm shadow-blue-900/[.07]"}`;
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #eef2ff 0%, #f0f9ff 40%, #fef9ee 75%, #f0fdf4 100%)",
-      fontFamily: "'DM Sans','Segoe UI',sans-serif",
-      color: "#1e293b",
-      position: "relative",
-      overflow: "hidden",
-    }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
 
-      {/* Ambient blobs */}
-      <div style={{ position:"fixed", top:"-120px", left:"8%",    width:"520px", height:"520px", background:"radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
-      <div style={{ position:"fixed", bottom:"-60px", right:"4%", width:"460px", height:"460px", background:"radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
-      <div style={{ position:"fixed", top:"38%",    left:"-100px", width:"380px", height:"380px", background:"radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
+      {/* ── Ambient blobs ── */}
+      <div className="fixed -top-32 left-[8%]  w-[520px] h-[520px] rounded-full bg-indigo-400/10  blur-3xl pointer-events-none -z-10" />
+      <div className="fixed -bottom-16 right-[4%] w-[460px] h-[460px] rounded-full bg-emerald-400/[.08] blur-3xl pointer-events-none -z-10" />
+      <div className="fixed top-[38%]  -left-24   w-[380px] h-[380px] rounded-full bg-amber-300/[.07]  blur-3xl pointer-events-none -z-10" />
 
-      {/* ── NAVBAR ── */}
-      <div style={{
-        display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"16px 44px",
-        background:"rgba(255,255,255,0.55)", backdropFilter:"blur(22px)", WebkitBackdropFilter:"blur(22px)",
-        borderBottom:"1.5px solid rgba(255,255,255,0.75)",
-        position:"sticky", top:0, zIndex:100,
-        boxShadow:"0 1px 0 rgba(30,64,175,0.06)",
-      }}>
-       
-        <h2 style={{ margin:0, fontSize:"16px", fontWeight:"800", color:"#1e3a8a", letterSpacing:"0.10em", textTransform:"uppercase" }}>
+      {/* ── CONTENT ── */}
+      <div className="max-w-[1140px] mx-auto px-10 py-9">
+
+        <h2 className="text-2xl font-extrabold text-slate-800 tracking-[0.10em] uppercase mb-6 px-1">
           Account Overview
         </h2>
 
-  
-      </div>
+        {/* ══════════════════════════════
+            PREMIUM BANK CARD
+        ══════════════════════════════ */}
+        <div className="anim-card-in mb-8">
 
-      {/* ── CONTENT ── */}
-      <div style={{
-        maxWidth:"1140px", margin:"0 auto", padding:"36px 40px",
-        opacity: animIn ? 1 : 0, transition:"opacity 0.5s ease",
-      }}>
+          {/* outer glow border */}
+          <div className="bank-card-outer rounded-[28px] p-[2px]">
 
-        {/* ── BANK CARD ── */}
-        <div style={{
-          borderRadius:"26px", padding:"36px 44px", marginBottom:"32px",
-         background: "linear-gradient(90deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%)",
-          position:"relative", overflow:"hidden",
-          boxShadow:"0 18px 64px rgba(29,78,216,0.28), 0 0 0 1.5px rgba(255,255,255,0.18)",
-          opacity: animIn ? 1 : 0,
-          transform: animIn ? "translateY(0)" : "translateY(18px)",
-          transition:"all 0.55s cubic-bezier(0.34,1.56,0.64,1) 0.06s",
-        }}>
-          {/* Shimmers */}
-          <div style={{ position:"absolute", top:"-60px", right:"-60px", width:"200px", height:"200px", background:"radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ position:"absolute", bottom:"-40px", left:"30%", width:"160px", height:"160px", background:"radial-gradient(circle, rgba(99,102,241,0.20) 0%, transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ position:"absolute", top:"50%", right:"260px", width:"300px", height:"300px", background:"radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%)", pointerEvents:"none", transform:"translateY(-50%)" }} />
+            {/* card body */}
+            <div className="bank-card-body relative rounded-[26px] overflow-hidden min-h-[220px] px-10 pt-9 pb-8">
 
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:"32px", flexWrap:"wrap" }}>
-            {/* Left */}
-            <div>
-              <p style={{ margin:0, fontSize:"12px", color:"rgba(255,255,255,0.60)", letterSpacing:"0.12em", textTransform:"uppercase" }}>My Saving A/C</p>
+              {/* texture glows */}
+              <div className="glow-tr absolute -top-20 -right-20 w-80 h-80 rounded-full pointer-events-none" />
+              <div className="glow-bl absolute -bottom-12 left-[25%] w-56 h-56 rounded-full pointer-events-none" />
 
-              {/* Account number — transparent pill */}
-              <div style={{
-                display:"inline-block", marginTop:"10px",
-             
-                backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)",
-               
-                borderRadius:"10px", padding:"8px 18px",
-              }}>
-                <p style={{ margin:0, fontSize:"15px", color:"rgba(255,255,255,0.92)", fontWeight:"700", letterSpacing:"0.18em" }}>
-                  {showDetails ? "1234 5678 9012 0123" : "XXXXXXXX 0123"}
-                </p>
+              {/* shimmer sweep */}
+              <div className="absolute inset-0 overflow-hidden rounded-[26px] pointer-events-none">
+                <div className="shimmer-sweep anim-shimmer absolute top-0 left-0 w-[40%] h-full" />
               </div>
 
-              <div style={{ marginTop:"26px" }}>
-                <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.50)", letterSpacing:"0.12em", textTransform:"uppercase" }}>Account Balance</p>
+              {/* "My Saving A/C" centre badge */}
+              <div className="badge-ac absolute top-4 left-1/2 -translate-x-1/2 whitespace-nowrap
+                              px-4 py-1 rounded-full border border-white/[.12] backdrop-blur-sm
+                              text-[9px] font-semibold tracking-[.22em] uppercase text-white/40">
+                My Saving A/C
+              </div>
 
-                {/* Balance — transparent pill */}
-                <div style={{
-                  display:"inline-block", marginTop:"10px",
-                
-                  backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)",
-                
-                  borderRadius:"14px", padding:"12px 24px",
-                  boxShadow:"0 4px 20px rgba(0,0,0,0.08)",
-                }}>
-                  <p style={{ margin:0, fontSize:"38px", fontWeight:"800", color:"#fff", letterSpacing:"-0.02em", textShadow:"0 2px 24px rgba(255,255,255,0.18)" }}>
-                    {showDetails ? "₹ 50,000" : "₹ *****"}
-                  </p>
+              {/* TOP ROW: logo + NFC */}
+              <div className="flex justify-between items-start mb-7">
+                <div className="flex items-center gap-3">
+                  <div className="logo-icon w-9 h-9 rounded-[10px] flex items-center justify-center">
+                    <Wallet size={17} color="#fff" />
+                  </div>
+                  <div>
+                    <p className="m-0 text-[13px] font-bold text-white tracking-wide">PayZen</p>
+                    <p className="m-0 text-[9px] text-white/40 tracking-[.14em] uppercase">Premium Banking</p>
+                  </div>
                 </div>
-
-                <div style={{ display:"flex", alignItems:"center", gap:"6px", marginTop:"10px" }}>
-                  <TrendingUp size={13} color="#86efac" />
-                  <span style={{ fontSize:"12px", color:"#86efac", fontWeight:"600" }}>+2.4% this month</span>
+                <div className="flex flex-col items-end gap-1">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" className="opacity-60">
+                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7"  stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5"  stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".6"/>
+                    <path d="M7 12.5C7 10.57 8.57 9 10.5 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".85"/>
+                    <circle cx="10.5" cy="12.5" r="1.5" fill="white"/>
+                  </svg>
+                  <span className="text-[9px] text-white/35 tracking-[.20em] uppercase font-semibold">Savings</span>
                 </div>
               </div>
-            </div>
 
-            {/* Right */}
-            <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"24px" }}>
-              <div style={{ display:"flex" }}>
-                <div style={{ width:"38px", height:"38px", borderRadius:"50%", background:"rgba(239,68,68,0.85)", boxShadow:"0 3px 12px rgba(239,68,68,0.42)" }} />
-                <div style={{ width:"38px", height:"38px", borderRadius:"50%", background:"rgba(251,146,60,0.85)", marginLeft:"-13px", boxShadow:"0 3px 12px rgba(251,146,60,0.38)" }} />
+              {/* CHIP + CARD NUMBER */}
+              <div className="flex items-center gap-5 mb-6">
+                {/* EMV Chip */}
+                <div className="chip-body anim-chip relative w-[46px] h-[36px] rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1">
+                    {[...Array(9)].map((_,i) => (
+                      <div key={i} className="chip-cell rounded-[1px]" />
+                    ))}
+                  </div>
+                  <div className="chip-contact absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                                  w-[22px] h-[16px] rounded-[3px] border-[1.5px]" />
+                </div>
+                {/* Card number */}
+                <span className="text-[15px] font-semibold tracking-[.22em]"
+                      style={{ fontFamily:"'JetBrains Mono',monospace",
+                               color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
+                               textShadow:"0 1px 8px rgba(0,0,0,.4)" }}>
+                  {showDetails ? "1234  5678  9012  0123" : "••••  ••••  ••••  0123"}
+                </span>
               </div>
-              <button
-                onClick={() => setShowDetails(!showDetails)}
-                style={{
-                  display:"flex", alignItems:"center", gap:"9px",
-                  background:"rgba(255,255,255,0.18)", backdropFilter:"blur(10px)",
-                  border:"1.5px solid rgba(255,255,255,0.35)",
-                  color:"#fff", padding:"11px 26px", borderRadius:"13px",
-                  fontSize:"14px", fontWeight:"700", cursor:"pointer",
-                  transition:"all 0.2s ease",
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.28)"}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.18)"}
-              >
-                {showDetails ? <EyeOff size={15} /> : <Eye size={15} />}
-                {showDetails ? "Hide" : "Show"}
-              </button>
-            </div>
-          </div>
+
+              {/* BOTTOM ROW */}
+              <div className="flex items-end justify-between gap-5 flex-wrap">
+
+                {/* left: holder / expiry / balance */}
+                <div className="flex gap-10 items-end flex-wrap">
+                  <div>
+                    <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Holder</p>
+                    <p className="m-0 text-[15px] font-extrabold text-white tracking-widest uppercase"
+                       style={{ textShadow:"0 1px 12px rgba(255,255,255,.25)" }}>
+                      Rahul Sharma
+                    </p>
+                  </div>
+                  <div>
+                    <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Valid Thru</p>
+                    <p className="m-0 text-[14px] font-semibold text-white/75 tracking-widest"
+                       style={{ fontFamily:"'JetBrains Mono',monospace" }}>
+                      08 / 28
+                    </p>
+                  </div>
+                  <div>
+                    <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
+                    <div className="flex items-center gap-3">
+                      <p className="balance-text m-0 text-[30px] font-extrabold text-white tracking-tight transition-all duration-300">
+                        {showDetails ? "₹ 50,000" : "₹ •••••"}
+                      </p>
+                      {showDetails && (
+                        <div className="trend-badge flex items-center gap-1 px-2 py-1 rounded-md border">
+                          <TrendingUp size={11} className="text-green-300" />
+                          <span className="text-[10px] font-bold text-green-300">+2.4%</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* right: mastercard + button */}
+                <div className="flex flex-col items-end gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      <div className="mc-red    w-[34px] h-[34px] rounded-full" />
+                      <div className="mc-orange  w-[34px] h-[34px] rounded-full -ml-3" />
+                    </div>
+                    <span className="text-[8px] text-white/35 tracking-[.14em] uppercase font-semibold">Debit</span>
+                  </div>
+                  <button
+                    onClick={() => setShowDetails(!showDetails)}
+                    className="show-btn flex items-center gap-2 px-5 py-[9px] rounded-[10px]
+                               text-[12px] font-bold text-white/85 tracking-wide
+                               border border-white/[.22] backdrop-blur-md
+                               transition-all duration-200"
+                  >
+                    {showDetails ? <EyeOff size={13}/> : <Eye size={13}/>}
+                    {showDetails ? "Hide Details" : "Show Details"}
+                  </button>
+                </div>
+              </div>
+
+            </div>{/* end card body */}
+          </div>{/* end outer glow */}
         </div>
+        {/* ══════════ END BANK CARD ══════════ */}
 
-        {/* ── QUICK ACTIONS — Row 1 (4) + Row 2 (4) ── */}
-        <div style={{
-          marginBottom:"28px",
-          opacity: animIn ? 1 : 0, transform: animIn ? "translateY(0)" : "translateY(16px)",
-          transition:"all 0.5s ease 0.20s",
-        }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px" }}>
-            <h3 style={{ margin:0, fontSize:"18px", fontWeight:"800", color:"#1e3a8a" }}>Quick Actions</h3>
-            <button style={{ fontSize:"13px", color:"#3b82f6", background:"none", border:"none", cursor:"pointer", fontWeight:"600", display:"flex", alignItems:"center", gap:"4px" }}>
-              View all <ChevronRight size={14} />
+
+        {/* ── QUICK ACTIONS — 4 + 4 ── */}
+        <div className="anim-fade-up-1 mb-7">
+          <div className="flex justify-between items-center mb-4 px-1">
+            <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Quick Actions</h3>
+            <button className="text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
+              View all <ChevronRight size={14}/>
             </button>
           </div>
 
-          {/* Row 1 */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"14px", marginBottom:"14px" }}>
-            {quickActions.slice(0, 4).map((item, i) => {
-              const Icon = item.icon;
-              const id = `q-${i}`;
+          {/* row 1 */}
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            {quickActions.slice(0,4).map((item,i) => {
+              const Icon = item.icon; const id = `q-${i}`;
               return (
-                <div
-                  key={id}
-                  onClick={() => navigate(item.path)}
-                  onMouseEnter={() => setActiveCard(id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                  style={{ ...cardStyle(id), padding:"26px 16px 22px", display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center" }}
-                >
-                  <div style={{
-                    width:"58px", height:"58px", borderRadius:"18px",
-                    background: activeCard === id ? item.glow : item.bg,
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    marginBottom:"14px",
-                    boxShadow: activeCard === id ? `0 6px 24px ${item.glow}` : "none",
-                    transition:"all 0.22s ease",
-                  }}>
-                    <Icon size={26} color={item.color} strokeWidth={2.1} />
+                <div key={id} className={tileBase(id)}
+                  onClick={()=>navigate(item.path)}
+                  onMouseEnter={()=>setActiveCard(id)}
+                  onMouseLeave={()=>setActiveCard(null)}>
+                  <div className={`w-14 h-14 rounded-[18px] flex items-center justify-center mb-3 transition-all duration-200
+                    ${activeCard===id ? `${item.hbg} shadow-lg ${item.glow}` : item.bg}`}>
+                    <Icon size={26} className={item.iconColor} strokeWidth={2.1}/>
                   </div>
-                  <p style={{ margin:0, fontSize:"13px", fontWeight:"700", color:"#1e3a8a", lineHeight:"1.35" }}>{item.name}</p>
+                  <p className="text-[13px] font-bold text-blue-950 leading-snug">{item.name}</p>
                 </div>
               );
             })}
           </div>
 
-          {/* Row 2 */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"14px" }}>
-            {quickActions.slice(4, 8).map((item, i) => {
-              const Icon = item.icon;
-              const id = `q-${i + 4}`;
+          {/* row 2 */}
+          <div className="grid grid-cols-4 gap-4">
+            {quickActions.slice(4,8).map((item,i) => {
+              const Icon = item.icon; const id = `q-${i+4}`;
               return (
-                <div
-                  key={id}
-                  onClick={() => navigate(item.path)}
-                  onMouseEnter={() => setActiveCard(id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                  style={{ ...cardStyle(id), padding:"26px 16px 22px", display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center" }}
-                >
-                  <div style={{
-                    width:"58px", height:"58px", borderRadius:"18px",
-                    background: activeCard === id ? item.glow : item.bg,
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    marginBottom:"14px",
-                    boxShadow: activeCard === id ? `0 6px 24px ${item.glow}` : "none",
-                    transition:"all 0.22s ease",
-                  }}>
-                    <Icon size={26} color={item.color} strokeWidth={2.1} />
+                <div key={id} className={tileBase(id)}
+                  onClick={()=>navigate(item.path)}
+                  onMouseEnter={()=>setActiveCard(id)}
+                  onMouseLeave={()=>setActiveCard(null)}>
+                  <div className={`w-14 h-14 rounded-[18px] flex items-center justify-center mb-3 transition-all duration-200
+                    ${activeCard===id ? `${item.hbg} shadow-lg ${item.glow}` : item.bg}`}>
+                    <Icon size={26} className={item.iconColor} strokeWidth={2.1}/>
                   </div>
-                  <p style={{ margin:0, fontSize:"13px", fontWeight:"700", color:"#1e3a8a", lineHeight:"1.35" }}>{item.name}</p>
+                  <p className="text-[13px] font-bold text-blue-950 leading-snug">{item.name}</p>
                 </div>
               );
             })}
@@ -247,41 +325,27 @@ function DashboardHome() {
         </div>
 
         {/* ── SHOPPING — 4 cards ── */}
-        <div style={{
-          marginBottom:"28px",
-          opacity: animIn ? 1 : 0, transform: animIn ? "translateY(0)" : "translateY(16px)",
-          transition:"all 0.5s ease 0.30s",
-        }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px" }}>
-            <h3 style={{ margin:0, fontSize:"18px", fontWeight:"800", color:"#1e3a8a" }}>Shopping</h3>
-            <button style={{ fontSize:"13px", color:"#3b82f6", background:"none", border:"none", cursor:"pointer", fontWeight:"600", display:"flex", alignItems:"center", gap:"4px" }}>
-              Explore <ChevronRight size={14} />
+        <div className="anim-fade-up-2 mb-7">
+          <div className="flex justify-between items-center mb-4 px-1">
+            <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Shopping</h3>
+            <button className="text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
+              Explore <ChevronRight size={14}/>
             </button>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"14px" }}>
-            {shoppingActions.map((item, i) => {
-              const Icon = item.icon;
-              const id = `s-${i}`;
+          <div className="grid grid-cols-4 gap-4">
+            {shoppingActions.map((item,i) => {
+              const Icon = item.icon; const id = `s-${i}`;
               return (
-                <div
-                  key={id}
-                  onClick={() => navigate(item.path)}
-                  onMouseEnter={() => setActiveCard(id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                  style={{ ...cardStyle(id), padding:"26px 16px 22px", display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center" }}
-                >
-                  <div style={{
-                    width:"58px", height:"58px", borderRadius:"18px",
-                    background: activeCard === id ? item.glow : item.bg,
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    marginBottom:"14px",
-                    boxShadow: activeCard === id ? `0 6px 24px ${item.glow}` : "none",
-                    transition:"all 0.22s ease",
-                  }}>
-                    <Icon size={26} color={item.color} strokeWidth={2.1} />
+                <div key={id} className={tileBase(id)}
+                  onClick={()=>navigate(item.path)}
+                  onMouseEnter={()=>setActiveCard(id)}
+                  onMouseLeave={()=>setActiveCard(null)}>
+                  <div className={`w-14 h-14 rounded-[18px] flex items-center justify-center mb-3 transition-all duration-200
+                    ${activeCard===id ? `${item.hbg} shadow-lg ${item.glow}` : item.bg}`}>
+                    <Icon size={26} className={item.iconColor} strokeWidth={2.1}/>
                   </div>
-                  <p style={{ margin:0, fontSize:"13px", fontWeight:"700", color:"#1e3a8a" }}>{item.name}</p>
-                  <p style={{ margin:"5px 0 0", fontSize:"11px", color:"#94a3b8" }}>{item.desc}</p>
+                  <p className="text-[13px] font-bold text-blue-950">{item.name}</p>
+                  <p className="text-[11px] text-slate-400 mt-1">{item.desc}</p>
                 </div>
               );
             })}
@@ -289,53 +353,30 @@ function DashboardHome() {
         </div>
 
         {/* ── RECENT TRANSACTIONS — full width ── */}
-        <div style={{
-          opacity: animIn ? 1 : 0, transform: animIn ? "translateY(0)" : "translateY(16px)",
-          transition:"all 0.5s ease 0.40s",
-        }}>
-          <div style={{
-            background:"rgba(255,255,255,0.62)", backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)",
-            borderRadius:"22px", border:"1.5px solid rgba(255,255,255,0.82)",
-            boxShadow:"0 4px 26px rgba(30,64,175,0.08)", padding:"28px 32px",
-          }}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"20px" }}>
-              <h3 style={{ margin:0, fontSize:"18px", fontWeight:"800", color:"#1e3a8a" }}>Recent Transactions</h3>
-              <button
-                onClick={() => navigate("/transactions")}
-                style={{ fontSize:"13px", color:"#3b82f6", background:"none", border:"none", cursor:"pointer", fontWeight:"600", display:"flex", alignItems:"center", gap:"4px" }}
-              >
-                View All <ChevronRight size={14} />
+        <div className="anim-fade-up-3 pb-8">
+          <div className="txns-wrap backdrop-blur-[18px] rounded-[22px] border border-white/80 p-8">
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Recent Transactions</h3>
+              <button onClick={()=>navigate("/transactions")}
+                className="text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
+                View All <ChevronRight size={14}/>
               </button>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"12px" }}>
-              {recentTxns.map((txn, i) => {
-                const Icon = txn.icon;
-                const isC = txn.type === "credit";
+            <div className="grid grid-cols-2 gap-3">
+              {recentTxns.map((txn,i) => {
+                const Icon = txn.icon; const isC = txn.type==="credit";
                 return (
-                  <div key={i} style={{
-                    display:"flex", alignItems:"center", gap:"16px",
-                    background:"rgba(255,255,255,0.58)", borderRadius:"14px",
-                    padding:"16px 18px", border:"1.5px solid rgba(255,255,255,0.82)",
-                  }}>
-                    <div style={{
-                      width:"46px", height:"46px", borderRadius:"14px", flexShrink:0,
-                      background: isC ? "rgba(5,150,105,0.11)" : "rgba(220,38,38,0.10)",
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                    }}>
-                      <Icon size={20} color={isC ? "#059669" : "#dc2626"} strokeWidth={2} />
+                  <div key={i} className="txn-card flex items-center gap-4 rounded-[14px] px-4 py-4 border border-white/80 hover:bg-white/80 transition-all duration-200">
+                    <div className={`${isC?"txn-icon-credit":"txn-icon-debit"} w-11 h-11 rounded-[13px] flex items-center justify-center flex-shrink-0`}>
+                      <Icon size={20} className={isC?"text-emerald-600":"text-red-600"} strokeWidth={2}/>
                     </div>
-                    <div style={{ flex:1 }}>
-                      <p style={{ margin:0, fontSize:"14px", fontWeight:"700", color:"#1e293b" }}>{txn.name}</p>
-                      <p style={{ margin:"3px 0 0", fontSize:"11px", color:"#94a3b8" }}>{txn.date}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[14px] font-bold text-slate-800 truncate">{txn.name}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{txn.date}</p>
                     </div>
-                    <p style={{
-                      margin:0, fontSize:"15px", fontWeight:"800",
-                      color: isC ? "#059669" : "#dc2626",
-                      background: isC ? "rgba(5,150,105,0.09)" : "rgba(220,38,38,0.09)",
-                      padding:"4px 12px", borderRadius:"8px",
-                    }}>
+                    <span className={`${isC?"txn-badge-credit text-emerald-600":"txn-badge-debit text-red-600"} text-[15px] font-extrabold px-3 py-1 rounded-lg flex-shrink-0`}>
                       {txn.amount}
-                    </p>
+                    </span>
                   </div>
                 );
               })}
@@ -343,10 +384,7 @@ function DashboardHome() {
           </div>
         </div>
 
-        <div style={{ height:"32px" }} />
       </div>
     </div>
   );
 }
-
-export default DashboardHome;

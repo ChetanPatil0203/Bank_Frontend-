@@ -68,16 +68,24 @@ export default function AccountDetails() {
             Account Details
           </h2>
 
-          {/* Download Button */}
-        <button
+     {/* Download Button */}
+<button
   onClick={downloadPDF}
-  className="absolute right-0 top-0 w-full md:w-40 bg-[#6F5FE7] 
-             hover:bg-[#5b4ec2] text-white font-semibold 
-             rounded-xl py-3.5 transition-all 
-             transform active:scale-[0.98] shadow-lg"
+  className="
+    absolute right-0 top-0
+    w-full md:w-40
+    bg-[linear-gradient(135deg,#1e3a7b_150%,#152d68_150%,#0f1f4d_150%)]
+
+    active:scale-[0.98]
+    text-white font-semibold
+    rounded-xl py-3.5
+    flex items-center justify-center gap-2
+    transition-all duration-200
+    border border-white/[.12]
+  "
 >
-  <ArrowDownToLineIcon className="w-5 h-5 inline mr-2" />
-  Download PDF
+  <ArrowDownToLineIcon className="w-5 h-5" />
+  <span className="font-semibold text-[14px] tracking-wide">Download PDF</span>
 </button>
         </div>
 

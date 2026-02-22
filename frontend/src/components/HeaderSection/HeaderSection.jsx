@@ -3,155 +3,73 @@ import { Bell, ChevronDown } from "lucide-react";
 function HeaderSection({ onMenuClick, sidebarOpen }) {
   return (
     <header
-      style={{
-        background: "linear-gradient(90deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%)",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.3)",
-        position: "sticky",
-        top: 0,
-        zIndex: 40,
-        marginLeft: sidebarOpen ? 230 : 60,
-        width: `calc(100% - ${sidebarOpen ? 230 : 60}px)`,
-        transition: "margin-left 0.28s ease",
-        fontFamily: "'Inter', sans-serif",
-      }}
+      className={`sticky top-0 z-40 border-b border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.3)]
+        transition-[margin-left] duration-[280ms] ease-in-out
+        ${sidebarOpen ? "ml-[230px] w-[calc(100%-230px)]" : "ml-[60px] w-[calc(100%-60px)]"}
+        bg-[linear-gradient(90deg,#1e3a7b_0%,#152d68_50%,#0f1f4d_100%)]
+        font-[Inter,sans-serif]`}
     >
       <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 28px",
-          height: 62,
-          position: "relative",
-        }}
-      >
-        {/* LEFT */}
-        <div style={{ width: 40 }} />
+      <div className="flex items-center justify-between px-7 h-[62px] relative">
+
+        {/* LEFT spacer */}
+        <div className="w-10" />
 
         {/* CENTER TITLE */}
-        <div
-          style={{
-            textAlign: "center",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <div
-            style={{
-              color: "#ffffff",
-              fontSize: 17,
-              fontWeight: 700,
-              letterSpacing: 0.3,
-              whiteSpace: "nowrap",
-            }}
-          >
-            State Bank Of India
+        <div className="absolute left-1/2 -translate-x-1/2 text-center">
+          <div className="text-white text-[17px] font-bold tracking-[0.3px] whitespace-nowrap">
+            PayZen
           </div>
-          <div
-            style={{
-              color: "rgba(255,255,255,0.35)",
-              fontSize: 11,
-              marginTop: 1,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
+          <div className="text-white/35 text-[11px] mt-px tracking-[0.08em] uppercase">
             Secure Banking Portal
           </div>
         </div>
 
         {/* RIGHT SIDE */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div className="flex items-center gap-4">
 
           {/* Notification Bell */}
           <button
-            style={{
-              position: "relative",
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 8,
-              padding: "7px 9px",
-              cursor: "pointer",
-              color: "rgba(255,255,255,0.75)",
-              display: "flex",
-              alignItems: "center",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "rgba(255,255,255,0.15)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "rgba(255,255,255,0.08)")
-            }
+            className="relative flex items-center rounded-lg px-[9px] py-[7px] cursor-pointer
+                       transition-all duration-200
+                       bg-white/[.08] hover:bg-white/[.15]
+                       border border-white/[.12]
+                       text-white/75"
           >
             <Bell size={18} />
-            <span
-              style={{
-                position: "absolute",
-                top: 7,
-                right: 7,
-                width: 7,
-                height: 7,
-                background: "#f87171",
-                borderRadius: "50%",
-                border: "1.5px solid #0f1f4d",
-              }}
-            />
+            <span className="absolute top-[7px] right-[7px] w-[7px] h-[7px] rounded-full
+                             bg-red-400 border-[1.5px] border-[#0f1f4d]" />
           </button>
 
-          {/* Profile Pill Button */}
+          {/* Profile Pill */}
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              background: "#5b4ec2",
-              padding: "6px 14px 6px 6px",
-              borderRadius: 40,
-              cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.transform = "translateY(-1px)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "translateY(0px)")
-            }
+            className="flex items-center gap-[10px] px-3 py-[6px] rounded-full cursor-pointer
+                       transition-all duration-200 hover:-translate-y-px
+                      "
           >
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="profile"
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid rgba(255,255,255,0.6)",
-              }}
-            />
-            {/* Name */}
-            <span
-              style={{
-                color: "#ffffff",
-                fontWeight: 600,
-                fontSize: 14,
-                whiteSpace: "nowrap",
-              }}
+            {/* BP Avatar */}
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 select-none
+                         bg-[linear-gradient(135deg,#a78bfa_0%,#7c3aed_100%)]
+                         border-2 border-white/60
+                         shadow-[0_2px_8px_rgba(124,58,237,0.45)]"
             >
-              Bhushan
-            </span>
+              <span className="text-white text-[11px] font-extrabold tracking-[0.04em] leading-none">
+                BP
+              </span>
+            </div>
 
-            {/* Dropdown Arrow */}
-            <ChevronDown size={16} color="#ffffff" />
+            {/* Welcome, Bhushan — single line */}
+            <span className="text-white text-[13px] font-medium whitespace-nowrap">
+              Hello,{" "}
+              <span className="font-bold">Bhushan</span>
+            </span>
           </div>
+
         </div>
       </div>
     </header>

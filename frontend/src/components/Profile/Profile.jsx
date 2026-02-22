@@ -48,7 +48,7 @@ export default function ProfilePage() {
           onClick={() => setEdit(!edit)}
           className={`
             w-full md:w-32 
-            bg-[#6F5FE7] 
+ bg-[linear-gradient(180deg,#1e3a7b_150%,#152d68_150%,#0f1f4d_150%)]
             hover:bg-[#5b4ec2] 
             text-white 
             font-semibold 

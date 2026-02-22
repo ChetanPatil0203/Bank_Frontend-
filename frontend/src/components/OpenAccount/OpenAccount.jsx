@@ -217,7 +217,20 @@ export default function OpenAccount() {
             {/* Submit - bottom right */}
             <button
               type="submit"
-              className="w-full md:w-64 bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg"
+              className="  w-full md:w-32 
+           bg-[linear-gradient(180deg,#1e3a7b_150%,#152d68_150%,#0f1f4d_150%)]
+            hover:bg-[#5b4ec2] 
+            text-white 
+            font-semibold 
+            rounded-xl 
+            py-3.5 
+            flex items-center 
+            justify-center 
+            gap-2 
+            transition-all 
+            transform 
+            active:scale-[0.98] 
+            shadow-lg"
             >
               Open Account
             </button>
