@@ -226,11 +226,6 @@ export default function DashboardHome() {
                     </p>
                   </div>
                   <div>
-                    <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Valid Thru</p>
-                    <p className="m-0 text-[14px] font-semibold text-white/75 tracking-widest"
-                       style={{ fontFamily:"'JetBrains Mono',monospace" }}>
-                      08 / 28
-                    </p>
                   </div>
                   <div>
                     <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
@@ -255,7 +250,6 @@ export default function DashboardHome() {
                       <div className="mc-red    w-[34px] h-[34px] rounded-full" />
                       <div className="mc-orange  w-[34px] h-[34px] rounded-full -ml-3" />
                     </div>
-                    <span className="text-[8px] text-white/35 tracking-[.14em] uppercase font-semibold">Debit</span>
                   </div>
                   <button
                     onClick={() => setShowDetails(!showDetails)}
