@@ -130,7 +130,7 @@ function Sidebar() {
     { name: "Transaction History", icon: <ArrowLeftRight size={23} />,  path: "/transactions" },
     { name: "Account Details",     icon: <Landmark size={23} />,        path: "/details" },
     { name: "Help & Support",      icon: <Headphones size={23} />,      path: "/helpsupport" },
-    { name: "Setting",             icon: <Settings size={23} />,        path: "/setting" },
+    { name: "Settings",             icon: <Settings size={23} />,        path: "/setting" },
     { name: "LogOut",              icon: <LogOut size={23} />,          path: "/logout" },
   ];
 
