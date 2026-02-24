@@ -18,11 +18,13 @@ import Registration from "./components/Registration/Registration.jsx";
 import AccountDetails from "./components/AccountDetail/AccountDetails.jsx";
 import Settings from "./components/Setting/Setting.jsx";
 import SplashScreen from "./components/SplashScreen/SplashScreen.jsx";
+import ForgotPassword from "./components/Forgot/Forgot.jsx";
+
 function AppContent() {
   const location = useLocation();
 
   // ❌ Pages where layout should NOT appear
-  const noLayoutPages = ["/", "/login", "/registration"];
+  const noLayoutPages = ["/", "/login", "/registration", "/forgot"]; // ✅ added forgot
 
   const showLayout = !noLayoutPages.includes(location.pathname);
 
@@ -38,6 +40,7 @@ function AppContent() {
             <Route path="/" element={<SplashScreen />} />
             <Route path="/registration" element={<Registration />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot" element={<ForgotPassword />} />
 
             <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/create-account" element={<CreateAccount />} />
