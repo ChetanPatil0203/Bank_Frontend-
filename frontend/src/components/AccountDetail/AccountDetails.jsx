@@ -5,7 +5,7 @@ export default function AccountDetails() {
 
   // Dummy Data
   const accountData = {
-    name: "Bhushan Patil",
+    name: "Chetan Patil",
     accountNumber: "XXXXXX4589",
     accountType: "Saving Account",
     branch: "Pune Main Branch",
@@ -16,8 +16,8 @@ export default function AccountDetails() {
     dob: "12-05-2002",
     fatherName: "Ramesh Patil",
 
-    mobile: "9876543210",
-    email: "bhushan@gmail.com",
+    mobile: "8956320427",
+    email: "Chetan@gmail.com",
 
     aadhaar: "XXXX XXXX 4589",
     pan: "ABCDE1234F",
