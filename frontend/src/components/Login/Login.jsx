@@ -324,7 +324,7 @@ export default function LoginPage() {
 
     if (!result.ok) {
       // ❌ Wrong credentials — red alert + loud beep + toast
-      const msg = result.data.message || "Invalid credentials!";
+      const msg = result.data.message || "Invalid Credentials!";
       triggerRedAlert(msg);
       showToast(msg, "error");
       setLoading(false);
@@ -407,17 +407,6 @@ export default function LoginPage() {
                 Access your banking dashboard safely
               </p>
             </div>
-
-            {/* Shield alert banner — card inside */}
-            {alertActive && (
-              <div className="mb-5 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/40 flex items-center gap-3">
-                <ShieldAlert size={20} className="shrink-0 text-red-400 shield-pulse" />
-                <div className="flex-1">
-                  <p className="text-red-400 text-sm font-semibold">Authentication Failed</p>
-                  <p className="text-red-400/70 text-xs mt-0.5">{alertMsg}</p>
-                </div>
-              </div>
-            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
