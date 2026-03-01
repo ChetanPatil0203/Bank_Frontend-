@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STYLES = `
@@ -158,11 +158,13 @@ const STYLES = `
   .corner-dot { animation: dotBlink 2.2s ease-in-out infinite; }
 `;
 
-export default function SplashScreen() {
-  const navigate  = useNavigate();
-  const [progress, setProgress] = useState(0);
 
-  // Inject styles
+export default function SplashScreen() {
+  const navigate = useNavigate();
+  const [progress, setProgress] = useState(0);
+  const speechRef = useRef(null);
+
+  /* ---------------- STYLE INJECTION ---------------- */
   useEffect(() => {
     const el = document.createElement("style");
     el.textContent = STYLES;
@@ -170,21 +172,61 @@ export default function SplashScreen() {
     return () => document.head.removeChild(el);
   }, []);
 
-  // Progress bar → navigate to /login
+  /* ---------------- FEMALE AI VOICE ---------------- */
+  useEffect(() => {
+    const speakWelcome = () => {
+      if ("speechSynthesis" in window) {
+        const message = new SpeechSynthesisUtterance(
+          "Welcome to PayZen Bank"
+        );
+
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice =
+          voices.find(v => v.name.toLowerCase().includes("female")) ||
+          voices.find(v => v.lang === "en-US");
+
+        if (femaleVoice) {
+          message.voice = femaleVoice;
+        }
+
+        message.rate = 0.95;
+        message.pitch = 1.15;
+        message.volume = 1;
+
+        speechRef.current = message;
+        window.speechSynthesis.speak(message);
+      }
+    };
+
+    setTimeout(speakWelcome, 1000);
+
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, []);
+
+  /* ---------------- PROGRESS + NAVIGATION ---------------- */
   useEffect(() => {
     let val = 0;
+
     const timer = setInterval(() => {
       val += 1.4;
       setProgress(Math.min(val, 100));
+
       if (val >= 100) {
         clearInterval(timer);
-        setTimeout(() => navigate("/registration"), 300);
+
+        setTimeout(() => {
+          window.speechSynthesis.cancel();
+          navigate("/registration");
+        }, 500);
       }
     }, 40);
+
     return () => clearInterval(timer);
   }, [navigate]);
 
-  return (
+   return (
     <div
       className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden splash-texture"
       style={{ fontFamily: "'Syne', sans-serif", zIndex: 9999 }}
