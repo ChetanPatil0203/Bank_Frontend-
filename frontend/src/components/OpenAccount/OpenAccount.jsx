@@ -1,56 +1,51 @@
 import { useState, useRef, useEffect } from "react";
 import { X, PenLine } from "lucide-react";
 
-export default function OpenAccount() {
+export default function OpenAccountPage() {
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    fatherName: "",
-    dob: "",
-    gender: "",
-    mobile: "",
-    email: "",
-    address: "",
-    aadhaar: "",
-    pan: "",
-    accountType: "",
-    branch: "",
-    nomineeName: "",
-    nomineeRelation: "",
-    agree: false,
+    fullName:"",
+    fatherName:"",
+    dob:"",
+    gender:"",
+    mobile:"",
+    email:"",
+    address:"",
+    aadhaar:"",
+    pan:"",
+    accountType:"",
+    branch:"",
+    nomineeName:"",
+    nomineeRelation:"",
+    agree:false,
   });
 
   const [photo, setPhoto] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
-
-  // Signature states
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [savedSignature, setSavedSignature] = useState(null);
+
   const canvasRef = useRef(null);
   const isDrawing = useRef(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.agree) return alert("Accept Terms & Conditions");
-    alert("Account Application Submitted ✅");
+    alert("Account Application Submitted Successfully ✅");
   };
 
   const isPDF = photo && photo.type === "application/pdf";
 
-  // ---- Signature Canvas Logic ----
+  /* Signature Canvas Setup */
   useEffect(() => {
     if (showSignatureModal && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const ctx = canvasRef.current.getContext("2d");
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       ctx.strokeStyle = "#1d4ed8";
       ctx.lineWidth = 2.2;
       ctx.lineCap = "round";
@@ -62,15 +57,16 @@ export default function OpenAccount() {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
+
     if (e.touches) {
       return {
-        x: (e.touches[0].clientX - rect.left) * scaleX,
-        y: (e.touches[0].clientY - rect.top) * scaleY,
+        x:(e.touches[0].clientX-rect.left)*scaleX,
+        y:(e.touches[0].clientY-rect.top)*scaleY
       };
     }
     return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY,
+      x:(e.clientX-rect.left)*scaleX,
+      y:(e.clientY-rect.top)*scaleY
     };
   };
 
@@ -94,33 +90,21 @@ export default function OpenAccount() {
     ctx.stroke();
   };
 
-  const stopDrawing = () => {
-    isDrawing.current = false;
-  };
+  const stopDrawing = () => { isDrawing.current = false; };
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvasRef.current.getContext("2d").clearRect(0,0,460,180);
   };
 
   const saveSignature = () => {
-    const canvas = canvasRef.current;
-    const dataUrl = canvas.toDataURL("image/png");
-    setSavedSignature(dataUrl);
-    setShowSignatureModal(false);
-  };
-
-  const cancelSignature = () => {
+    setSavedSignature(canvasRef.current.toDataURL("image/png"));
     setShowSignatureModal(false);
   };
 
   return (
     <div className="min-h-screen py-6 px-4 bg-gray-50">
+      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
-      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6 transition-all duration-500">
-
-        {/* HEADER */}
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-blue-900">Open New Account</h2>
           <p className="text-gray-500 text-sm">Secure Banking Registration Portal</p>
@@ -146,32 +130,10 @@ export default function OpenAccount() {
             <Input label="PAN Number" name="pan" handleChange={handleChange}/>
           </Section>
 
-          <div className="rounded-xl p-4 bg-gray-50">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">
-              Upload Photo / Document <span className="text-red-500">*</span>
-            </h3>
-            <div className="relative flex items-center">
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                onChange={(e) => setPhoto(e.target.files[0])}
-                className="rounded-xl p-3 w-full bg-white border focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-              {photo && (
-                <button
-                  type="button"
-                  onClick={() => setShowImageModal(true)}
-                  className="absolute right-4 text-blue-700 text-sm font-medium"
-                >
-                  View
-                </button>
-              )}
-            </div>
-          </div>
-
           <Section title="Account Details">
-            <Select label="Account Type" name="accountType" options={["Saving Account","Current Account"]} handleChange={handleChange}/>
+            <Select label="Account Type" name="accountType"
+              options={["Saving Account","Current Account"]}
+              handleChange={handleChange}/>
             <Input label="Preferred Branch" name="branch" handleChange={handleChange}/>
           </Section>
 
@@ -180,187 +142,55 @@ export default function OpenAccount() {
             <Input label="Relation with Nominee" name="nomineeRelation" handleChange={handleChange}/>
           </Section>
 
+          <div className="rounded-xl p-4 bg-gray-50">
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">
+              Upload Photo / Document <span className="text-red-500">*</span>
+            </h3>
+
+            <input
+              type="file"
+              accept="image/*,application/pdf"
+              onChange={(e) => setPhoto(e.target.files[0])}
+              className="rounded-xl p-3 w-full bg-white border"
+              required
+            />
+          </div>
+
           <div className="flex gap-2 items-start">
-            <input type="checkbox" name="agree" onChange={handleChange}/>
+            <input type="checkbox" name="agree" onChange={handleChange} required/>
             <p className="text-xs text-gray-600">
-              I confirm that all provided details are correct.
+              I confirm that all provided details are correct. <span className="text-red-500">*</span>
             </p>
           </div>
 
-          {/* BOTTOM: Submit + Signature */}
-          <div className="flex items-center justify-between pt-2">
+          <button
+            type="button"
+            onClick={() => setShowSignatureModal(true)}
+            className="flex items-center gap-2 px-5 py-2 bg-white border border-blue-700 text-blue-800 rounded-full"
+          >
+            <PenLine size={15}/>
+            {savedSignature ? "Edit Signature" : "Add Signature"}
+          </button>
 
-            {/* Signature area - bottom left */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowSignatureModal(true)}
-                className="flex items-center gap-2 px-5 py-2 bg-white border border-blue-700 text-blue-800 rounded-full text-sm font-medium shadow-sm hover:bg-blue-50 transition"
-              >
-                <PenLine size={15} />
-                {savedSignature ? "Edit Signature" : "Add Signature"}
-              </button>
-              {savedSignature && (
-                <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-1 bg-white shadow-sm">
-                  <img src={savedSignature} alt="Signature" className="h-8 w-auto object-contain" />
-                  <button
-                    type="button"
-                    onClick={() => setSavedSignature(null)}
-                    className="text-gray-400 hover:text-red-500 transition ml-1"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Submit - bottom right */}
-            <button
-              type="submit"
-              className="  w-full md:w-32 
-           bg-[linear-gradient(180deg,#1e3a7b_150%,#152d68_150%,#0f1f4d_150%)]
-            hover:bg-[#5b4ec2] 
-            text-white 
-            font-semibold 
-            rounded-xl 
-            py-3.5 
-            flex items-center 
-            justify-center 
-            gap-2 
-            transition-all 
-            transform 
-            active:scale-[0.98] 
-            shadow-lg"
-            >
-              Open Account
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-900 text-white font-semibold rounded-xl py-3"
+          >
+            Open Account
+          </button>
 
         </form>
       </div>
-
-      {/* IMAGE/PDF MODAL */}
-      {showImageModal && photo && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-          onClick={() => setShowImageModal(false)}
-        >
-          <div
-            className="relative w-full max-w-4xl h-[85vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowImageModal(false)}
-              className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg"
-            >
-              <X size={22} className="text-gray-800" />
-            </button>
-            <div className="w-full h-full overflow-auto p-6">
-              {isPDF ? (
-                <iframe
-                  src={URL.createObjectURL(photo)}
-                  className="w-full h-full border-0"
-                  title="PDF Document"
-                />
-              ) : (
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt="Uploaded"
-                  className="w-full h-auto object-contain"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* SIGNATURE MODAL */}
-      {showSignatureModal && (
-        <div
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-          onClick={cancelSignature}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <PenLine size={18} className="text-blue-800" />
-                <h3 className="text-base font-semibold text-blue-900">Draw Your Signature</h3>
-              </div>
-              <button
-                onClick={cancelSignature}
-                className="text-gray-400 hover:text-gray-600 transition"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <p className="text-xs text-gray-500 mb-3">Use your mouse or finger to sign below</p>
-
-            {/* Canvas */}
-            <div className="border-2 border-dashed border-blue-200 rounded-xl overflow-hidden bg-gray-50 relative">
-              <canvas
-                ref={canvasRef}
-                width={460}
-                height={180}
-                className="w-full touch-none cursor-crosshair"
-                onMouseDown={startDrawing}
-                onMouseMove={draw}
-                onMouseUp={stopDrawing}
-                onMouseLeave={stopDrawing}
-                onTouchStart={startDrawing}
-                onTouchMove={draw}
-                onTouchEnd={stopDrawing}
-              />
-              <span className="absolute bottom-2 right-3 text-xs text-gray-300 select-none">Sign here</span>
-            </div>
-
-            {/* Clear */}
-            <div className="flex justify-end mt-2 mb-4">
-              <button
-                type="button"
-                onClick={clearCanvas}
-                className="text-xs text-gray-400 hover:text-red-500 transition underline"
-              >
-                Clear
-              </button>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3 justify-end">
-              <button
-                type="button"
-                onClick={cancelSignature}
-                className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={saveSignature}
-                className="px-6 py-2 rounded-full bg-blue-800 text-white text-sm font-medium shadow hover:shadow-md hover:bg-blue-900 transition"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-/* ---------- Reusable Components ---------- */
+/* ---------- reusable components ---------- */
 
 function Section({ title, children }) {
   return (
     <div className="rounded-xl p-3 bg-gray-50">
-      <h3 className="text-base font-semibold text-blue-900 mb-1 leading-tight">
-        {title}
-      </h3>
+      <h3 className="text-base font-semibold text-blue-900 mb-2">{title}</h3>
       <div className="grid md:grid-cols-2 gap-3">{children}</div>
     </div>
   );
@@ -396,7 +226,7 @@ function Select({ label, name, options, handleChange }) {
         required
       >
         <option value="">Select {label}</option>
-        {options.map((opt) => <option key={opt}>{opt}</option>)}
+        {options.map(opt => <option key={opt}>{opt}</option>)}
       </select>
     </div>
   );
