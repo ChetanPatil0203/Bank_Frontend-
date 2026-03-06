@@ -1,139 +1,243 @@
-import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ArrowRight, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../utils/apiServices";
 
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
 function Toast({ message, type, onClose }) {
   useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, [onClose]);
   return (
-    <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border backdrop-blur-xl min-w-72 max-w-sm
-      ${type === "success" ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-red-500/10 border-red-500/30 text-red-400"}`}>
-      {type === "success" ? <CheckCircle size={20} className="shrink-0" /> : <XCircle size={20} className="shrink-0" />}
-      <p className="text-sm font-medium flex-1">{message}</p>
-      <button onClick={onClose} className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"><X size={16} /></button>
+    <div style={{
+      position: "fixed", top: 24, right: 24, zIndex: 50,
+      display: "flex", alignItems: "center", gap: 12,
+      padding: "14px 20px", borderRadius: 16,
+      border: `1px solid ${type === "success" ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"}`,
+      background: type === "success" ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)",
+      color: type === "success" ? "#34d399" : "#f87171",
+      backdropFilter: "blur(20px)",
+      boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+      minWidth: 280, maxWidth: 360,
+    }}>
+      {type === "success" ? <CheckCircle size={20} style={{ flexShrink: 0 }} /> : <XCircle size={20} style={{ flexShrink: 0 }} />}
+      <p style={{ fontSize: 13, fontWeight: 500, flex: 1, margin: 0 }}>{message}</p>
+      <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", opacity: 0.6, display: "flex", padding: 0 }}>
+        <X size={16} />
+      </button>
     </div>
   );
 }
 
-function ParticleCanvas() {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    let animId;
-    let W = canvas.width = window.innerWidth;
-    let H = canvas.height = window.innerHeight;
-    const particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.8 + 0.2,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      alpha: Math.random() * 0.5 + 0.1,
-    }));
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(147,197,253,${p.alpha})`; ctx.fill();
-      });
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-    const onResize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
-    window.addEventListener("resize", onResize);
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", onResize); };
-  }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
-}
-
-function BankBuilding() {
+/* ═══════════════════════════════════════
+   GRID BACKGROUND (same as Registration)
+═══════════════════════════════════════ */
+function GridBackground() {
   return (
-    <svg width="300" height="320" viewBox="0 0 300 320" fill="none" className="drop-shadow-2xl">
-      <ellipse cx="150" cy="300" rx="100" ry="10" fill="rgba(56,189,248,0.08)" />
-      <line x1="50" y1="298" x2="250" y2="298" stroke="rgba(56,189,248,0.3)" strokeWidth="1.5" />
-      <g className="animate-bounce" style={{ transformOrigin: "50px 110px", animationDuration: "2s" }}>
-        <circle cx="50" cy="110" r="13" fill="rgba(250,204,21,0.1)" stroke="rgba(250,204,21,0.6)" strokeWidth="1.5" />
-        <text x="50" y="115" textAnchor="middle" fontSize="10" fill="rgba(250,204,21,0.8)" fontWeight="bold">₹</text>
-      </g>
-      <g className="animate-bounce" style={{ transformOrigin: "255px 95px", animationDuration: "2.5s", animationDelay: "0.3s" }}>
-        <circle cx="255" cy="95" r="10" fill="rgba(250,204,21,0.1)" stroke="rgba(250,204,21,0.5)" strokeWidth="1.5" />
-        <text x="255" y="99" textAnchor="middle" fontSize="8" fill="rgba(250,204,21,0.7)" fontWeight="bold">₹</text>
-      </g>
-      <g className="animate-bounce" style={{ transformOrigin: "258px 200px", animationDuration: "3s", animationDelay: "0.6s" }}>
-        <circle cx="258" cy="200" r="8" fill="rgba(250,204,21,0.08)" stroke="rgba(250,204,21,0.4)" strokeWidth="1.2" />
-        <text x="258" y="204" textAnchor="middle" fontSize="7" fill="rgba(250,204,21,0.6)" fontWeight="bold">₹</text>
-      </g>
-      {[[35,45],[270,55],[28,155],[282,135],[55,240],[260,250]].map(([x,y],i)=>(
-        <g key={i} opacity={i%2===0?0.6:0.4}>
-          <line x1={x} y1={y-4} x2={x} y2={y+4} stroke="rgba(56,189,248,0.8)" strokeWidth="1.2"/>
-          <line x1={x-4} y1={y} x2={x+4} y2={y} stroke="rgba(56,189,248,0.8)" strokeWidth="1.2"/>
-        </g>
-      ))}
-      <rect x="55" y="278" width="190" height="22" rx="3" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.35)" strokeWidth="1.2"/>
-      <rect x="60" y="274" width="180" height="6" rx="1" fill="rgba(56,189,248,0.15)" stroke="rgba(56,189,248,0.3)" strokeWidth="1"/>
-      <rect x="52" y="280" width="196" height="6" rx="1" fill="rgba(56,189,248,0.1)" stroke="rgba(56,189,248,0.22)" strokeWidth="1"/>
-      <rect x="68" y="152" width="164" height="126" rx="2" fill="rgba(10,25,65,0.75)" stroke="rgba(56,189,248,0.3)" strokeWidth="1.2"/>
-      <rect x="68" y="152" width="164" height="50" rx="2" fill="rgba(56,189,248,0.04)"/>
-      {[88,112,136,160,184,208].map((x,i)=>(
-        <g key={i}>
-          <rect x={x} y="147" width="9" height="131" rx="2" fill="rgba(56,189,248,0.07)" stroke="rgba(56,189,248,0.28)" strokeWidth="1"/>
-          <rect x={x+1} y="147" width="7" height="7" rx="1" fill="rgba(56,189,248,0.18)"/>
-        </g>
-      ))}
-      <rect x="64" y="140" width="172" height="13" rx="2" fill="rgba(56,189,248,0.14)" stroke="rgba(56,189,248,0.5)" strokeWidth="1.2"/>
-      <text x="150" y="150" textAnchor="middle" fontSize="6.5" fill="rgba(56,189,248,0.75)" letterSpacing="3">PAYZEN BANK</text>
-      <path d="M64 140 L150 82 L236 140 Z" fill="rgba(8,18,50,0.85)" stroke="rgba(56,189,248,0.65)" strokeWidth="1.5"/>
-      <path d="M76 140 L150 95 L224 140 Z" fill="none" stroke="rgba(56,189,248,0.18)" strokeWidth="1"/>
-      <circle cx="150" cy="112" r="6" fill="rgba(56,189,248,0.15)" stroke="rgba(56,189,248,0.7)" strokeWidth="1.2"/>
-      <text x="150" y="116" textAnchor="middle" fontSize="7" fill="rgba(56,189,248,0.9)">★</text>
-      <line x1="150" y1="60" x2="150" y2="82" stroke="rgba(56,189,248,0.6)" strokeWidth="1.5"/>
-      <circle cx="150" cy="57" r="4.5" fill="rgba(56,189,248,0.2)" stroke="rgba(56,189,248,0.7)" strokeWidth="1.2"/>
-      <path d="M150 58 L166 63 L150 69 Z" fill="rgba(99,102,241,0.5)" stroke="rgba(99,102,241,0.7)" strokeWidth="1"/>
-      {[80,108,136,164,192,220].map((x,i)=>(
-        <g key={i}>
-          <rect x={x} y="163" width="20" height="26" rx="3" fill="rgba(56,189,248,0.07)" stroke="rgba(56,189,248,0.28)" strokeWidth="1"/>
-          <rect x={x+2} y="165" width="16" height="22" rx="2" fill="rgba(56,189,248,0.04)"/>
-          <line x1={x+10} y1="163" x2={x+10} y2="189" stroke="rgba(56,189,248,0.18)" strokeWidth="0.8"/>
-          <line x1={x} y1="176" x2={x+20} y2="176" stroke="rgba(56,189,248,0.18)" strokeWidth="0.8"/>
-        </g>
-      ))}
-      {[80,108,192,220].map((x,i)=>(
-        <g key={i}>
-          <rect x={x} y="207" width="20" height="26" rx="3" fill="rgba(56,189,248,0.07)" stroke="rgba(56,189,248,0.28)" strokeWidth="1"/>
-          <rect x={x+2} y="209" width="16" height="22" rx="2" fill="rgba(56,189,248,0.04)"/>
-          <line x1={x+10} y1="207" x2={x+10} y2="233" stroke="rgba(56,189,248,0.18)" strokeWidth="0.8"/>
-          <line x1={x} y1="220" x2={x+20} y2="220" stroke="rgba(56,189,248,0.18)" strokeWidth="0.8"/>
-        </g>
-      ))}
-      <rect x="132" y="218" width="36" height="60" rx="4" fill="rgba(99,102,241,0.14)" stroke="rgba(99,102,241,0.55)" strokeWidth="1.5"/>
-      <path d="M132 230 Q150 216 168 230" fill="none" stroke="rgba(99,102,241,0.45)" strokeWidth="1.2"/>
-      <circle cx="145" cy="250" r="2.5" fill="rgba(250,204,21,0.75)"/>
-      <line x1="150" y1="218" x2="150" y2="278" stroke="rgba(99,102,241,0.28)" strokeWidth="1"/>
-      <line x1="18" y1="298" x2="55" y2="298" stroke="rgba(56,189,248,0.4)" strokeWidth="1"/>
-      <line x1="245" y1="298" x2="282" y2="298" stroke="rgba(56,189,248,0.4)" strokeWidth="1"/>
-      <circle cx="18" cy="298" r="3" fill="rgba(56,189,248,0.6)"/>
-      <circle cx="282" cy="298" r="3" fill="rgba(56,189,248,0.6)"/>
-    </svg>
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #03071e 0%, #05103a 40%, #0a0a2e 70%, #03071e 100%)" }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `
+          radial-gradient(ellipse 70% 50% at 20% 50%, rgba(29,78,216,0.22) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 70% at 80% 20%, rgba(109,40,217,0.18) 0%, transparent 55%),
+          radial-gradient(ellipse 40% 40% at 60% 85%, rgba(6,182,212,0.1) 0%, transparent 50%)`
+      }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "radial-gradient(circle, rgba(99,102,241,0.18) 1px, transparent 1px)",
+        backgroundSize: "32px 32px"
+      }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,50,255,0.015) 2px, rgba(0,50,255,0.015) 4px)",
+        mixBlendMode: "screen"
+      }} />
+    </div>
   );
 }
 
+/* ═══════════════════════════════════════
+   FLOATING PARTICLES (same as Registration)
+═══════════════════════════════════════ */
+function Particles() {
+  const pts = [
+    { s:3, t:"8%",  l:"5%",  c:"#60a5fa", d:"3.2s", dl:"0s" },
+    { s:2, t:"20%", l:"88%", c:"#a78bfa", d:"2.8s", dl:"0.7s" },
+    { s:4, t:"65%", l:"8%",  c:"#38bdf8", d:"3.5s", dl:"1.2s" },
+    { s:2, t:"82%", l:"80%", c:"#818cf8", d:"2.3s", dl:"0.4s" },
+    { s:3, t:"42%", l:"2%",  c:"#22d3ee", d:"3.8s", dl:"1.8s" },
+    { s:2, t:"10%", l:"50%", c:"#a78bfa", d:"2.6s", dl:"0.9s" },
+    { s:3, t:"92%", l:"35%", c:"#60a5fa", d:"3.1s", dl:"1.5s" },
+    { s:2, t:"30%", l:"92%", c:"#22d3ee", d:"2.9s", dl:"0.2s" },
+    { s:4, t:"55%", l:"96%", c:"#38bdf8", d:"3.3s", dl:"2.1s" },
+    { s:2, t:"75%", l:"52%", c:"#c084fc", d:"2.7s", dl:"0.6s" },
+  ];
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
+      {pts.map((p, i) => (
+        <div key={i} style={{
+          position: "absolute", borderRadius: "50%",
+          width: p.s, height: p.s, top: p.t, left: p.l,
+          background: p.c, boxShadow: `0 0 ${p.s * 3}px ${p.c}`,
+          animation: `ptFloat ${p.d} ease-in-out infinite ${p.dl}`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   BRAND PANEL — LEFT (same as Registration)
+═══════════════════════════════════════ */
+function BrandPanel() {
+  return (
+    <div style={{
+      display: "none", flex: 1,
+      flexDirection: "column", alignItems: "center", justifyContent: "center",
+      position: "relative", padding: "64px 48px", overflow: "hidden",
+    }} className="lg-brand-panel">
+
+      {/* Central glow */}
+      <div style={{
+        position: "absolute", width: 480, height: 480,
+        borderRadius: "50%", top: "50%", left: "50%",
+        transform: "translate(-50%,-50%)",
+        background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(109,40,217,0.12) 40%, transparent 70%)",
+        filter: "blur(40px)",
+        animation: "ambPulse 6s ease-in-out infinite",
+      }} />
+
+      {/* Orbit rings */}
+      {[
+        { sz: 360, spd: 24, rev: false, dot: 9, dc: "#38bdf8", bc: "rgba(56,189,248,0.12)" },
+        { sz: 270, spd: 17, rev: true,  dot: 7, dc: "#a78bfa", bc: "rgba(167,139,250,0.12)" },
+        { sz: 185, spd: 11, rev: false, dot: 5, dc: "#22d3ee", bc: "rgba(34,211,238,0.15)" },
+      ].map((r, i) => (
+        <div key={i} style={{
+          position: "absolute", borderRadius: "50%",
+          width: r.sz, height: r.sz, top: "50%", left: "50%",
+          border: `1px solid ${r.bc}`,
+          animation: `orbitSpin ${r.spd}s linear infinite ${r.rev ? "reverse" : "normal"}`,
+          pointerEvents: "none",
+        }}>
+          <div style={{
+            position: "absolute", borderRadius: "50%",
+            width: r.dot, height: r.dot,
+            background: r.dc, boxShadow: `0 0 14px ${r.dc}`,
+            top: `calc(-${r.dot / 2}px)`, left: "50%", transform: "translateX(-50%)",
+          }} />
+        </div>
+      ))}
+
+      {/* Logo block */}
+      <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", animation: "logoIn 1s cubic-bezier(.16,1,.3,1) both .3s" }}>
+
+        {/* Hex icon */}
+        <div style={{ position: "relative", marginBottom: 28, animation: "hexFloat 5s ease-in-out infinite" }}>
+          <div style={{
+            position: "absolute", inset: -18, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(37,99,235,0.6) 0%, transparent 65%)",
+            filter: "blur(18px)", animation: "ambPulse 3s ease-in-out infinite",
+          }} />
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z"
+              fill="rgba(29,78,216,0.2)" stroke="url(#hs3)" strokeWidth="1.5" />
+            <path d="M50 16 L80 32 L80 68 L50 84 L20 68 L20 32 Z"
+              fill="rgba(37,99,235,0.1)" stroke="rgba(56,189,248,0.35)" strokeWidth="1" />
+            <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900"
+              fill="url(#tg3)" textAnchor="middle">P</text>
+            {[[50,4],[90,26],[90,74],[50,96],[10,74],[10,26]].map(([x,y],i) => (
+              <circle key={i} cx={x} cy={y} r="2.5" fill="rgba(56,189,248,0.9)" />
+            ))}
+            <defs>
+              <linearGradient id="hs3" x1="10" y1="4" x2="90" y2="96" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="rgba(56,189,248,0.9)" />
+                <stop offset="50%" stopColor="rgba(129,140,248,0.6)" />
+                <stop offset="100%" stopColor="rgba(56,189,248,0.9)" />
+              </linearGradient>
+              <linearGradient id="tg3" x1="0" y1="0" x2="0" y2="70" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#fff" />
+                <stop offset="100%" stopColor="rgba(56,189,248,0.85)" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {/* Wordmark */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+          <span style={{
+            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
+            color: "#fff", letterSpacing: -3, lineHeight: 1,
+            textShadow: "0 0 40px rgba(255,255,255,0.15)",
+          }}>Pay</span>
+          <span style={{
+            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
+            letterSpacing: -3, lineHeight: 1,
+            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)",
+            backgroundSize: "200%",
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+            animation: "shimmer 3s linear infinite",
+          }}>Zen</span>
+        </div>
+
+        {/* Underline */}
+        <div style={{
+          height: 3, borderRadius: 99, margin: "10px auto 20px",
+          background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)",
+          backgroundSize: "200%",
+          animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s",
+          width: 0,
+        }} />
+
+        <p style={{
+          fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase",
+          color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0,
+          animation: "fadeUp .7s ease both 1.2s",
+        }}>Private Banking</p>
+
+        <p style={{
+          fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8,
+          maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0,
+          animation: "fadeUp .7s ease both 1.4s",
+        }}>
+          Secure, intelligent banking <br />always at your fingertips.
+        </p>
+
+        <p style={{
+          fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase",
+          color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0,
+          animation: "fadeUp .7s ease both 1.5s",
+        }}>Secure · Smart · Banking</p>
+
+
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════ */
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [formData, setFormData]         = useState({ email: "", password: "", remember: false });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading]           = useState(false);
-  const [alertActive, setAlertActive]   = useState(false);
-  const [shakeCard, setShakeCard]       = useState(false);
-  const [toast, setToast]               = useState({ show: false, message: "", type: "" });
-  const [mounted, setMounted]           = useState(false);
 
-  useEffect(() => { setTimeout(() => setMounted(true), 80); }, []);
+  const [formData, setFormData] = useState({ email: "", password: "", remember: false });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alertActive, setAlertActive] = useState(false);
+  const [shakeCard, setShakeCard] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: "", type: "" });
+  const [focusedField, setFocusedField] = useState(null);
 
   const showToast = (msg, type) => setToast({ show: true, message: msg, type });
   const hideToast = () => setToast({ show: false, message: "", type: "" });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    if (alertActive) setAlertActive(false);
+  };
 
   const playAlertSound = () => {
     try {
@@ -142,17 +246,13 @@ export default function LoginPage() {
       if (ctx.state === "suspended") ctx.resume();
       [{ delay: 0, freq: 960 }, { delay: 380, freq: 880 }, { delay: 760, freq: 960 }].forEach(({ delay, freq }) => {
         setTimeout(() => {
-          const osc = ctx.createOscillator(), gain = ctx.createGain(), dist = ctx.createWaveShaper();
-          const curve = new Float32Array(512);
-          for (let i = 0; i < 512; i++) { const x = (i * 2) / 512 - 1; curve[i] = ((Math.PI + 800) * x) / (Math.PI + 800 * Math.abs(x)); }
-          dist.curve = curve; dist.oversample = "4x";
-          osc.connect(dist); dist.connect(gain); gain.connect(ctx.destination);
+          const osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination);
           osc.type = "sawtooth"; osc.frequency.setValueAtTime(freq, ctx.currentTime);
           gain.gain.setValueAtTime(0, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(1.0, ctx.currentTime + 0.008);
-          gain.gain.linearRampToValueAtTime(1.0, ctx.currentTime + 0.20);
-          gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.30);
-          osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.30);
+          gain.gain.linearRampToValueAtTime(0.8, ctx.currentTime + 0.01);
+          gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.25);
+          osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25);
         }, delay);
       });
     } catch (err) { console.warn("[PayZen] Audio error:", err); }
@@ -160,14 +260,8 @@ export default function LoginPage() {
 
   const triggerRedAlert = () => {
     setAlertActive(true); setShakeCard(true); playAlertSound();
-    setTimeout(() => setAlertActive(false), 6000);
-    setTimeout(() => setShakeCard(false), 600);
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-    if (alertActive) setAlertActive(false);
+    setTimeout(() => setAlertActive(false), 5000);
+    setTimeout(() => setShakeCard(false), 500);
   };
 
   const handleSubmit = async (e) => {
@@ -183,206 +277,265 @@ export default function LoginPage() {
     setLoading(false);
   };
 
-  // ── Input base styles ──
-  const inputBase = "w-full bg-white/5 border rounded-xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/10";
-  const inputClass = alertActive
-    ? `${inputBase} border-red-500/60 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`
-    : `${inputBase} border-white/10 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20`;
-
-  const iconClass = "absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-300";
+  const inputStyle = (name) => ({
+    width: "100%", boxSizing: "border-box",
+    background: alertActive ? "rgba(239,68,68,0.06)" : focusedField === name ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
+    border: `1px solid ${alertActive ? "rgba(239,68,68,0.5)" : focusedField === name ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.2)"}`,
+    borderRadius: 12,
+    paddingLeft: 38, paddingRight: name === "password" ? 40 : 16, paddingTop: 12, paddingBottom: 12,
+    color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
+    outline: "none",
+    transition: "all 0.2s ease",
+    boxShadow: alertActive ? "0 0 0 3px rgba(239,68,68,0.1)" : focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
+  });
 
   return (
     <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @keyframes ptFloat { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
+        @keyframes hexFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes ambPulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+        @keyframes orbitSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        @keyframes ulGrow { from{width:0} to{width:200px} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes logoIn { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        @keyframes scanPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+        @keyframes shakeX { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-7px)} 20%,40%,60%,80%{transform:translateX(7px)} }
+        @keyframes alertPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+        input::placeholder { color: rgba(148,163,184,0.3); }
+        * { box-sizing: border-box; }
+        @media (min-width: 1024px) { .lg-brand-panel { display: flex !important; } }
+      `}</style>
+
       {toast.show && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
 
-      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#020d20] via-[#061d3e] to-[#08234d]">
+      {/* Alert top line */}
+      {alertActive && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 40,
+          background: "linear-gradient(90deg, transparent, #ef4444, transparent)",
+          animation: "alertPulse 1s ease-in-out infinite",
+        }} />
+      )}
 
-        <ParticleCanvas />
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", padding: "24px 16px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none opacity-20 blur-3xl bg-cyan-400" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full pointer-events-none opacity-10 blur-3xl bg-indigo-600" />
+        <GridBackground />
+        <Particles />
 
-        {alertActive && (
-          <div className="absolute left-0 w-full h-0.5 pointer-events-none z-20 animate-pulse bg-gradient-to-r from-transparent via-red-500 to-transparent" />
-        )}
+        {/* Main wrap */}
+        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
 
-        {/* EN Badge */}
-        <div className="fixed top-5 right-5 z-10 flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white/60 text-sm cursor-pointer hover:bg-white/10 transition-colors">
-          EN
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
+          <BrandPanel />
 
-        <div className={`flex items-center gap-10 xl:gap-20 px-4 z-10 w-full max-w-5xl justify-center transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+          {/* ════ LOGIN CARD ════ */}
+          <div style={{
+            animation: `${shakeCard ? "shakeX 0.5s ease-in-out" : "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s"}`,
+            width: "100%", maxWidth: 460,
+          }}>
+            <div style={{
+              borderRadius: 24,
+              background: alertActive ? "rgba(60,8,8,0.7)" : "rgba(8,16,60,0.7)",
+              border: `1px solid ${alertActive ? "rgba(239,68,68,0.35)" : "rgba(99,102,241,0.2)"}`,
+              backdropFilter: "blur(32px)",
+              boxShadow: alertActive
+                ? "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(239,68,68,0.2)"
+                : "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)",
+              padding: "36px 36px 32px",
+              transition: "all 0.4s ease",
+            }}>
 
-          {/* Left: Bank Building */}
-          <div className="hidden lg:flex flex-col items-center gap-5">
-            <div style={{ animation: "bankFloat 4s ease-in-out infinite" }}>
-              <BankBuilding />
-            </div>
-            <div className="text-center">
-              <p className="text-cyan-400 font-bold text-lg tracking-widest">Your Trusted Bank</p>
-              <p className="text-white/30 text-xs tracking-[3px] mt-1">SECURE · SMART · BANKING</p>
-            </div>
-            {/* Stats */}
-            <div className="flex gap-6 mt-1">
-              {[["10M+","Customers"],["₹500Cr+","Transactions"],["99.9%","Uptime"]].map(([val,label])=>(
-                <div key={label} className="text-center">
-                  <p className="text-cyan-400 font-bold text-sm">{val}</p>
-                  <p className="text-white/30 text-xs">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: Login Card */}
-          <div className={`w-full max-w-md transition-transform duration-300 ${shakeCard ? "animate-[shakeX_0.5s_ease-in-out]" : ""}`}>
-            <div className={`rounded-3xl p-8 backdrop-blur-2xl border transition-all duration-500
-              ${alertActive
-                ? "bg-red-950/20 border-red-500/40 shadow-[0_30px_70px_rgba(239,68,68,0.15)]"
-                : "bg-white/5 border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.5)]"
-              }`}>
-
-              {/* Header */}
-              <div className="text-center mb-7">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                    <svg width="17" height="17" viewBox="0 0 32 32" fill="none">
-                      <path d="M13 10L13 22M13 10L18 10Q22 10 22 14Q22 18 18 18L13 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* Top bar */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 10,
+                    background: "linear-gradient(135deg,#4f46e5,#2563eb)",
+                    boxShadow: "0 0 20px rgba(79,70,229,0.5)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L22 7V17L12 22L2 17V7Z" stroke="white" strokeWidth="1.8" fill="rgba(255,255,255,0.15)"/>
+                      <path d="M8 12H16M12 8V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                     </svg>
                   </div>
-                  <span className="text-white/70 font-bold text-sm tracking-[2px]">PAYZEN BANK</span>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.02em" }}>PayZen Bank</span>
                 </div>
-                <h1 className={`text-3xl font-extrabold tracking-tight transition-colors duration-300 ${alertActive ? "text-red-400" : "text-white"}`}>
-                  User Login
-                </h1>
-                <p className="text-white/40 text-sm mt-1.5">Access your banking dashboard safely</p>
+
+                {/* Secure badge */}
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 5,
+                  padding: "5px 12px", borderRadius: 999,
+                  border: `1px solid ${alertActive ? "rgba(239,68,68,0.3)" : "rgba(52,211,153,0.25)"}`,
+                  background: alertActive ? "rgba(239,68,68,0.08)" : "rgba(52,211,153,0.07)",
+                  fontSize: 11, fontWeight: 600,
+                  color: alertActive ? "rgba(239,68,68,0.85)" : "rgba(52,211,153,0.8)",
+                  transition: "all 0.4s ease",
+                }}>
+                  <div style={{
+                    width: 5, height: 5, borderRadius: "50%",
+                    background: alertActive ? "#ef4444" : "#34d399",
+                    boxShadow: `0 0 6px ${alertActive ? "#ef4444" : "#34d399"}`,
+                    animation: "scanPulse 2s ease-in-out infinite",
+                  }} />
+                  {alertActive ? "Alert" : "Secure"}
+                </div>
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Heading */}
+              <div style={{ textAlign: "center", marginBottom: 28 }}>
+                <h2 style={{
+                  fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", margin: 0, marginBottom: 6,
+                  color: alertActive ? "#fca5a5" : "#f1f5f9",
+                  transition: "color 0.4s ease",
+                }}>
+                  Welcome Back
+                </h2>
+                <p style={{ fontSize: 13, fontWeight: 400, color: "rgba(148,163,184,0.6)", margin: 0 }}>
+                  Access your banking dashboard safely
+                </p>
+              </div>
 
-                {/* ── Email Field with Mail Icon ── */}
-                <div>
-                  <label className="block text-xs font-medium text-white/60 mb-2 ml-1">
-                    Email Address <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    {/* Left Mail Icon */}
-                    <span className={iconClass}>
-                      <Mail
-                        size={17}
-                        className={alertActive ? "text-red-400/70" : "text-indigo-400/70"}
+              {/* ── FORM ── */}
+              <form onSubmit={handleSubmit}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+                  {/* Email */}
+                  <div>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                      Email Address <span style={{ color: "#f87171" }}>*</span>
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
+                        <Mail size={14} />
+                      </span>
+                      <input
+                        type="email" name="email" placeholder="you@email.com"
+                        value={formData.email} onChange={handleChange} required
+                        onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
+                        style={inputStyle("email")}
+                        autoComplete="email"
                       />
-                    </span>
-                    <input
-                      type="email" name="email"
-                      placeholder="Enter Email Address"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required autoComplete="email"
-                    />
+                    </div>
                   </div>
-                </div>
 
-                {/* ── Password Field with Lock Icon + Eye Toggle ── */}
-                <div>
-                  <label className="block text-xs font-medium text-white/60 mb-2 ml-1">
-                    Password <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    {/* Left Lock Icon */}
-                    <span className={iconClass}>
-                      <Lock
-                        size={17}
-                        className={alertActive ? "text-red-400/70" : "text-indigo-400/70"}
+                  {/* Password */}
+                  <div>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                      Password <span style={{ color: "#f87171" }}>*</span>
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
+                        <Lock size={14} />
+                      </span>
+                      <input
+                        type={showPassword ? "text" : "password"} name="password" placeholder="Enter password"
+                        value={formData.password} onChange={handleChange} required
+                        onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)}
+                        style={inputStyle("password")}
+                        autoComplete="current-password"
                       />
-                    </span>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="Enter Password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      className={`${inputClass} pr-12`}
-                      required autoComplete="current-password"
-                    />
-                    {/* Right Eye Toggle */}
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
-                    >
-                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} style={{
+                        position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+                        background: "none", border: "none", cursor: "pointer",
+                        color: "rgba(99,102,241,0.5)", display: "flex", padding: 0,
+                      }}>
+                        {showPassword ? <EyeOff size={14}/> : <Eye size={14}/>}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Remember + Forgot */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 12, color: "rgba(148,163,184,0.55)" }}>
+                      <input
+                        type="checkbox" name="remember" checked={formData.remember} onChange={handleChange}
+                        style={{ accentColor: "#6366f1", width: 13, height: 13 }}
+                      />
+                      Remember Me
+                    </label>
+                    <button type="button" onClick={() => navigate("/forgot")} style={{
+                      background: "none", border: "none", cursor: "pointer",
+                      fontSize: 12, fontWeight: 600, color: "#818cf8",
+                      fontFamily: "inherit", padding: 0,
+                    }}>
+                      Forgot Password?
                     </button>
                   </div>
-                </div>
 
-                {/* Remember + Forgot */}
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 text-white/50 text-sm cursor-pointer hover:text-white/70 transition-colors">
-                    <input type="checkbox" name="remember" checked={formData.remember} onChange={handleChange}
-                      className="accent-indigo-500 w-3.5 h-3.5" />
-                    Remember Me
-                  </label>
-                  <button type="button" onClick={() => navigate("/forgot")}
-                    className="text-indigo-400 hover:text-indigo-300 text-sm font-semibold transition-colors">
-                    Forgot Password?
+                  {/* Submit */}
+                  <button type="submit" disabled={loading} style={{
+                    width: "100%", marginTop: 4,
+                    padding: "14px 24px",
+                    borderRadius: 14, border: "none",
+                    background: loading
+                      ? "rgba(79,70,229,0.5)"
+                      : alertActive
+                        ? "linear-gradient(135deg,#dc2626,#b91c1c)"
+                        : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
+                    backgroundSize: "200%",
+                    color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    boxShadow: alertActive
+                      ? "0 4px 28px rgba(220,38,38,0.45)"
+                      : loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
+                    transition: "all 0.3s ease",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    fontFamily: "inherit",
+                    animation: !loading && !alertActive ? "shimmer 3s linear infinite" : "none",
+                  }}>
+                    {loading ? (
+                      <>
+                        <span style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", animation: "spin 0.7s linear infinite", display: "inline-block" }} />
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        
+                        Login
+                        
+                      </>
+                    )}
                   </button>
+
+                  {/* Verifying text */}
+                  {loading && (
+                    <p style={{ textAlign: "center", fontSize: 11, color: "rgba(148,163,184,0.4)", margin: 0, animation: "scanPulse 1.5s ease-in-out infinite" }}>
+                      Verifying Secure Access...
+                    </p>
+                  )}
+
                 </div>
-
-                {/* Login Button */}
-                <button type="submit" disabled={loading}
-                  className={`w-full py-3.5 rounded-xl font-extrabold text-base text-white tracking-wide transition-all duration-300 shadow-lg
-                    disabled:opacity-60 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0
-                    ${alertActive
-                      ? "bg-gradient-to-r from-red-600 to-red-700 shadow-red-500/30 hover:shadow-red-500/50"
-                      : "bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-700 shadow-indigo-500/30 hover:shadow-indigo-500/50"
-                    }`}>
-                  {loading ? "Logging in..." : "Login"}
-                </button>
-
-                {/* Verifying */}
-                {loading && (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-3.5 h-3.5 border-2 border-indigo-500/30 border-t-indigo-400 rounded-full animate-spin" />
-                    <span className="text-white/40 text-xs animate-pulse">Verifying Secure Access...</span>
-                  </div>
-                )}
               </form>
 
               {/* Divider */}
-              <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-white/5" />
-                <span className="text-white/20 text-xs tracking-widest">OR</span>
-                <div className="flex-1 h-px bg-white/5" />
+              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+                <span style={{ fontSize: 10, letterSpacing: "0.15em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase" }}>or</span>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
               </div>
 
               {/* Register link */}
-              <p className="text-center text-white/40 text-sm">
+              <p style={{ textAlign: "center", fontSize: 13, color: "rgba(148,163,184,0.5)", margin: 0, marginBottom: 16 }}>
                 Don't have an account?{" "}
-                <button onClick={() => navigate("/registration")}
-                  className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
-                  Register here
+                <button onClick={() => navigate("/registration")} style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  fontWeight: 700, color: "#818cf8", fontSize: "inherit", fontFamily: "inherit", padding: 0,
+                }}>
+                  Register here 
                 </button>
               </p>
 
-              {/* SSL Badge */}
-              <div className="flex items-center justify-center gap-2 mt-5 py-2 px-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10">
-                <Lock size={11} className="text-cyan-500/60" />
-                <span className="text-white/30 text-[10px] tracking-widest">256-BIT SSL ENCRYPTED · SECURE LOGIN</span>
-              </div>
+
 
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes bankFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-        @keyframes shakeX { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-8px)} 20%,40%,60%,80%{transform:translateX(8px)} }
-        .animate-\\[shakeX_0\\.5s_ease-in-out\\] { animation: shakeX 0.5s ease-in-out; }
-      `}</style>
     </>
   );
 }

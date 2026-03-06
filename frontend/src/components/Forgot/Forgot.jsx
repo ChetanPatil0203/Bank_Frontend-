@@ -1,451 +1,516 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, KeyRound, ShieldCheck } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, KeyRound, ShieldCheck, ArrowRight } from "lucide-react";
 
-const G = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'DM Sans',sans-serif;}
-    @keyframes spin      {to{transform:rotate(360deg)}}
-    @keyframes twinkle   {0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.85;transform:scale(1.5)}}
-    @keyframes floatOrb  {0%,100%{transform:translate(0,0)}33%{transform:translate(22px,-14px)}66%{transform:translate(-12px,10px)}}
-    @keyframes cardIn    {from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes stepIn    {from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes shake     {0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
-    @keyframes dotPulse  {0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-    @keyframes floatUp   {0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
-    @keyframes coinOrbit {0%{transform:rotate(0deg) translateX(115px) rotate(0deg)}100%{transform:rotate(360deg) translateX(115px) rotate(-360deg)}}
-    @keyframes coin2     {0%{transform:rotate(125deg) translateX(88px) rotate(-125deg)}100%{transform:rotate(485deg) translateX(88px) rotate(-485deg)}}
-    @keyframes coin3     {0%{transform:rotate(245deg) translateX(132px) rotate(-245deg)}100%{transform:rotate(605deg) translateX(132px) rotate(-605deg)}}
-    @keyframes scan      {0%{top:-5%}100%{top:105%}}
-    @keyframes glowPulse {0%,100%{opacity:.35}50%{opacity:.7}}
-    @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
-    .card-in {animation:cardIn .6s cubic-bezier(.16,1,.3,1) forwards}
-    .step-in {animation:stepIn .35s cubic-bezier(.16,1,.3,1) forwards}
-    .shk     {animation:shake .4s ease}
-    .gp      {animation:glowPulse 2.8s ease-in-out infinite}
-
-    /* Input with icon */
-    .pz-in {
-      width:100%; background:rgba(15,25,65,.55);
-      border:1px solid rgba(99,179,237,.2); border-radius:10px;
-      padding:13px 16px 13px 42px;
-      color:#e2e8f0; font-size:14px; outline:none;
-      transition:all .2s; font-family:'DM Sans',sans-serif;
-    }
-    .pz-in:focus {
-      border-color:rgba(124,58,237,.65);
-      background:rgba(20,35,85,.8);
-      box-shadow:0 0 0 3px rgba(124,58,237,.15);
-    }
-    .pz-in::placeholder{color:rgba(148,163,184,.4);}
-    .pz-in.no-icon { padding-left: 16px; }
-
-    /* Input icon left */
-    .in-icon {
-      position:absolute; left:13px; top:50%; transform:translateY(-50%);
-      pointer-events:none; transition:color .2s;
-      display:flex; align-items:center; color:rgba(124,58,237,.65);
-    }
-
-    .pz-btn{transition:all .2s;border:none;cursor:pointer;font-family:'Syne',sans-serif;}
-    .pz-btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
-    .pz-btn:active:not(:disabled){transform:scale(.98);}
-    .eye{background:none;border:none;cursor:pointer;color:rgba(148,163,184,.55);transition:color .2s;display:flex;align-items:center;}
-    .eye:hover{color:#a78bfa;}
-    .back-l{background:none;border:none;color:rgba(148,163,184,.55);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:color .2s;}
-    .back-l:hover{color:#a78bfa;}
-    .rs-l{background:none;border:none;color:#7c3aed;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:color .2s;}
-    .rs-l:hover{color:#a78bfa;}
-    .lang-opt{display:block;width:100%;padding:9px 16px;border:none;font-size:13px;font-weight:600;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;transition:background .15s;}
-  `}</style>
-);
-
-function Stars() {
-  const st = Array.from({length:95},(_,i)=>({id:i,x:Math.random()*100,y:Math.random()*100,s:Math.random()*2+.3,d:Math.random()*5,dur:Math.random()*3+2,b:Math.random()>.9}));
+/* ═══════════════════════════════════════
+   GRID BACKGROUND
+═══════════════════════════════════════ */
+function GridBackground() {
   return (
-    <div style={{position:"fixed",inset:0,overflow:"hidden",zIndex:0,pointerEvents:"none"}}>
-      {st.map(s=>(
-        <div key={s.id} style={{position:"absolute",left:`${s.x}%`,top:`${s.y}%`,width:s.s,height:s.s,borderRadius:"50%",background:s.b?"#38bdf8":"#e2e8f0",boxShadow:s.b?`0 0 ${s.s*5}px #38bdf8`:"none",animation:`twinkle ${s.dur}s ${s.d}s ease-in-out infinite`}}/>
-      ))}
-      {[{x:5,y:10,sz:350,c:"rgba(30,58,138,.18)",d:14},{x:65,y:50,sz:280,c:"rgba(91,33,182,.12)",d:18},{x:30,y:70,sz:240,c:"rgba(6,78,59,.1)",d:12}].map((o,i)=>(
-        <div key={i} style={{position:"absolute",left:`${o.x}%`,top:`${o.y}%`,width:o.sz,height:o.sz,borderRadius:"50%",background:`radial-gradient(circle,${o.c},transparent 70%)`,filter:"blur(50px)",animation:`floatOrb ${o.d}s ${i*4}s ease-in-out infinite`}}/>
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #03071e 0%, #05103a 40%, #0a0a2e 70%, #03071e 100%)" }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `
+          radial-gradient(ellipse 70% 50% at 20% 50%, rgba(29,78,216,0.22) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 70% at 80% 20%, rgba(109,40,217,0.18) 0%, transparent 55%),
+          radial-gradient(ellipse 40% 40% at 60% 85%, rgba(6,182,212,0.1) 0%, transparent 50%)`
+      }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "radial-gradient(circle, rgba(99,102,241,0.18) 1px, transparent 1px)",
+        backgroundSize: "32px 32px"
+      }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,50,255,0.015) 2px, rgba(0,50,255,0.015) 4px)",
+        mixBlendMode: "screen"
+      }} />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   FLOATING PARTICLES
+═══════════════════════════════════════ */
+function Particles() {
+  const pts = [
+    { s:3, t:"8%",  l:"5%",  c:"#60a5fa", d:"3.2s", dl:"0s" },
+    { s:2, t:"20%", l:"88%", c:"#a78bfa", d:"2.8s", dl:"0.7s" },
+    { s:4, t:"65%", l:"8%",  c:"#38bdf8", d:"3.5s", dl:"1.2s" },
+    { s:2, t:"82%", l:"80%", c:"#818cf8", d:"2.3s", dl:"0.4s" },
+    { s:3, t:"42%", l:"2%",  c:"#22d3ee", d:"3.8s", dl:"1.8s" },
+    { s:2, t:"10%", l:"50%", c:"#a78bfa", d:"2.6s", dl:"0.9s" },
+    { s:3, t:"92%", l:"35%", c:"#60a5fa", d:"3.1s", dl:"1.5s" },
+    { s:2, t:"30%", l:"92%", c:"#22d3ee", d:"2.9s", dl:"0.2s" },
+    { s:4, t:"55%", l:"96%", c:"#38bdf8", d:"3.3s", dl:"2.1s" },
+    { s:2, t:"75%", l:"52%", c:"#c084fc", d:"2.7s", dl:"0.6s" },
+  ];
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
+      {pts.map((p, i) => (
+        <div key={i} style={{
+          position: "absolute", borderRadius: "50%",
+          width: p.s, height: p.s, top: p.t, left: p.l,
+          background: p.c, boxShadow: `0 0 ${p.s * 3}px ${p.c}`,
+          animation: `ptFloat ${p.d} ease-in-out infinite ${p.dl}`,
+        }} />
       ))}
     </div>
   );
 }
 
-function BankBuilding() {
+/* ═══════════════════════════════════════
+   BRAND PANEL — LEFT
+═══════════════════════════════════════ */
+function BrandPanel() {
   return (
-    <div style={{position:"relative",width:280,height:300,margin:"0 auto"}}>
-      <div className="gp" style={{position:"absolute",bottom:18,left:"50%",transform:"translateX(-50%)",width:200,height:35,borderRadius:"50%",background:"radial-gradient(ellipse,rgba(56,189,248,.22),transparent 70%)",filter:"blur(10px)"}}/>
-      {[{a:"coinOrbit 8s linear infinite"},{a:"coin2 11s linear infinite"},{a:"coin3 13s linear infinite"}].map((c,i)=>(
-        <div key={i} style={{position:"absolute",top:"40%",left:"50%",width:26,height:26,marginLeft:-13,marginTop:-13,animation:c.a}}>
-          <div style={{width:26,height:26,borderRadius:"50%",background:"radial-gradient(circle at 35% 35%,#fbbf24,#b45309)",boxShadow:"0 0 8px rgba(251,191,36,.5)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:"#fff",fontFamily:"'Syne',sans-serif"}}>₹</div>
+    <div style={{ flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center",
+      position: "relative", padding: "64px 48px", overflow: "hidden" }}
+      className="lg-brand-panel">
+
+      {/* Central glow */}
+      <div style={{
+        position: "absolute", width: 480, height: 480,
+        borderRadius: "50%", top: "50%", left: "50%",
+        transform: "translate(-50%,-50%)",
+        background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(109,40,217,0.12) 40%, transparent 70%)",
+        filter: "blur(40px)", animation: "ambPulse 6s ease-in-out infinite",
+      }} />
+
+      {/* Orbit rings */}
+      {[
+        { sz: 360, spd: 24, rev: false, dot: 9, dc: "#38bdf8", bc: "rgba(56,189,248,0.12)" },
+        { sz: 270, spd: 17, rev: true,  dot: 7, dc: "#a78bfa", bc: "rgba(167,139,250,0.12)" },
+        { sz: 185, spd: 11, rev: false, dot: 5, dc: "#22d3ee", bc: "rgba(34,211,238,0.15)" },
+      ].map((r, i) => (
+        <div key={i} style={{
+          position: "absolute", borderRadius: "50%",
+          width: r.sz, height: r.sz, top: "50%", left: "50%",
+          border: `1px solid ${r.bc}`,
+          animation: `orbitSpin ${r.spd}s linear infinite ${r.rev ? "reverse" : "normal"}`,
+          pointerEvents: "none",
+        }}>
+          <div style={{
+            position: "absolute", borderRadius: "50%",
+            width: r.dot, height: r.dot,
+            background: r.dc, boxShadow: `0 0 14px ${r.dc}`,
+            top: `calc(-${r.dot / 2}px)`, left: "50%", transform: "translateX(-50%)",
+          }} />
         </div>
       ))}
-      <svg viewBox="0 0 240 275" fill="none" style={{width:"100%",height:"100%",animation:"floatUp 5s ease-in-out infinite"}}>
-        <ellipse cx="120" cy="262" rx="88" ry="7" fill="rgba(56,189,248,.15)"/>
-        <rect x="15" y="252" width="210" height="11" rx="3" fill="rgba(56,189,248,.22)" stroke="rgba(56,189,248,.38)" strokeWidth=".5"/>
-        <rect x="28" y="241" width="184" height="12" rx="2" fill="rgba(56,189,248,.17)" stroke="rgba(56,189,248,.32)" strokeWidth=".5"/>
-        <rect x="42" y="230" width="156" height="12" rx="2" fill="rgba(56,189,248,.13)" stroke="rgba(56,189,248,.28)" strokeWidth=".5"/>
-        <rect x="52" y="118" width="136" height="115" rx="2" fill="rgba(12,28,80,.75)" stroke="rgba(56,189,248,.38)" strokeWidth="1"/>
-        {[63,80,97,114,131,148,165].map((x,i)=>(
-          <rect key={i} x={x} y="123" width="7" height="110" rx="1" fill="rgba(56,189,248,.1)" stroke="rgba(56,189,248,.28)" strokeWidth=".4"/>
-        ))}
-        {[0,1,2].map(r=>[0,1,2,3,4].map(c=>(
-          <rect key={`${r}${c}`} x={62+c*22} y={135+r*27} width="13" height="17" rx="1" fill="rgba(56,189,248,.07)" stroke="rgba(56,189,248,.22)" strokeWidth=".4"/>
-        )))}
-        <rect x="100" y="192" width="40" height="43" rx="2" fill="rgba(56,189,248,.13)" stroke="rgba(56,189,248,.38)" strokeWidth=".7"/>
-        <circle cx="120" cy="215" r="2.5" fill="#38bdf8" style={{filter:"drop-shadow(0 0 3px #38bdf8)"}}/>
-        <polygon points="46,120 120,73 194,120" fill="rgba(12,28,80,.85)" stroke="rgba(56,189,248,.48)" strokeWidth="1"/>
-        <polygon points="60,120 120,82 180,120" fill="rgba(56,189,248,.07)" stroke="rgba(56,189,248,.28)" strokeWidth=".5"/>
-        <line x1="120" y1="73" x2="120" y2="44" stroke="rgba(56,189,248,.55)" strokeWidth="1.5"/>
-        <polygon points="120,44 143,53 120,62" fill="#38bdf8" opacity=".65"/>
-        <text x="120" y="183" textAnchor="middle" fill="rgba(56,189,248,.48)" fontSize="6" fontFamily="'DM Sans',sans-serif" fontWeight="600" letterSpacing="2">PAYZEN BANK</text>
-        {[15,52,89,126,163,200,225].map((x,i)=>(
-          <circle key={i} cx={x} cy="264" r="1.8" fill="rgba(56,189,248,.35)"/>
-        ))}
-        <line x1="15" y1="264" x2="225" y2="264" stroke="rgba(56,189,248,.18)" strokeWidth=".5" strokeDasharray="4 3"/>
-      </svg>
-      <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none"}}>
-        <div style={{position:"absolute",left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,rgba(56,189,248,.35),transparent)",animation:"scan 3.5s linear infinite"}}/>
+
+      {/* Logo block */}
+      <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", animation: "logoIn 1s cubic-bezier(.16,1,.3,1) both .3s" }}>
+
+        <div style={{ position: "relative", marginBottom: 28, animation: "hexFloat 5s ease-in-out infinite" }}>
+          <div style={{
+            position: "absolute", inset: -18, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(37,99,235,0.6) 0%, transparent 65%)",
+            filter: "blur(18px)", animation: "ambPulse 3s ease-in-out infinite",
+          }} />
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z" fill="rgba(29,78,216,0.2)" stroke="url(#hsFP)" strokeWidth="1.5" />
+            <path d="M50 16 L80 32 L80 68 L50 84 L20 68 L20 32 Z" fill="rgba(37,99,235,0.1)" stroke="rgba(56,189,248,0.35)" strokeWidth="1" />
+            <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900" fill="url(#tgFP)" textAnchor="middle">P</text>
+            {[[50,4],[90,26],[90,74],[50,96],[10,74],[10,26]].map(([x,y],i) => (
+              <circle key={i} cx={x} cy={y} r="2.5" fill="rgba(56,189,248,0.9)" />
+            ))}
+            <defs>
+              <linearGradient id="hsFP" x1="10" y1="4" x2="90" y2="96" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="rgba(56,189,248,0.9)" />
+                <stop offset="50%" stopColor="rgba(129,140,248,0.6)" />
+                <stop offset="100%" stopColor="rgba(56,189,248,0.9)" />
+              </linearGradient>
+              <linearGradient id="tgFP" x1="0" y1="0" x2="0" y2="70" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#fff" />
+                <stop offset="100%" stopColor="rgba(56,189,248,0.85)" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, color: "#fff", letterSpacing: -3, lineHeight: 1, textShadow: "0 0 40px rgba(255,255,255,0.15)" }}>Pay</span>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, letterSpacing: -3, lineHeight: 1, background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)", backgroundSize: "200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", animation: "shimmer 3s linear infinite" }}>Zen</span>
+        </div>
+
+        <div style={{ height: 3, borderRadius: 99, margin: "10px auto 20px", background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)", backgroundSize: "200%", animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s", width: 0 }} />
+
+        <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0, animation: "fadeUp .7s ease both 1.2s" }}>Private Banking</p>
+
+        <p style={{ fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8, maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0, animation: "fadeUp .7s ease both 1.4s" }}>
+          Secure, intelligent banking <br />always at your fingertips.
+        </p>
+
+        <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0, animation: "fadeUp .7s ease both 1.5s" }}>
+          Secure · Smart · Banking
+        </p>
       </div>
     </div>
   );
 }
 
+/* ═══════════════════════════════════════
+   STEP INDICATOR
+═══════════════════════════════════════ */
+function StepIndicator({ step }) {
+  const steps = ["Email", "OTP", "Reset"];
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 24 }}>
+      {steps.map((lbl, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{
+              width: 26, height: 26, borderRadius: "50%",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 11, fontWeight: 700, transition: "all 0.3s",
+              background: step === i+1 ? "linear-gradient(135deg,#4f46e5,#7c3aed)" : step > i+1 ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.08)",
+              color: (step === i+1 || step > i+1) ? "#fff" : "rgba(255,255,255,0.3)",
+              boxShadow: step === i+1 ? "0 4px 12px rgba(79,70,229,0.5)" : "none",
+            }}>{step > i+1 ? "✓" : i+1}</div>
+            <span style={{ fontSize: 11, fontWeight: 500, color: step === i+1 ? "#e2e8f0" : "rgba(148,163,184,0.38)", transition: "color 0.3s" }}>{lbl}</span>
+          </div>
+          {i < 2 && (
+            <div style={{ width: 20, height: 2, borderRadius: 99, transition: "background 0.4s", background: step > i+1 ? "linear-gradient(90deg,#10b981,#059669)" : "rgba(255,255,255,0.1)" }} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   FORGOT PASSWORD PAGE
+═══════════════════════════════════════ */
 export default function ForgotPassword() {
-  const [step,setStep]         = useState(1);
-  const [email,setEmail]       = useState("");
-  const [otp,setOtp]           = useState(["","","","","",""]);
-  const [newP,setNewP]         = useState("");
-  const [conP,setConP]         = useState("");
-  const [showN,setShowN]       = useState(false);
-  const [showC,setShowC]       = useState(false);
-  const [err,setErr]           = useState("");
-  const [suc,setSuc]           = useState("");
-  const [load,setLoad]         = useState(false);
-  const [cardIn,setCardIn]     = useState(false);
-  const [focusIdx,setFocusIdx] = useState(-1);
-  const [lang,setLang]         = useState("EN");
-  const [showL,setShowL]       = useState(false);
-  const refs = [useRef(),useRef(),useRef(),useRef(),useRef(),useRef()];
   const navigate = useNavigate();
 
-  useEffect(()=>{setTimeout(()=>setCardIn(true),200);},[]);
-  const filled = otp.filter(d=>d!=="").length;
+  const [step, setStep]       = useState(1);
+  const [email, setEmail]     = useState("");
+  const [otp, setOtp]         = useState(["","","","","",""]);
+  const [newP, setNewP]       = useState("");
+  const [conP, setConP]       = useState("");
+  const [showN, setShowN]     = useState(false);
+  const [showC, setShowC]     = useState(false);
+  const [err, setErr]         = useState("");
+  const [suc, setSuc]         = useState("");
+  const [load, setLoad]       = useState(false);
+  const [focusIdx, setFocusIdx] = useState(-1);
+  const [focusedField, setFocusedField] = useState(null);
 
-  const chOtp=(i,v)=>{ if(!/^\d?$/.test(v)) return; const n=[...otp];n[i]=v;setOtp(n); if(v&&i<5) refs[i+1].current.focus(); };
-  const kyOtp=(i,e)=>{ if(e.key==="Backspace"&&!otp[i]&&i>0){const n=[...otp];n[i-1]="";setOtp(n);refs[i-1].current.focus();} };
+  const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
+  const filled = otp.filter(d => d !== "").length;
+  const pwMatch = conP.length > 0 && newP === conP;
 
-  const sendOtp=async()=>{
-    if(!email.trim()){setErr("Email required ⚠️");return;}
-    if(!email.includes("@")){setErr("Valid email enter करा ⚠️");return;}
-    setLoad(true);setErr("");setSuc("");
-    try{
-      const r=await(await fetch("http://localhost:5000/api/v1/auth/send-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.trim().toLowerCase()})})).json();
-      if(r.success){setSuc("OTP पाठवला ✅ Email वर 6-digit OTP आला आहे");setTimeout(()=>{setSuc("");setStep(2);},1500);}
-      else setErr(r.message||"Account सापडला नाही ❌");
-    }catch{setErr("❌ Server connect नाही झाला.");}finally{setLoad(false);}
+  const chOtp = (i, v) => {
+    if (!/^\d?$/.test(v)) return;
+    const n = [...otp]; n[i] = v; setOtp(n);
+    if (v && i < 5) refs[i+1].current.focus();
+  };
+  const kyOtp = (i, e) => {
+    if (e.key === "Backspace" && !otp[i] && i > 0) {
+      const n = [...otp]; n[i-1] = ""; setOtp(n); refs[i-1].current.focus();
+    }
   };
 
-  const verOtp=async()=>{
-    const code=otp.join("");
-    if(code.length<6){setErr("6-digit OTP enter करा ⚠️");return;}
-    setLoad(true);setErr("");setSuc("");
-    try{
-      const r=await(await fetch("http://localhost:5000/api/v1/auth/verify-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.trim().toLowerCase(),otp:code})})).json();
-      if(r.success){setSuc("OTP Verified ✅");setTimeout(()=>{setSuc("");setStep(3);},1000);}
-      else{setErr(r.message||"Invalid OTP ❌");setOtp(["","","","","",""]);refs[0].current.focus();}
-    }catch{setErr("❌ Server connect नाही झाला.");}finally{setLoad(false);}
+  const sendOtp = async () => {
+    if (!email.trim()) { setErr("Email required ⚠️"); return; }
+    if (!email.includes("@")) { setErr("Valid email enter करा ⚠️"); return; }
+    setLoad(true); setErr(""); setSuc("");
+    try {
+      const r = await (await fetch("http://localhost:5000/api/v1/auth/send-otp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.trim().toLowerCase() }) })).json();
+      if (r.success) { setSuc("OTP पाठवला ✅"); setTimeout(() => { setSuc(""); setStep(2); }, 1500); }
+      else setErr(r.message || "Account सापडला नाही ❌");
+    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
   };
 
-  const reset=async()=>{
-    if(!newP||!conP){setErr("सगळे fields भरा ⚠️");return;}
-    if(newP.length<6){setErr("Password कमीत कमी 6 characters असावा ⚠️");return;}
-    if(newP!==conP){setErr("Passwords match नाही ❌");return;}
-    setLoad(true);setErr("");setSuc("");
-    try{
-      const r=await(await fetch("http://localhost:5000/api/v1/auth/reset-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.trim().toLowerCase(),newPass:newP,confirmPass:conP})})).json();
-      if(r.success){setSuc("Password Reset Successful ✅");setTimeout(()=>navigate("/login"),2000);}
-      else setErr(r.message||"काहीतरी चूक झाली ❌");
-    }catch{setErr("❌ Server connect नाही झाला.");}finally{setLoad(false);}
+  const verOtp = async () => {
+    const code = otp.join("");
+    if (code.length < 6) { setErr("6-digit OTP enter करा ⚠️"); return; }
+    setLoad(true); setErr(""); setSuc("");
+    try {
+      const r = await (await fetch("http://localhost:5000/api/v1/auth/verify-otp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.trim().toLowerCase(), otp: code }) })).json();
+      if (r.success) { setSuc("OTP Verified ✅"); setTimeout(() => { setSuc(""); setStep(3); }, 1000); }
+      else { setErr(r.message || "Invalid OTP ❌"); setOtp(["","","","","",""]); refs[0].current.focus(); }
+    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
   };
 
-  const steps=["Email","OTP","Reset"];
-  const SP=()=><div style={{width:15,height:15,borderRadius:"50%",border:"2px solid rgba(255,255,255,.3)",borderTopColor:"#fff",animation:"spin .7s linear infinite"}}/>;
+  const reset = async () => {
+    if (!newP || !conP) { setErr("सगळे fields भरा ⚠️"); return; }
+    if (newP.length < 6) { setErr("Password कमीत कमी 6 characters असावा ⚠️"); return; }
+    if (newP !== conP) { setErr("Passwords match नाही ❌"); return; }
+    setLoad(true); setErr(""); setSuc("");
+    try {
+      const r = await (await fetch("http://localhost:5000/api/v1/auth/reset-password", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.trim().toLowerCase(), newPass: newP, confirmPass: conP }) })).json();
+      if (r.success) { setSuc("Password Reset Successful ✅"); setTimeout(() => navigate("/login"), 2000); }
+      else setErr(r.message || "काहीतरी चूक झाली ❌");
+    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
+  };
 
-  const btnStyle=(active=true)=>({
-    width:"100%",padding:"13px",borderRadius:10,
-    background:active?"linear-gradient(135deg,#7c3aed,#6d28d9)":"rgba(124,58,237,.22)",
-    color:"#fff",fontSize:15,fontWeight:700,letterSpacing:.2,
-    boxShadow:active?"0 5px 20px rgba(124,58,237,.4)":"none",
-    display:"flex",alignItems:"center",justifyContent:"center",gap:8,
-    opacity:(!active||load)?.6:1,cursor:(!active||load)?"not-allowed":"pointer",
-    transition:"all .3s",
+  const Spinner = () => (
+    <span style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", animation: "spin 0.7s linear infinite", display: "inline-block" }} />
+  );
+
+  const inputStyle = (name) => ({
+    width: "100%", boxSizing: "border-box",
+    background: focusedField === name ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
+    border: `1px solid ${focusedField === name ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.2)"}`,
+    borderRadius: 12,
+    paddingLeft: 38, paddingRight: name === "newP" || name === "conP" ? 40 : 16,
+    paddingTop: 12, paddingBottom: 12,
+    color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
+    outline: "none", transition: "all 0.2s ease",
+    boxShadow: focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
+
+  const iconStyle = { position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex" };
+
+  const btnStyle = (active = true) => ({
+    width: "100%", padding: "14px 24px", borderRadius: 14, border: "none",
+    background: active && !load ? "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)" : "rgba(79,70,229,0.4)",
+    backgroundSize: "200%",
+    color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
+    cursor: active && !load ? "pointer" : "not-allowed",
+    boxShadow: active && !load ? "0 4px 28px rgba(79,70,229,0.45)" : "none",
+    transition: "all 0.2s ease",
+    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+    fontFamily: "inherit",
+    animation: active && !load ? "shimmer 3s linear infinite" : "none",
+  });
+
+  const labelStyle = { display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" };
 
   return (
     <>
-      <G/>
-      <Stars/>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @keyframes ptFloat   { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
+        @keyframes hexFloat  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes ambPulse  { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+        @keyframes orbitSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+        @keyframes shimmer   { 0%{background-position:0% center} 100%{background-position:200% center} }
+        @keyframes ulGrow    { from{width:0} to{width:200px} }
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes logoIn    { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes cardIn    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin      { to{transform:rotate(360deg)} }
+        @keyframes scanPulse { 0%,100%{opacity:0} 50%{opacity:1} }
+        @keyframes stepIn    { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+        input::placeholder { color: rgba(148,163,184,0.3); }
+        * { box-sizing: border-box; }
+        @media (min-width: 1024px) { .lg-brand-panel { display: flex !important; } }
+      `}</style>
 
-      {/* Language dropdown */}
-      <div style={{position:"fixed",top:18,right:24,zIndex:100}}>
-        <div style={{position:"relative"}}>
-          <button onClick={()=>setShowL(!showL)} style={{background:"rgba(12,22,58,.8)",border:"1px solid rgba(99,179,237,.22)",borderRadius:8,padding:"6px 14px",color:"#e2e8f0",fontSize:13,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:6,fontFamily:"'DM Sans',sans-serif"}}>
-            {lang}<svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="rgba(255,255,255,.45)" strokeWidth="1.5" strokeLinecap="round"/></svg>
-          </button>
-          {showL&&(
-            <div style={{position:"absolute",top:"calc(100% + 5px)",right:0,minWidth:80,background:"rgba(8,18,50,.97)",backdropFilter:"blur(16px)",border:"1px solid rgba(99,179,237,.18)",borderRadius:10,overflow:"hidden",boxShadow:"0 8px 24px rgba(0,0,0,.5)"}}>
-              {["EN","मर","हिं","ગુ"].map(l=>(
-                <button key={l} className="lang-opt" onClick={()=>{setLang(l);setShowL(false);}} style={{background:l===lang?"rgba(124,58,237,.2)":"transparent",color:l===lang?"#a78bfa":"rgba(255,255,255,.65)"}}>
-                  {l}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", padding: "24px 16px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
-      {/* Page */}
-      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#030C20 0%,#06152E 45%,#091E3E 100%)",position:"relative",zIndex:1,padding:"20px 16px"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:56,width:"100%",maxWidth:1060,flexWrap:"wrap"}}>
+        <GridBackground />
+        <Particles />
 
-          {/* LEFT */}
-          <div style={{flex:"0 0 auto",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",gap:24,minWidth:260}}>
-            <BankBuilding/>
-            <div>
-              <h3 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:24,background:"linear-gradient(90deg,#38bdf8,#7c3aed)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",letterSpacing:-0.5,marginBottom:6}}>
-                Your Trusted Bank
-              </h3>
-              <p style={{color:"rgba(148,163,184,.5)",fontSize:10,letterSpacing:"3px",textTransform:"uppercase",fontWeight:600}}>
-                SECURE · SMART · BANKING
-              </p>
-            </div>
-          </div>
+        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
 
-          {/* RIGHT CARD */}
-          <div className={cardIn?"card-in":""} style={{flex:"0 0 auto",width:"100%",maxWidth:390}}>
-            <div style={{background:"rgba(9,18,52,.85)",backdropFilter:"blur(22px)",border:"1px solid rgba(99,179,237,.17)",boxShadow:"0 24px 65px rgba(0,0,0,.6),inset 0 1px 0 rgba(99,179,237,.1)",borderRadius:16,padding:"34px 30px",color:"#e2e8f0",position:"relative",overflow:"hidden"}}>
+          <BrandPanel />
 
-              <div style={{position:"absolute",top:0,left:"10%",right:"10%",height:1,background:"linear-gradient(90deg,transparent,rgba(56,189,248,.45),rgba(124,58,237,.38),transparent)"}}/>
+          {/* ════ CARD ════ */}
+          <div style={{ width: "100%", maxWidth: 460, animation: "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s" }}>
+            <div style={{
+              borderRadius: 24,
+              background: "rgba(8,16,60,0.7)",
+              border: "1px solid rgba(99,102,241,0.2)",
+              backdropFilter: "blur(32px)",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)",
+              padding: "36px 36px 32px",
+            }}>
 
-              {/* Brand */}
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:9,marginBottom:18}}>
-                <div style={{width:34,height:34,borderRadius:9,background:"linear-gradient(135deg,#7c3aed,#6366f1)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 14px rgba(124,58,237,.4)"}}>
-                  <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="white" strokeWidth="1.8" fill="none"/><polyline points="9 22 9 12 15 12 15 22" stroke="white" strokeWidth="1.8"/></svg>
-                </div>
-                <span style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:14,letterSpacing:2,color:"#e2e8f0"}}>PAYZEN BANK</span>
-              </div>
-
-              {/* Title */}
-              <div style={{textAlign:"center",marginBottom:22}}>
-                <h2 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:25,letterSpacing:-.5,marginBottom:5}}>Forgot Password</h2>
-                <p style={{color:"rgba(148,163,184,.55)",fontSize:13}}>Reset your account securely</p>
-              </div>
-
-              {/* Steps */}
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,marginBottom:22}}>
-                {steps.map((lbl,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:7}}>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"center",width:28,height:28,borderRadius:"50%",fontSize:11,fontWeight:700,transition:"all .3s",
-                      background:step===i+1?"linear-gradient(135deg,#7c3aed,#6366f1)":step>i+1?"linear-gradient(135deg,#10b981,#059669)":"rgba(255,255,255,.08)",
-                      color:(step===i+1||step>i+1)?"#fff":"rgba(255,255,255,.3)",
-                      boxShadow:step===i+1?"0 4px 12px rgba(124,58,237,.5)":"none",
-                    }}>{step>i+1?"✓":i+1}</div>
-                    <span style={{fontSize:11,fontWeight:500,color:step===i+1?"#e2e8f0":"rgba(148,163,184,.38)",transition:"color .3s"}}>{lbl}</span>
-                    {i<2&&<div style={{width:18,height:2,borderRadius:99,transition:"background .4s",background:step>i+1?"linear-gradient(90deg,#10b981,#059669)":"rgba(255,255,255,.1)"}}/>}
+              {/* Top bar */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#4f46e5,#2563eb)", boxShadow: "0 0 20px rgba(79,70,229,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L22 7V17L12 22L2 17V7Z" stroke="white" strokeWidth="1.8" fill="rgba(255,255,255,0.15)"/>
+                      <path d="M8 12H16M12 8V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
                   </div>
-                ))}
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.02em" }}>PayZen Bank</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", borderRadius: 999, border: "1px solid rgba(52,211,153,0.25)", background: "rgba(52,211,153,0.07)", fontSize: 11, fontWeight: 600, color: "rgba(52,211,153,0.8)" }}>
+                  <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#34d399", boxShadow: "0 0 6px #34d399", animation: "scanPulse 2s ease-in-out infinite" }} />
+                  Secure
+                </div>
               </div>
 
-              {/* ══════════════════════════════════
-                  STEP 1 — Email + Mail Icon
-              ══════════════════════════════════ */}
-              {step===1&&(
-                <div className="step-in">
-                  <div style={{marginBottom:15}}>
-                    <label style={{display:"block",fontSize:13,fontWeight:600,color:"rgba(226,232,240,.75)",marginBottom:7}}>
-                      Email Address <span style={{color:"#f87171"}}>*</span>
-                    </label>
-                    {/* Input with Mail icon */}
-                    <div style={{position:"relative"}}>
-                      <span className="in-icon">
-                        <Mail size={16} />
-                      </span>
-                      <input
-                        type="email" placeholder="Enter Email Address" className="pz-in"
-                        value={email}
-                        onChange={e=>{setEmail(e.target.value);setErr("");}}
-                        onKeyDown={e=>e.key==="Enter"&&sendOtp()}
-                      />
+              {/* Heading */}
+              <div style={{ textAlign: "center", marginBottom: 22 }}>
+                <h2 style={{ fontSize: 26, fontWeight: 800, color: "#f1f5f9", letterSpacing: "-0.03em", margin: 0, marginBottom: 6 }}>Forgot Password</h2>
+                <p style={{ fontSize: 13, color: "rgba(148,163,184,0.6)", margin: 0 }}>Reset your account securely</p>
+              </div>
+
+              {/* Step indicator */}
+              <StepIndicator step={step} />
+
+              {/* ══ STEP 1 — Email ══ */}
+              {step === 1 && (
+                <div style={{ animation: "stepIn .35s cubic-bezier(.16,1,.3,1) forwards" }}>
+                  <div style={{ marginBottom: 16 }}>
+                    <label style={labelStyle}>Email Address <span style={{ color: "#f87171" }}>*</span></label>
+                    <div style={{ position: "relative" }}>
+                      <span style={iconStyle}><Mail size={14} /></span>
+                      <input type="email" placeholder="you@email.com"
+                        value={email} onChange={e => { setEmail(e.target.value); setErr(""); }}
+                        onKeyDown={e => e.key === "Enter" && sendOtp()}
+                        onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
+                        style={inputStyle("email")} />
                     </div>
                   </div>
-                  <button onClick={sendOtp} disabled={load} className="pz-btn" style={btnStyle()}>
-                    {load?<><SP/> Sending OTP...</>:<><Mail size={16}/> Send OTP</>}
+                  <button onClick={sendOtp} disabled={load} style={btnStyle()}>
+                    {load ? <><Spinner /> Sending OTP...</> : <><Mail size={16} /> Send OTP <ArrowRight size={14} style={{ opacity: 0.7 }} /></>}
                   </button>
                 </div>
               )}
 
-              {/* ══════════════════════════════════
-                  STEP 2 — OTP Boxes + KeyRound icon
-              ══════════════════════════════════ */}
-              {step===2&&(
-                <div className="step-in">
-                  {/* OTP header with icon */}
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,marginBottom:13}}>
-                    <KeyRound size={16} style={{color:"rgba(124,58,237,.8)"}}/>
-                    <label style={{fontSize:13,fontWeight:600,color:"rgba(226,232,240,.75)"}}>
-                      Enter 6-digit OTP <span style={{color:"#f87171"}}>*</span>
-                    </label>
+              {/* ══ STEP 2 — OTP ══ */}
+              {step === 2 && (
+                <div style={{ animation: "stepIn .35s cubic-bezier(.16,1,.3,1) forwards" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, marginBottom: 14 }}>
+                    <KeyRound size={14} style={{ color: "rgba(99,102,241,0.7)" }} />
+                    <label style={{ ...labelStyle, margin: 0 }}>Enter 6-digit OTP <span style={{ color: "#f87171" }}>*</span></label>
                   </div>
 
-                  {/* OTP Boxes */}
-                  <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:16}}>
-                    {otp.map((d,i)=>(
-                      <div key={i} onClick={()=>refs[i].current.focus()}
-                        style={{position:"relative",width:46,height:52,cursor:"text"}}>
+                  {/* OTP boxes */}
+                  <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 14 }}>
+                    {otp.map((d, i) => (
+                      <div key={i} onClick={() => refs[i].current.focus()}
+                        style={{ position: "relative", width: 46, height: 52, cursor: "text" }}>
                         <div style={{
-                          position:"absolute",inset:0,borderRadius:12,
-                          background:"rgba(15,25,65,.55)",
-                          border:`2px solid ${focusIdx===i?"rgba(124,58,237,.7)":"rgba(99,179,237,.2)"}`,
-                          boxShadow:focusIdx===i?"0 0 0 3px rgba(124,58,237,.15)":"none",
-                          transition:"border-color .2s, box-shadow .2s",
-                          display:"flex",alignItems:"center",justifyContent:"center",
+                          position: "absolute", inset: 0, borderRadius: 12,
+                          background: focusIdx === i ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${focusIdx === i ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.2)"}`,
+                          boxShadow: focusIdx === i ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
+                          transition: "all 0.2s",
+                          display: "flex", alignItems: "center", justifyContent: "center",
                         }}>
                           {d ? (
-                            <div style={{width:9,height:9,borderRadius:"50%",background:"#e2e8f0",boxShadow:"0 0 6px rgba(226,232,240,.6)"}}/>
-                          ) : focusIdx===i ? (
-                            <div style={{width:2,height:22,background:"#818cf8",borderRadius:1,animation:"cursorBlink 1s step-end infinite"}}/>
+                            <div style={{ width: 9, height: 9, borderRadius: "50%", background: "#e2e8f0", boxShadow: "0 0 6px rgba(226,232,240,0.6)" }} />
+                          ) : focusIdx === i ? (
+                            <div style={{ width: 2, height: 20, background: "#818cf8", borderRadius: 1, animation: "cursorBlink 1s step-end infinite" }} />
                           ) : null}
                         </div>
-                        <input
-                          ref={refs[i]} type="text" inputMode="numeric" maxLength={1} value={d}
-                          onChange={e=>{chOtp(i,e.target.value);setErr("");}}
-                          onKeyDown={e=>kyOtp(i,e)}
-                          onFocus={()=>setFocusIdx(i)} onBlur={()=>setFocusIdx(-1)}
-                          style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0,cursor:"text",zIndex:10,fontSize:16,background:"transparent",border:"none",outline:"none"}}
+                        <input ref={refs[i]} type="text" inputMode="numeric" maxLength={1} value={d}
+                          onChange={e => { chOtp(i, e.target.value); setErr(""); }}
+                          onKeyDown={e => kyOtp(i, e)}
+                          onFocus={() => setFocusIdx(i)} onBlur={() => setFocusIdx(-1)}
+                          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0, cursor: "text", zIndex: 10, fontSize: 16, background: "transparent", border: "none", outline: "none" }}
                         />
                       </div>
                     ))}
                   </div>
 
-                  <p style={{textAlign:"center",color:"rgba(148,163,184,.48)",fontSize:12,marginBottom:3}}>
-                    {filled===0?"Enter the 6-digit code":filled<6?`${filled} of 6 entered`:"✅ All digits entered"}
+                  <p style={{ textAlign: "center", fontSize: 12, color: "rgba(148,163,184,0.45)", marginBottom: 4 }}>
+                    {filled === 0 ? "Enter the 6-digit code" : filled < 6 ? `${filled} of 6 entered` : "✅ All digits entered"}
                   </p>
-                  <p style={{textAlign:"center",color:"rgba(148,163,184,.48)",fontSize:12,marginBottom:13}}>
-                    OTP sent to <span style={{color:"rgba(226,232,240,.65)",fontWeight:600}}>{email}</span>
+                  <p style={{ textAlign: "center", fontSize: 12, color: "rgba(148,163,184,0.45)", marginBottom: 12 }}>
+                    OTP sent to <span style={{ color: "rgba(226,232,240,0.65)", fontWeight: 600 }}>{email}</span>
                   </p>
-                  <p style={{textAlign:"center",marginBottom:14}}>
-                    <button className="rs-l" onClick={()=>{setStep(1);setOtp(["","","","","",""]);setErr("");}}>
+                  <p style={{ textAlign: "center", marginBottom: 14 }}>
+                    <button onClick={() => { setStep(1); setOtp(["","","","","",""]); setErr(""); }}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: "#818cf8", fontSize: 12, fontFamily: "inherit" }}>
                       OTP नाही आला? Resend करा ↩
                     </button>
                   </p>
-                  <button onClick={verOtp} disabled={load||filled<6} className="pz-btn" style={btnStyle(filled===6)}>
-                    {load?<><SP/> Verifying...</>:<><ShieldCheck size={16}/> Verify OTP</>}
+                  <button onClick={verOtp} disabled={load || filled < 6} style={btnStyle(filled === 6)}>
+                    {load ? <><Spinner /> Verifying...</> : <><ShieldCheck size={16} /> Verify OTP <ArrowRight size={14} style={{ opacity: 0.7 }} /></>}
                   </button>
                 </div>
               )}
 
-              {/* ══════════════════════════════════
-                  STEP 3 — New & Confirm Password + Lock Icons
-              ══════════════════════════════════ */}
-              {step===3&&(
-                <div className="step-in">
+              {/* ══ STEP 3 — Reset Password ══ */}
+              {step === 3 && (
+                <div style={{ animation: "stepIn .35s cubic-bezier(.16,1,.3,1) forwards" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
-                  {/* New Password */}
-                  <div style={{marginBottom:13}}>
-                    <label style={{display:"block",fontSize:13,fontWeight:600,color:"rgba(226,232,240,.75)",marginBottom:7}}>
-                      New Password <span style={{color:"#f87171"}}>*</span>
-                    </label>
-                    <div style={{position:"relative"}}>
-                      {/* Left Lock Icon */}
-                      <span className="in-icon">
-                        <Lock size={16} />
-                      </span>
-                      <input
-                        type={showN?"text":"password"} placeholder="Enter New Password"
-                        className="pz-in" style={{paddingRight:42}}
-                        value={newP} onChange={e=>{setNewP(e.target.value);setErr("");}}
-                      />
-                      {/* Right Eye Toggle */}
-                      <button className="eye" onClick={()=>setShowN(!showN)}
-                        style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)"}}>
-                        {showN ? <EyeOff size={17}/> : <Eye size={17}/>}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div style={{marginBottom:5}}>
-                    <label style={{display:"block",fontSize:13,fontWeight:600,color:"rgba(226,232,240,.75)",marginBottom:7}}>
-                      Confirm Password <span style={{color:"#f87171"}}>*</span>
-                    </label>
-                    <div style={{position:"relative"}}>
-                      {/* Left Lock Icon */}
-                      <span className="in-icon">
-                        <Lock size={16} />
-                      </span>
-                      <input
-                        type={showC?"text":"password"} placeholder="Re-enter New Password"
-                        className="pz-in" style={{paddingRight:42}}
-                        value={conP} onChange={e=>{setConP(e.target.value);setErr("");}}
-                      />
-                      {/* Right Eye Toggle */}
-                      <button className="eye" onClick={()=>setShowC(!showC)}
-                        style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)"}}>
-                        {showC ? <EyeOff size={17}/> : <Eye size={17}/>}
-                      </button>
-                    </div>
-
-                    {/* Password match indicator */}
-                    {conP&&(
-                      <div style={{display:"flex",alignItems:"center",gap:6,marginTop:7}}>
-                        <div style={{width:7,height:7,borderRadius:"50%",background:newP===conP?"#10b981":"#ef4444",boxShadow:newP===conP?"0 0 6px #10b981":"0 0 6px #ef4444"}}/>
-                        <span style={{fontSize:12,color:newP===conP?"#6ee7b7":"#fca5a5"}}>
-                          {newP===conP?"Passwords match ✓":"Passwords don't match"}
-                        </span>
+                    {/* New Password */}
+                    <div>
+                      <label style={labelStyle}>New Password <span style={{ color: "#f87171" }}>*</span></label>
+                      <div style={{ position: "relative" }}>
+                        <span style={iconStyle}><Lock size={14} /></span>
+                        <input type={showN ? "text" : "password"} placeholder="Enter new password"
+                          value={newP} onChange={e => { setNewP(e.target.value); setErr(""); }}
+                          onFocus={() => setFocusedField("newP")} onBlur={() => setFocusedField(null)}
+                          style={inputStyle("newP")} />
+                        <button type="button" onClick={() => setShowN(!showN)} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(99,102,241,0.5)", display: "flex", padding: 0 }}>
+                          {showN ? <EyeOff size={14} /> : <Eye size={14} />}
+                        </button>
                       </div>
-                    )}
-                  </div>
+                    </div>
 
-                  <button onClick={reset} disabled={load} className="pz-btn" style={{...btnStyle(),marginTop:16}}>
-                    {load?<><SP/> Resetting...</>:<><ShieldCheck size={16}/> Reset Password</>}
-                  </button>
+                    {/* Confirm Password */}
+                    <div>
+                      <label style={labelStyle}>Confirm Password <span style={{ color: "#f87171" }}>*</span></label>
+                      <div style={{ position: "relative" }}>
+                        <span style={iconStyle}><Lock size={14} /></span>
+                        <input type={showC ? "text" : "password"} placeholder="Re-enter new password"
+                          value={conP} onChange={e => { setConP(e.target.value); setErr(""); }}
+                          onFocus={() => setFocusedField("conP")} onBlur={() => setFocusedField(null)}
+                          style={inputStyle("conP")} />
+                        <button type="button" onClick={() => setShowC(!showC)} style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(99,102,241,0.5)", display: "flex", padding: 0 }}>
+                          {showC ? <EyeOff size={14} /> : <Eye size={14} />}
+                        </button>
+                      </div>
+                      {conP && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 7 }}>
+                          <div style={{ width: 7, height: 7, borderRadius: "50%", background: pwMatch ? "#4ade80" : "#f87171", boxShadow: `0 0 6px ${pwMatch ? "#4ade80" : "#f87171"}`, transition: "all 0.3s" }} />
+                          <span style={{ fontSize: 10, color: pwMatch ? "#4ade80" : "#f87171" }}>
+                            {pwMatch ? "Passwords match ✓" : "Doesn't match"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <button onClick={reset} disabled={load} style={btnStyle()}>
+                      {load ? <><Spinner /> Resetting...</> : <><ShieldCheck size={16} /> Reset Password <ArrowRight size={14} style={{ opacity: 0.7 }} /></>}
+                    </button>
+                  </div>
                 </div>
               )}
 
-              {/* Error / Success */}
-              {err&&<div className="shk" style={{marginTop:13,padding:"10px 13px",borderRadius:9,background:"rgba(239,68,68,.07)",border:"1px solid rgba(239,68,68,.24)",color:"#fca5a5",fontSize:13,textAlign:"center"}}>{err}</div>}
-              {suc&&<div style={{marginTop:13,padding:"10px 13px",borderRadius:9,background:"rgba(16,185,129,.07)",border:"1px solid rgba(16,185,129,.24)",color:"#6ee7b7",fontSize:13,textAlign:"center"}}>{suc}</div>}
+              {/* Error / Success messages */}
+              {err && (
+                <div style={{ marginTop: 14, padding: "10px 14px", borderRadius: 10, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5", fontSize: 13, textAlign: "center" }}>
+                  {err}
+                </div>
+              )}
+              {suc && (
+                <div style={{ marginTop: 14, padding: "10px 14px", borderRadius: 10, background: "rgba(52,211,153,0.07)", border: "1px solid rgba(52,211,153,0.25)", color: "#6ee7b7", fontSize: 13, textAlign: "center" }}>
+                  {suc}
+                </div>
+              )}
 
-              {/* OR */}
-              <div style={{display:"flex",alignItems:"center",gap:10,margin:"17px 0 13px"}}>
-                <div style={{flex:1,height:1,background:"rgba(99,179,237,.1)"}}/>
-                <span style={{color:"rgba(148,163,184,.38)",fontSize:11,fontWeight:600,letterSpacing:2}}>OR</span>
-                <div style={{flex:1,height:1,background:"rgba(99,179,237,.1)"}}/>
+              {/* Divider */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
+                <span style={{ fontSize: 10, letterSpacing: "0.15em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase" }}>or</span>
+                <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
               </div>
 
-              <p style={{textAlign:"center",fontSize:13,color:"rgba(148,163,184,.5)"}}>
+              <p style={{ textAlign: "center", fontSize: 13, color: "rgba(148,163,184,0.5)", margin: 0 }}>
                 Remember your password?{" "}
-                <button onClick={()=>navigate("/login")} style={{background:"none",border:"none",color:"#7c3aed",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>
-                  Login here
+                <button onClick={() => navigate("/login")} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: 700, color: "#818cf8", fontSize: "inherit", fontFamily: "inherit", padding: 0 }}>
+                  Login here 
                 </button>
               </p>
 
-              {step>1&&(
-                <div style={{textAlign:"center",marginTop:10}}>
-                  <button className="back-l" onClick={()=>{setStep(step-1);setErr("");setSuc("");}}>← Back</button>
+              {step > 1 && (
+                <div style={{ textAlign: "center", marginTop: 12 }}>
+                  <button onClick={() => { setStep(step - 1); setErr(""); setSuc(""); }}
+                    style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(148,163,184,0.5)", fontSize: 12, fontFamily: "inherit" }}>
+                    ← Back
+                  </button>
                 </div>
               )}
 
-              <div style={{position:"absolute",bottom:0,left:"20%",right:"20%",height:1,background:"linear-gradient(90deg,transparent,rgba(124,58,237,.28),transparent)"}}/>
             </div>
           </div>
-
         </div>
       </div>
     </>
