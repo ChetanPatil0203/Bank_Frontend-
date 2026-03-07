@@ -1,6 +1,19 @@
 import { Bell, ChevronDown } from "lucide-react";
 
 function HeaderSection({ onMenuClick, sidebarOpen }) {
+
+  // ✅ LocalStorage मधून user चं नाव घ्या
+  const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
+  const userName = payzenUser?.name || "User";
+
+  // ✅ Avatar initials बनवा (e.g. "Chetan Patil" → "CP")
+  const initials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
     <header
       className={`sticky top-0 z-40 border-b border-white/[.08] shadow-[0_2px_16px_rgba(0,0,0,0.3)]
@@ -48,10 +61,9 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
           {/* Profile Pill */}
           <div
             className="flex items-center gap-[10px] px-3 py-[6px] rounded-full cursor-pointer
-                       transition-all duration-200 hover:-translate-y-px
-                      "
+                       transition-all duration-200 hover:-translate-y-px"
           >
-            {/* BP Avatar */}
+            {/* ✅ Dynamic Avatar Initials */}
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 select-none
                          bg-[linear-gradient(135deg,#a78bfa_0%,#7c3aed_100%)]
@@ -59,15 +71,16 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
                          shadow-[0_2px_8px_rgba(124,58,237,0.45)]"
             >
               <span className="text-white text-[11px] font-extrabold tracking-[0.04em] leading-none">
-                BP
+                {initials}
               </span>
             </div>
 
-            {/* Welcome, Bhushan — single line */}
+            {/* ✅ Dynamic Hello Name */}
             <span className="text-white text-[13px] font-medium whitespace-nowrap">
               Hello,{" "}
-              <span className="font-bold">Bhushan</span>
+              <span className="font-bold">{userName}</span>
             </span>
+
           </div>
 
         </div>

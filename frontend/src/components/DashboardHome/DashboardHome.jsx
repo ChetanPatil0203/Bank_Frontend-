@@ -43,7 +43,6 @@ const STYLES = `
     box-shadow: 0 12px 36px rgba(30,64,175,0.14), 0 2px 8px rgba(0,0,0,0.06) !important;
   }
 
-  /* card bg + diagonal texture — cannot do in Tailwind */
   .bank-card-body {
     background: linear-gradient(135deg, #1e3a7b 0%, #152d68 50%, #0f1f4d 100%);
     background-image:
@@ -88,6 +87,10 @@ export default function DashboardHome() {
   const [activeCard, setActiveCard]   = useState(null);
   const navigate = useNavigate();
 
+  // ✅ LocalStorage मधून user चं नाव घ्या
+  const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
+  const userName = payzenUser?.name || "User";
+
   useEffect(() => {
     const el = document.createElement("style");
     el.textContent = STYLES;
@@ -120,7 +123,6 @@ export default function DashboardHome() {
     { name:"Flight Ticket",   amount:"−₹12,800", date:"Feb 18",         type:"debit",  icon:Plane          },
   ];
 
-  /* shared tile classes */
   const tileBase = (id) =>
     `action-tile flex flex-col items-center text-center py-7 px-4 rounded-[18px] cursor-pointer
      border border-white/80 backdrop-blur-[18px]
@@ -139,6 +141,7 @@ export default function DashboardHome() {
       {/* ── CONTENT ── */}
       <div className="max-w-[1140px] mx-auto px-10 py-9">
 
+        {/* ✅ Dynamic Hello Message */}
         <h2 className="text-2xl font-extrabold text-slate-800 tracking-[0.10em] uppercase mb-6 px-1">
           Account Overview
         </h2>
@@ -147,30 +150,23 @@ export default function DashboardHome() {
             PREMIUM BANK CARD
         ══════════════════════════════ */}
         <div className="anim-card-in mb-8">
-
-          {/* outer glow border */}
           <div className="bank-card-outer rounded-[28px] p-[2px]">
-
-            {/* card body */}
             <div className="bank-card-body relative rounded-[26px] overflow-hidden min-h-[220px] px-10 pt-9 pb-8">
 
-              {/* texture glows */}
               <div className="glow-tr absolute -top-20 -right-20 w-80 h-80 rounded-full pointer-events-none" />
               <div className="glow-bl absolute -bottom-12 left-[25%] w-56 h-56 rounded-full pointer-events-none" />
 
-              {/* shimmer sweep */}
               <div className="absolute inset-0 overflow-hidden rounded-[26px] pointer-events-none">
                 <div className="shimmer-sweep anim-shimmer absolute top-0 left-0 w-[40%] h-full" />
               </div>
 
-              {/* "My Saving A/C" centre badge */}
               <div className="badge-ac absolute top-4 left-1/2 -translate-x-1/2 whitespace-nowrap
                               px-4 py-1 rounded-full border border-white/[.12] backdrop-blur-sm
                               text-[9px] font-semibold tracking-[.22em] uppercase text-white/40">
                 My Saving A/C
               </div>
 
-              {/* TOP ROW: logo + NFC */}
+              {/* TOP ROW */}
               <div className="flex justify-between items-start mb-7">
                 <div className="flex items-center gap-3">
                   <div className="logo-icon w-9 h-9 rounded-[10px] flex items-center justify-center">
@@ -194,7 +190,6 @@ export default function DashboardHome() {
 
               {/* CHIP + CARD NUMBER */}
               <div className="flex items-center gap-5 mb-6">
-                {/* EMV Chip */}
                 <div className="chip-body anim-chip relative w-[46px] h-[36px] rounded-lg overflow-hidden flex-shrink-0">
                   <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1">
                     {[...Array(9)].map((_,i) => (
@@ -204,7 +199,6 @@ export default function DashboardHome() {
                   <div className="chip-contact absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                                   w-[22px] h-[16px] rounded-[3px] border-[1.5px]" />
                 </div>
-                {/* Card number */}
                 <span className="text-[15px] font-semibold tracking-[.22em]"
                       style={{ fontFamily:"'JetBrains Mono',monospace",
                                color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
@@ -215,17 +209,14 @@ export default function DashboardHome() {
 
               {/* BOTTOM ROW */}
               <div className="flex items-end justify-between gap-5 flex-wrap">
-
-                {/* left: holder / expiry / balance */}
                 <div className="flex gap-10 items-end flex-wrap">
                   <div>
                     <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Holder</p>
+                    {/* ✅ Dynamic user name */}
                     <p className="m-0 text-[15px] font-extrabold text-white tracking-widest uppercase"
                        style={{ textShadow:"0 1px 12px rgba(255,255,255,.25)" }}>
-                      Bhushan Patil
+                      {userName}
                     </p>
-                  </div>
-                  <div>
                   </div>
                   <div>
                     <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
@@ -243,7 +234,6 @@ export default function DashboardHome() {
                   </div>
                 </div>
 
-                {/* right: mastercard + button */}
                 <div className="flex flex-col items-end gap-3">
                   <div className="flex items-center gap-2">
                     <div className="flex">
@@ -264,13 +254,11 @@ export default function DashboardHome() {
                 </div>
               </div>
 
-            </div>{/* end card body */}
-          </div>{/* end outer glow */}
+            </div>
+          </div>
         </div>
-        {/* ══════════ END BANK CARD ══════════ */}
 
-
-        {/* ── QUICK ACTIONS — 4 + 4 ── */}
+        {/* ── QUICK ACTIONS ── */}
         <div className="anim-fade-up-1 mb-7">
           <div className="flex justify-between items-center mb-4 px-1">
             <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Quick Actions</h3>
@@ -279,7 +267,6 @@ export default function DashboardHome() {
             </button>
           </div>
 
-          {/* row 1 */}
           <div className="grid grid-cols-4 gap-4 mb-4">
             {quickActions.slice(0,4).map((item,i) => {
               const Icon = item.icon; const id = `q-${i}`;
@@ -298,7 +285,6 @@ export default function DashboardHome() {
             })}
           </div>
 
-          {/* row 2 */}
           <div className="grid grid-cols-4 gap-4">
             {quickActions.slice(4,8).map((item,i) => {
               const Icon = item.icon; const id = `q-${i+4}`;
@@ -318,7 +304,7 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* ── SHOPPING — 4 cards ── */}
+        {/* ── SHOPPING ── */}
         <div className="anim-fade-up-2 mb-7">
           <div className="flex justify-between items-center mb-4 px-1">
             <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Shopping</h3>
@@ -346,11 +332,10 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* ── RECENT TRANSACTIONS — professional table ── */}
+        {/* ── RECENT TRANSACTIONS ── */}
         <div className="anim-fade-up-3 pb-8">
           <div className="txns-wrap backdrop-blur-[18px] rounded-[22px] border border-white/80 overflow-hidden">
 
-            {/* Title bar */}
             <div className="flex justify-between items-center px-8 py-5 border-b border-slate-100/80">
               <h3 className="text-xl font-extrabold text-slate-800 tracking-wide">Recent Transactions</h3>
               <button onClick={()=>navigate("/transactions")}
@@ -359,98 +344,56 @@ export default function DashboardHome() {
               </button>
             </div>
 
-      {/* Scrollable */}
-<div className="overflow-x-auto overflow-y-auto max-h-[340px]">
-  <table className="w-full min-w-[620px] text-center">
+            <div className="overflow-x-auto overflow-y-auto max-h-[340px]">
+              <table className="w-full min-w-[620px] text-center">
+                <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
+                  <tr>
+                    <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">SR NO</th>
+                    <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Transaction</th>
+                    <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Type</th>
+                    <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Date & Time</th>
+                    <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Status</th>
+                    <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentTxns.map((txn, i) => {
+                    const Icon = txn.icon;
+                    const isC = txn.type === "credit";
+                    return (
+                      <tr key={i} className="border-b border-slate-200 hover:bg-blue-50 transition">
+                        <td className="px-6 py-4 text-[13px] font-bold text-black">
+                          {String(i + 1).padStart(2)}
+                        </td>
+                        <td className="px-4 py-4 text-center">
+                          <div className="flex items-center justify-center gap-3">
+                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0
+                              ${isC ? "bg-emerald-100" : "bg-red-100"}`}>
+                              <Icon size={16} className={isC ? "text-emerald-600" : "text-red-600"} strokeWidth={2}/>
+                            </div>
+                            <span className="text-[14px] font-semibold text-slate-800 whitespace-nowrap">{txn.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`text-[12px] font-semibold px-3 py-1 rounded-full
+                            ${isC ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"}`}>
+                            {isC ? "▲ Credit" : "▼ Debit"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-[13px] text-slate-500 font-medium">{txn.date}</td>
+                        <td className="px-4 py-4">
+                          <span className="text-[12px] font-semibold text-emerald-600">Success</span>
+                        </td>
+                        <td className={`px-6 py-4 text-[15px] font-bold ${isC ? "text-emerald-600" : "text-red-600"}`}>
+                          {txn.amount}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-    {/* ── TABLE HEADER ── */}
-    <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
-      <tr>
-        <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">SR NO</th>
-        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Transaction</th>
-        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Type</th>
-        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Date & Time</th>
-        <th className="px-4 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Status</th>
-        <th className="px-6 py-3.5 text-[11px] font-bold text-white tracking-[.16em] uppercase">Amount</th>
-      </tr>
-    </thead>
-
-    {/* ── TABLE BODY ── */}
-    <tbody>
-      {recentTxns.map((txn, i) => {
-        const Icon = txn.icon;
-        const isC = txn.type === "credit";
-
-        return (
-          <tr
-            key={i}
-            className="border-b border-slate-200 hover:bg-blue-50 transition"
-          >
-            {/* Sr No */}
-            <td className="px-6 py-4 text-[13px] font-bold text-black">
-              {String(i + 1).padStart(2)}
-            </td>
-
-                {/* Transaction */}
-              <td className="px-4 py-4 text-center">
-                <div className="flex items-center justify-center gap-3">
-                  
-                  {/* Icon */}
-                  <div
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0
-                    ${isC ? "bg-emerald-100" : "bg-red-100"}`}
-                  >
-                    <Icon
-                      size={16}
-                      className={isC ? "text-emerald-600" : "text-red-600"}
-                      strokeWidth={2}
-                    />
-                  </div>
-
-                  {/* Transaction Name */}
-                  <span className="text-[14px] font-semibold text-slate-800 whitespace-nowrap">
-                    {txn.name}
-                  </span>
-
-                </div>
-              </td>
-            {/* Type */}
-            <td className="px-4 py-4">
-              <span
-                className={`text-[12px] font-semibold px-3 py-1 rounded-full
-                ${isC
-                  ? "bg-emerald-100 text-emerald-600"
-                  : "bg-red-100 text-red-600"}`}
-              >
-                {isC ? "▲ Credit" : "▼ Debit"}
-              </span>
-            </td>
-
-            {/* Date */}
-            <td className="px-4 py-4 text-[13px] text-slate-500 font-medium">
-              {txn.date}
-            </td>
-
-            {/* Status */}
-            <td className="px-4 py-4">
-              <span className="text-[12px] font-semibold text-emerald-600">
-                Success
-              </span>
-            </td>
-
-            {/* Amount */}
-            <td className={`px-6 py-4 text-[15px] font-bold
-              ${isC ? "text-emerald-600" : "text-red-600"}`}>
-              {txn.amount}
-            </td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-</div>
-
-            {/* Footer */}
             <div className="flex justify-between items-center px-8 py-3 border-t border-slate-100/80"
                  style={{ background:"rgba(241,245,255,0.70)" }}>
               <span className="text-[12px] text-slate-400 font-medium">Showing {recentTxns.length} of {recentTxns.length} records</span>

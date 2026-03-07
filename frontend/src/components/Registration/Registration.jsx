@@ -29,12 +29,10 @@ function Toast({ message, type, onClose }) {
 function GridBackground() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none">
-      {/* Deep space base */}
       <div style={{
         position: "absolute", inset: 0,
         background: "linear-gradient(135deg, #03071e 0%, #05103a 40%, #0a0a2e 70%, #03071e 100%)"
       }} />
-      {/* Radial accent glows */}
       <div style={{
         position: "absolute", inset: 0,
         background: `
@@ -42,13 +40,11 @@ function GridBackground() {
           radial-gradient(ellipse 50% 70% at 80% 20%, rgba(109,40,217,0.18) 0%, transparent 55%),
           radial-gradient(ellipse 40% 40% at 60% 85%, rgba(6,182,212,0.1) 0%, transparent 50%)`
       }} />
-      {/* Fine dot grid */}
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage: "radial-gradient(circle, rgba(99,102,241,0.18) 1px, transparent 1px)",
         backgroundSize: "32px 32px"
       }} />
-      {/* Scanline texture */}
       <div style={{
         position: "absolute", inset: 0,
         backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,50,255,0.015) 2px, rgba(0,50,255,0.015) 4px)",
@@ -89,13 +85,11 @@ function Particles() {
 }
 
 /* ═══════════════════════════════════════
-   BRAND MARK (LEFT PANEL)
+   BRAND PANEL (LEFT)
 ═══════════════════════════════════════ */
 function BrandPanel() {
   return (
     <div className="hidden lg:flex flex-col items-center justify-center flex-1 relative px-12 py-16 overflow-hidden">
-
-      {/* Central glow disk */}
       <div style={{
         position: "absolute", width: 480, height: 480,
         borderRadius: "50%", top: "50%", left: "50%",
@@ -104,8 +98,6 @@ function BrandPanel() {
         filter: "blur(40px)",
         animation: "ambPulse 6s ease-in-out infinite",
       }} />
-
-      {/* Orbit rings */}
       {[
         { sz: 360, spd: 24, rev: false, dot: 9, dc: "#38bdf8", bc: "rgba(56,189,248,0.12)" },
         { sz: 270, spd: 17, rev: true,  dot: 7, dc: "#a78bfa", bc: "rgba(167,139,250,0.12)" },
@@ -126,17 +118,12 @@ function BrandPanel() {
           }} />
         </div>
       ))}
-
-      {/* Logo block */}
       <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", animation: "logoIn 1s cubic-bezier(.16,1,.3,1) both .3s" }}>
-
-        {/* Hex icon */}
         <div style={{ position: "relative", marginBottom: 28, animation: "hexFloat 5s ease-in-out infinite" }}>
           <div style={{
             position: "absolute", inset: -18, borderRadius: "50%",
             background: "radial-gradient(circle, rgba(37,99,235,0.6) 0%, transparent 65%)",
-            filter: "blur(18px)",
-            animation: "ambPulse 3s ease-in-out infinite",
+            filter: "blur(18px)", animation: "ambPulse 3s ease-in-out infinite",
           }} />
           <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
             <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z"
@@ -161,62 +148,20 @@ function BrandPanel() {
             </defs>
           </svg>
         </div>
-
-        {/* Wordmark */}
         <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-          <span style={{
-            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
-            color: "#fff", letterSpacing: -3, lineHeight: 1,
-            textShadow: "0 0 40px rgba(255,255,255,0.15)",
-          }}>Pay</span>
-          <span style={{
-            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
-            letterSpacing: -3, lineHeight: 1,
-            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)",
-            backgroundSize: "200%",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            animation: "shimmer 3s linear infinite",
-          }}>Zen</span>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, color: "#fff", letterSpacing: -3, lineHeight: 1, textShadow: "0 0 40px rgba(255,255,255,0.15)" }}>Pay</span>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, letterSpacing: -3, lineHeight: 1, background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)", backgroundSize: "200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", animation: "shimmer 3s linear infinite" }}>Zen</span>
         </div>
-
-        {/* Underline */}
-        <div style={{
-          height: 3, borderRadius: 99, margin: "10px auto 20px",
-          background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)",
-          backgroundSize: "200%",
-          animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s",
-          width: 0,
-        }} />
-
-        <p style={{
-          fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase",
-          color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0,
-          animation: "fadeUp .7s ease both 1.2s",
-        }}>Private Banking</p>
-
-        <p style={{
-          fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8,
-          maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0,
-          animation: "fadeUp .7s ease both 1.4s",
-        }}>
+        <div style={{ height: 3, borderRadius: 99, margin: "10px auto 20px", background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)", backgroundSize: "200%", animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s", width: 0 }} />
+        <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0, animation: "fadeUp .7s ease both 1.2s" }}>Private Banking</p>
+        <p style={{ fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8, maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0, animation: "fadeUp .7s ease both 1.4s" }}>
           Secure, intelligent banking <br />always at your fingertips.
         </p>
-
-        <p style={{
-          fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase",
-          color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0,
-          animation: "fadeUp .7s ease both 1.5s",
-        }}>Secure · Smart · Banking</p>
-
-
+        <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0, animation: "fadeUp .7s ease both 1.5s" }}>Secure · Smart · Banking</p>
       </div>
-
-
     </div>
   );
 }
-
-
 
 /* ═══════════════════════════════════════
    INPUT FIELD
@@ -250,19 +195,18 @@ export default function RegistrationPage() {
     name: "", email: "", mobile: "",
     gender: "", password: "", confirmPassword: "",
   });
-  const [showPw, setShowPw] = useState(false);
+  const [showPw, setShowPw]   = useState(false);
   const [showCpw, setShowCpw] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "" });
+  const [toast, setToast]     = useState({ show: false, message: "", type: "" });
   const [focusedField, setFocusedField] = useState(null);
 
   const showToast = (msg, type) => setToast({ show: true, message: msg, type });
   const hideToast = () => setToast({ show: false, message: "", type: "" });
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const pwMatch = formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword;
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password.length < 6) { showToast("Password कमीत कमी 6 characters असावा ⚠️", "error"); return; }
     if (formData.password !== formData.confirmPassword) { showToast("Passwords match नाही ❌", "error"); return; }
@@ -286,30 +230,28 @@ const handleSubmit = async (e) => {
     borderRadius: 12,
     paddingLeft: 36, paddingRight: 36, paddingTop: 12, paddingBottom: 12,
     color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
-    outline: "none",
-    transition: "all 0.2s ease",
+    outline: "none", transition: "all 0.2s ease",
     boxShadow: focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
 
   const selectStyle = (name) => ({
-    ...inputStyle(name),
-    cursor: "pointer", appearance: "none", WebkitAppearance: "none",
+    ...inputStyle(name), cursor: "pointer", appearance: "none", WebkitAppearance: "none",
   });
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        @keyframes ptFloat { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
-        @keyframes hexFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        @keyframes ambPulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+        @keyframes ptFloat   { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
+        @keyframes hexFloat  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes ambPulse  { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
         @keyframes orbitSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
-        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-        @keyframes ulGrow { from{width:0} to{width:200px} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes logoIn { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes spin { to{transform:rotate(360deg)} }
+        @keyframes shimmer   { 0%{background-position:0% center} 100%{background-position:200% center} }
+        @keyframes ulGrow    { from{width:0} to{width:200px} }
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes logoIn    { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes cardIn    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin      { to{transform:rotate(360deg)} }
         @keyframes scanPulse { 0%,100%{opacity:0} 50%{opacity:1} }
         input::placeholder, select::placeholder { color: rgba(148,163,184,0.3); }
         select option { background: #0a1040; color: #e2e8f0; }
@@ -323,15 +265,13 @@ const handleSubmit = async (e) => {
         <GridBackground />
         <Particles />
 
-        {/* ── MAIN WRAP ── */}
         <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
 
           <BrandPanel />
 
           {/* ════ RIGHT CARD ════ */}
           <div style={{
-            width: "100%", maxWidth: 460,
-            borderRadius: 24,
+            width: "100%", maxWidth: 460, borderRadius: 24,
             background: "rgba(8,16,60,0.7)",
             border: "1px solid rgba(99,102,241,0.2)",
             backdropFilter: "blur(32px)",
@@ -340,41 +280,12 @@ const handleSubmit = async (e) => {
             animation: "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s",
           }}>
 
-            {/* Top bar */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: "linear-gradient(135deg,#4f46e5,#2563eb)",
-                  boxShadow: "0 0 20px rgba(79,70,229,0.5)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L22 7V17L12 22L2 17V7Z" stroke="white" strokeWidth="1.8" fill="rgba(255,255,255,0.15)"/>
-                    <path d="M8 12H16M12 8V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.02em" }}>PayZen Bank</span>
-              </div>
-
-              {/* Secure badge */}
-              <div style={{
-                display: "flex", alignItems: "center", gap: 5,
-                padding: "5px 12px", borderRadius: 999,
-                border: "1px solid rgba(52,211,153,0.25)",
-                background: "rgba(52,211,153,0.07)",
-                fontSize: 11, fontWeight: 600,
-                color: "rgba(52,211,153,0.8)",
-              }}>
-                <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#34d399", boxShadow: "0 0 6px #34d399", animation: "scanPulse 2s ease-in-out infinite" }} />
-                Secure
-              </div>
-            </div>
+            {/* ❌ Top bar (PayZen Bank + Secure badge) REMOVED */}
 
             {/* Heading */}
             <div style={{ textAlign: "center", marginBottom: 28 }}>
               <h2 style={{ fontSize: 26, fontWeight: 800, color: "#f1f5f9", letterSpacing: "-0.03em", margin: 0, marginBottom: 6 }}>
-                Create Account
+                Registration
               </h2>
               <p style={{ fontSize: 13, fontWeight: 400, color: "rgba(148,163,184,0.6)", margin: 0 }}>
                 Join PayZen — fill all details carefully
@@ -440,7 +351,6 @@ const handleSubmit = async (e) => {
                         {showPw ? <EyeOff size={14}/> : <Eye size={14}/>}
                       </button>
                     </Field>
-
                   </div>
 
                   <div>
@@ -473,11 +383,10 @@ const handleSubmit = async (e) => {
                   </div>
                 </div>
 
-                {/* Submit */}
+                {/* Submit Button */}
                 <button type="submit" disabled={loading} style={{
                   width: "100%", marginTop: 4,
-                  padding: "14px 24px",
-                  borderRadius: 14, border: "none",
+                  padding: "14px 24px", borderRadius: 14, border: "none",
                   background: loading ? "rgba(79,70,229,0.5)" : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
                   backgroundSize: "200%",
                   color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
@@ -494,11 +403,7 @@ const handleSubmit = async (e) => {
                       Registering...
                     </>
                   ) : (
-                    <>
-                      <UserPlus size={16} />
-                      Create Account
-                      
-                    </>
+                    <><UserPlus size={16} /> Create Account</>
                   )}
                 </button>
 
@@ -517,11 +422,10 @@ const handleSubmit = async (e) => {
               Already have an account?{" "}
               <button onClick={() => navigate("/login")} style={{
                 background: "none", border: "none", cursor: "pointer",
-                fontWeight: 700, color: "#818cf8", fontSize: "inherit", fontFamily: "inherit",
-                padding: 0,
-                transition: "color 0.2s",
+                fontWeight: 700, color: "#818cf8", fontSize: "inherit",
+                fontFamily: "inherit", padding: 0, transition: "color 0.2s",
               }}>
-                Login here 
+                Login here
               </button>
             </p>
 
@@ -530,4 +434,4 @@ const handleSubmit = async (e) => {
       </div>
     </>
   );
-} 
+}

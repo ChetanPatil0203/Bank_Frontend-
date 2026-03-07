@@ -30,7 +30,7 @@ function Toast({ message, type, onClose }) {
 }
 
 /* ═══════════════════════════════════════
-   GRID BACKGROUND (same as Registration)
+   GRID BACKGROUND
 ═══════════════════════════════════════ */
 function GridBackground() {
   return (
@@ -58,7 +58,7 @@ function GridBackground() {
 }
 
 /* ═══════════════════════════════════════
-   FLOATING PARTICLES (same as Registration)
+   FLOATING PARTICLES
 ═══════════════════════════════════════ */
 function Particles() {
   const pts = [
@@ -88,7 +88,7 @@ function Particles() {
 }
 
 /* ═══════════════════════════════════════
-   BRAND PANEL — LEFT (same as Registration)
+   BRAND PANEL — LEFT
 ═══════════════════════════════════════ */
 function BrandPanel() {
   return (
@@ -97,18 +97,13 @@ function BrandPanel() {
       flexDirection: "column", alignItems: "center", justifyContent: "center",
       position: "relative", padding: "64px 48px", overflow: "hidden",
     }} className="lg-brand-panel">
-
-      {/* Central glow */}
       <div style={{
         position: "absolute", width: 480, height: 480,
         borderRadius: "50%", top: "50%", left: "50%",
         transform: "translate(-50%,-50%)",
         background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(109,40,217,0.12) 40%, transparent 70%)",
-        filter: "blur(40px)",
-        animation: "ambPulse 6s ease-in-out infinite",
+        filter: "blur(40px)", animation: "ambPulse 6s ease-in-out infinite",
       }} />
-
-      {/* Orbit rings */}
       {[
         { sz: 360, spd: 24, rev: false, dot: 9, dc: "#38bdf8", bc: "rgba(56,189,248,0.12)" },
         { sz: 270, spd: 17, rev: true,  dot: 7, dc: "#a78bfa", bc: "rgba(167,139,250,0.12)" },
@@ -129,11 +124,7 @@ function BrandPanel() {
           }} />
         </div>
       ))}
-
-      {/* Logo block */}
       <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", animation: "logoIn 1s cubic-bezier(.16,1,.3,1) both .3s" }}>
-
-        {/* Hex icon */}
         <div style={{ position: "relative", marginBottom: 28, animation: "hexFloat 5s ease-in-out infinite" }}>
           <div style={{
             position: "absolute", inset: -18, borderRadius: "50%",
@@ -141,12 +132,9 @@ function BrandPanel() {
             filter: "blur(18px)", animation: "ambPulse 3s ease-in-out infinite",
           }} />
           <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-            <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z"
-              fill="rgba(29,78,216,0.2)" stroke="url(#hs3)" strokeWidth="1.5" />
-            <path d="M50 16 L80 32 L80 68 L50 84 L20 68 L20 32 Z"
-              fill="rgba(37,99,235,0.1)" stroke="rgba(56,189,248,0.35)" strokeWidth="1" />
-            <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900"
-              fill="url(#tg3)" textAnchor="middle">P</text>
+            <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z" fill="rgba(29,78,216,0.2)" stroke="url(#hs3)" strokeWidth="1.5" />
+            <path d="M50 16 L80 32 L80 68 L50 84 L20 68 L20 32 Z" fill="rgba(37,99,235,0.1)" stroke="rgba(56,189,248,0.35)" strokeWidth="1" />
+            <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900" fill="url(#tg3)" textAnchor="middle">P</text>
             {[[50,4],[90,26],[90,74],[50,96],[10,74],[10,26]].map(([x,y],i) => (
               <circle key={i} cx={x} cy={y} r="2.5" fill="rgba(56,189,248,0.9)" />
             ))}
@@ -163,54 +151,16 @@ function BrandPanel() {
             </defs>
           </svg>
         </div>
-
-        {/* Wordmark */}
         <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-          <span style={{
-            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
-            color: "#fff", letterSpacing: -3, lineHeight: 1,
-            textShadow: "0 0 40px rgba(255,255,255,0.15)",
-          }}>Pay</span>
-          <span style={{
-            fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900,
-            letterSpacing: -3, lineHeight: 1,
-            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)",
-            backgroundSize: "200%",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            animation: "shimmer 3s linear infinite",
-          }}>Zen</span>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, color: "#fff", letterSpacing: -3, lineHeight: 1, textShadow: "0 0 40px rgba(255,255,255,0.15)" }}>Pay</span>
+          <span style={{ fontFamily: "'Georgia', serif", fontSize: 62, fontWeight: 900, letterSpacing: -3, lineHeight: 1, background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #38bdf8 90%)", backgroundSize: "200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", animation: "shimmer 3s linear infinite" }}>Zen</span>
         </div>
-
-        {/* Underline */}
-        <div style={{
-          height: 3, borderRadius: 99, margin: "10px auto 20px",
-          background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)",
-          backgroundSize: "200%",
-          animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s",
-          width: 0,
-        }} />
-
-        <p style={{
-          fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase",
-          color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0,
-          animation: "fadeUp .7s ease both 1.2s",
-        }}>Private Banking</p>
-
-        <p style={{
-          fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8,
-          maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0,
-          animation: "fadeUp .7s ease both 1.4s",
-        }}>
+        <div style={{ height: 3, borderRadius: 99, margin: "10px auto 20px", background: "linear-gradient(90deg, #2563eb, #38bdf8, #818cf8, #38bdf8, #2563eb)", backgroundSize: "200%", animation: "ulGrow .9s cubic-bezier(.22,1,.36,1) forwards 1s, shimmer 3s linear infinite 1.5s", width: 0 }} />
+        <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(180,210,255,0.35)", marginBottom: 28, opacity: 0, animation: "fadeUp .7s ease both 1.2s" }}>Private Banking</p>
+        <p style={{ fontSize: 14, fontWeight: 300, textAlign: "center", lineHeight: 1.8, maxWidth: 240, color: "rgba(180,210,255,0.5)", opacity: 0, animation: "fadeUp .7s ease both 1.4s" }}>
           Secure, intelligent banking <br />always at your fingertips.
         </p>
-
-        <p style={{
-          fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase",
-          color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0,
-          animation: "fadeUp .7s ease both 1.5s",
-        }}>Secure · Smart · Banking</p>
-
-
+        <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0, animation: "fadeUp .7s ease both 1.5s" }}>Secure · Smart · Banking</p>
       </div>
     </div>
   );
@@ -272,10 +222,14 @@ export default function LoginPage() {
       triggerRedAlert(); showToast(msg, "error"); setLoading(false); return;
     }
     showToast("Login Successful! 🎉", "success");
+    
+    // ✅ हे बदला - token वेगळा save करा
     localStorage.setItem("payzen_user", JSON.stringify(result.data.user));
+    localStorage.setItem("token", result.data.token);  // ← हे add करा
+    
     setTimeout(() => navigate("/dashboard"), 1500);
     setLoading(false);
-  };
+};
 
   const inputStyle = (name) => ({
     width: "100%", boxSizing: "border-box",
@@ -284,8 +238,7 @@ export default function LoginPage() {
     borderRadius: 12,
     paddingLeft: 38, paddingRight: name === "password" ? 40 : 16, paddingTop: 12, paddingBottom: 12,
     color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
-    outline: "none",
-    transition: "all 0.2s ease",
+    outline: "none", transition: "all 0.2s ease",
     boxShadow: alertActive ? "0 0 0 3px rgba(239,68,68,0.1)" : focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
 
@@ -293,18 +246,18 @@ export default function LoginPage() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        @keyframes ptFloat { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
-        @keyframes hexFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        @keyframes ambPulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
+        @keyframes ptFloat   { 0%,100%{transform:translateY(0) scale(1);opacity:.2} 50%{transform:translateY(-18px) scale(1.6);opacity:.9} }
+        @keyframes hexFloat  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes ambPulse  { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.1)} }
         @keyframes orbitSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
-        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
-        @keyframes ulGrow { from{width:0} to{width:200px} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes logoIn { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes spin { to{transform:rotate(360deg)} }
+        @keyframes shimmer   { 0%{background-position:0% center} 100%{background-position:200% center} }
+        @keyframes ulGrow    { from{width:0} to{width:200px} }
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes logoIn    { from{opacity:0;transform:scale(.88) translateY(18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes cardIn    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin      { to{transform:rotate(360deg)} }
         @keyframes scanPulse { 0%,100%{opacity:0} 50%{opacity:1} }
-        @keyframes shakeX { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-7px)} 20%,40%,60%,80%{transform:translateX(7px)} }
+        @keyframes shakeX    { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-7px)} 20%,40%,60%,80%{transform:translateX(7px)} }
         @keyframes alertPulse { 0%,100%{opacity:0} 50%{opacity:1} }
         input::placeholder { color: rgba(148,163,184,0.3); }
         * { box-sizing: border-box; }
@@ -327,7 +280,6 @@ export default function LoginPage() {
         <GridBackground />
         <Particles />
 
-        {/* Main wrap */}
         <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
 
           <BrandPanel />
@@ -349,42 +301,7 @@ export default function LoginPage() {
               transition: "all 0.4s ease",
             }}>
 
-              {/* Top bar */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 10,
-                    background: "linear-gradient(135deg,#4f46e5,#2563eb)",
-                    boxShadow: "0 0 20px rgba(79,70,229,0.5)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2L22 7V17L12 22L2 17V7Z" stroke="white" strokeWidth="1.8" fill="rgba(255,255,255,0.15)"/>
-                      <path d="M8 12H16M12 8V16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.02em" }}>PayZen Bank</span>
-                </div>
-
-                {/* Secure badge */}
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 5,
-                  padding: "5px 12px", borderRadius: 999,
-                  border: `1px solid ${alertActive ? "rgba(239,68,68,0.3)" : "rgba(52,211,153,0.25)"}`,
-                  background: alertActive ? "rgba(239,68,68,0.08)" : "rgba(52,211,153,0.07)",
-                  fontSize: 11, fontWeight: 600,
-                  color: alertActive ? "rgba(239,68,68,0.85)" : "rgba(52,211,153,0.8)",
-                  transition: "all 0.4s ease",
-                }}>
-                  <div style={{
-                    width: 5, height: 5, borderRadius: "50%",
-                    background: alertActive ? "#ef4444" : "#34d399",
-                    boxShadow: `0 0 6px ${alertActive ? "#ef4444" : "#34d399"}`,
-                    animation: "scanPulse 2s ease-in-out infinite",
-                  }} />
-                  {alertActive ? "Alert" : "Secure"}
-                </div>
-              </div>
+              {/* ❌ Top bar REMOVED (PayZen Bank + Secure/Alert badge) */}
 
               {/* Heading */}
               <div style={{ textAlign: "center", marginBottom: 28 }}>
@@ -393,7 +310,7 @@ export default function LoginPage() {
                   color: alertActive ? "#fca5a5" : "#f1f5f9",
                   transition: "color 0.4s ease",
                 }}>
-                  Welcome Back
+                  User Login
                 </h2>
                 <p style={{ fontSize: 13, fontWeight: 400, color: "rgba(148,163,184,0.6)", margin: 0 }}>
                   Access your banking dashboard safely
@@ -413,13 +330,10 @@ export default function LoginPage() {
                       <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
                         <Mail size={14} />
                       </span>
-                      <input
-                        type="email" name="email" placeholder="you@email.com"
+                      <input type="email" name="email" placeholder="you@email.com"
                         value={formData.email} onChange={handleChange} required
                         onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
-                        style={inputStyle("email")}
-                        autoComplete="email"
-                      />
+                        style={inputStyle("email")} autoComplete="email" />
                     </div>
                   </div>
 
@@ -432,13 +346,10 @@ export default function LoginPage() {
                       <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
                         <Lock size={14} />
                       </span>
-                      <input
-                        type={showPassword ? "text" : "password"} name="password" placeholder="Enter password"
+                      <input type={showPassword ? "text" : "password"} name="password" placeholder="Enter password"
                         value={formData.password} onChange={handleChange} required
                         onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)}
-                        style={inputStyle("password")}
-                        autoComplete="current-password"
-                      />
+                        style={inputStyle("password")} autoComplete="current-password" />
                       <button type="button" onClick={() => setShowPassword(!showPassword)} style={{
                         position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
                         background: "none", border: "none", cursor: "pointer",
@@ -452,16 +363,13 @@ export default function LoginPage() {
                   {/* Remember + Forgot */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 12, color: "rgba(148,163,184,0.55)" }}>
-                      <input
-                        type="checkbox" name="remember" checked={formData.remember} onChange={handleChange}
-                        style={{ accentColor: "#6366f1", width: 13, height: 13 }}
-                      />
+                      <input type="checkbox" name="remember" checked={formData.remember} onChange={handleChange}
+                        style={{ accentColor: "#6366f1", width: 13, height: 13 }} />
                       Remember Me
                     </label>
                     <button type="button" onClick={() => navigate("/forgot")} style={{
                       background: "none", border: "none", cursor: "pointer",
-                      fontSize: 12, fontWeight: 600, color: "#818cf8",
-                      fontFamily: "inherit", padding: 0,
+                      fontSize: 12, fontWeight: 600, color: "#818cf8", fontFamily: "inherit", padding: 0,
                     }}>
                       Forgot Password?
                     </button>
@@ -469,20 +377,13 @@ export default function LoginPage() {
 
                   {/* Submit */}
                   <button type="submit" disabled={loading} style={{
-                    width: "100%", marginTop: 4,
-                    padding: "14px 24px",
+                    width: "100%", marginTop: 4, padding: "14px 24px",
                     borderRadius: 14, border: "none",
-                    background: loading
-                      ? "rgba(79,70,229,0.5)"
-                      : alertActive
-                        ? "linear-gradient(135deg,#dc2626,#b91c1c)"
-                        : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
+                    background: loading ? "rgba(79,70,229,0.5)" : alertActive ? "linear-gradient(135deg,#dc2626,#b91c1c)" : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
                     backgroundSize: "200%",
                     color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
                     cursor: loading ? "not-allowed" : "pointer",
-                    boxShadow: alertActive
-                      ? "0 4px 28px rgba(220,38,38,0.45)"
-                      : loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
+                    boxShadow: alertActive ? "0 4px 28px rgba(220,38,38,0.45)" : loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
                     transition: "all 0.3s ease",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     fontFamily: "inherit",
@@ -494,11 +395,7 @@ export default function LoginPage() {
                         Verifying...
                       </>
                     ) : (
-                      <>
-                        
-                        Login
-                        
-                      </>
+                      <> Login </>
                     )}
                   </button>
 
@@ -512,7 +409,7 @@ export default function LoginPage() {
                 </div>
               </form>
 
-              {/* Divider */}
+              {/* OR Divider */}
               <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
                 <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.06)" }} />
                 <span style={{ fontSize: 10, letterSpacing: "0.15em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase" }}>or</span>
@@ -520,17 +417,15 @@ export default function LoginPage() {
               </div>
 
               {/* Register link */}
-              <p style={{ textAlign: "center", fontSize: 13, color: "rgba(148,163,184,0.5)", margin: 0, marginBottom: 16 }}>
+              <p style={{ textAlign: "center", fontSize: 13, color: "rgba(148,163,184,0.5)", margin: 0 }}>
                 Don't have an account?{" "}
                 <button onClick={() => navigate("/registration")} style={{
                   background: "none", border: "none", cursor: "pointer",
                   fontWeight: 700, color: "#818cf8", fontSize: "inherit", fontFamily: "inherit", padding: 0,
                 }}>
-                  Register here 
+                  Register here
                 </button>
               </p>
-
-
 
             </div>
           </div>
