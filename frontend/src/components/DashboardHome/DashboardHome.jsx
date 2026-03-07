@@ -131,12 +131,7 @@ export default function DashboardHome() {
        : "bg-white/[.62] shadow-sm shadow-blue-900/[.07]"}`;
 
   return (
-<<<<<<< Updated upstream
     <div className="min-h-screen relative overflow-hidden bg-[#f0f4ff]" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
-=======
-    <div className="min-h-screen bg-white p-8 flex justify-center">
-      <div className="w-full max-w-4xl">
->>>>>>> Stashed changes
 
       {/* ── Ambient blobs ── */}
       <div className="fixed -top-32 left-[8%]  w-[520px] h-[520px] rounded-full bg-indigo-400/10  blur-3xl pointer-events-none -z-10" />
@@ -146,7 +141,6 @@ export default function DashboardHome() {
       {/* ── CONTENT ── */}
       <div className="max-w-[1140px] mx-auto px-10 py-9">
 
-        {/* ✅ Dynamic Hello Message */}
         <h2 className="text-2xl font-extrabold text-slate-800 tracking-[0.10em] uppercase mb-6 px-1">
           Account Overview
         </h2>
@@ -217,7 +211,6 @@ export default function DashboardHome() {
                 <div className="flex gap-10 items-end flex-wrap">
                   <div>
                     <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Holder</p>
-                    {/* ✅ Dynamic user name */}
                     <p className="m-0 text-[15px] font-extrabold text-white tracking-widest uppercase"
                        style={{ textShadow:"0 1px 12px rgba(255,255,255,.25)" }}>
                       {userName}

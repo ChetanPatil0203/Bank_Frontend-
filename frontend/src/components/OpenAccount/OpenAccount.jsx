@@ -22,14 +22,14 @@ export default function OpenAccountPage() {
     agree:           false,
   });
 
-  const [photo, setPhoto]                     = useState(null);
-  const [savedSignature, setSavedSignature]   = useState(null);
+  const [photo, setPhoto]                           = useState(null);
+  const [savedSignature, setSavedSignature]         = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
-  const [loading, setLoading]                 = useState(false);
-  const [alert, setAlert]                     = useState({ show: false, type: "", msg: "" });
+  const [loading, setLoading]                       = useState(false);
+  const [alert, setAlert]                           = useState({ show: false, type: "", msg: "" });
 
-  const canvasRef  = useRef(null);
-  const isDrawing  = useRef(false);
+  const canvasRef = useRef(null);
+  const isDrawing = useRef(false);
 
   // ── Pre-fill from localStorage (login data) ──
   useEffect(() => {
@@ -59,21 +59,12 @@ export default function OpenAccountPage() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-<<<<<<< Updated upstream
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-=======
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
->>>>>>> Stashed changes
   };
 
   // ── Submit → API call ──
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< Updated upstream
     if (!formData.agree) return showAlert("error", "Terms & Conditions accept करा");
 
     setLoading(true);
@@ -98,12 +89,8 @@ export default function OpenAccountPage() {
       const data = await res.json();
 
       if (data.success) {
-        // Account data localStorage मध्ये save करतो → Profile auto-fill होईल
         localStorage.setItem("payzen_account", JSON.stringify(data.account));
-
         showAlert("success", "Account successfully opened! 🎉");
-
-        // 2 seconds नंतर profile वर navigate
         setTimeout(() => navigate("/profile"), 2000);
       } else {
         showAlert("error", data.message || "काहीतरी error झाला");
@@ -113,12 +100,6 @@ export default function OpenAccountPage() {
     } finally {
       setLoading(false);
     }
-=======
-
-    if (!formData.agree) return alert("Accept Terms & Conditions");
-
-    alert("Account Application Submitted ✅");
->>>>>>> Stashed changes
   };
 
   const showAlert = (type, msg) => {
@@ -161,36 +142,20 @@ export default function OpenAccountPage() {
     canvas.getContext("2d").stroke();
   };
 
-  const stopDrawing  = () => { isDrawing.current = false; };
-  const clearCanvas  = () => canvasRef.current.getContext("2d").clearRect(0, 0, 460, 180);
+  const stopDrawing   = () => { isDrawing.current = false; };
+  const clearCanvas   = () => canvasRef.current.getContext("2d").clearRect(0, 0, 460, 180);
   const saveSignature = () => {
     setSavedSignature(canvasRef.current.toDataURL("image/png"));
     setShowSignatureModal(false);
   };
 
   return (
-<<<<<<< Updated upstream
     <div className="min-h-screen py-6 px-4 bg-gray-50">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-blue-900">Open New Account</h2>
           <p className="text-gray-500 text-sm">Secure Banking Registration Portal</p>
-=======
-    <div className="min-h-screen py-12 px-4 bg-gray-100">
-
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl p-10">
-
-        {/* HEADER */}
-        <div className="text-center mb-10 pb-6">
-          <h2 className="text-2xl font-medium text-blue-900">
-            Open New Account
-          </h2>
-
-          <p className="text-gray-500 mt-2">
-            Secure Banking Registration Portal
-          </p>
->>>>>>> Stashed changes
         </div>
 
         {/* Alert */}
@@ -217,11 +182,7 @@ export default function OpenAccountPage() {
               options={["Male","Female","Other"]} handleChange={handleChange} />
           </Section>
 
-<<<<<<< Updated upstream
           {/* Contact Details */}
-=======
-          {/* CONTACT */}
->>>>>>> Stashed changes
           <Section title="Contact Details">
             <Input label="Mobile Number" name="mobile" value={formData.mobile} handleChange={handleChange} />
             <Input label="Email Address" name="email"  value={formData.email}  handleChange={handleChange} type="email" />
@@ -234,7 +195,6 @@ export default function OpenAccountPage() {
             <Input label="PAN Number"     name="pan"     value={formData.pan}     handleChange={handleChange} />
           </Section>
 
-<<<<<<< Updated upstream
           {/* Account Details */}
           <Section title="Account Details">
             <Select label="Account Type" name="accountType" value={formData.accountType}
@@ -300,69 +260,10 @@ export default function OpenAccountPage() {
               ? <><Loader size={18} className="animate-spin" /> Opening Account...</>
               : "Open Account"}
           </button>
-=======
-          {/* PHOTO */}
-          <div className="p-6 bg-white">
-            <h3 className="text-xl font-semibold text-blue-900 mb-5">
-              Upload Photo / Document
-            </h3>
-
-            <div className="relative flex items-center">
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                onChange={(e) => setPhoto(e.target.files[0])}
-                className="rounded-xl p-3 w-full bg-gray-50"
-                required
-              />
-
-              {photo && (
-                <button
-                  type="button"
-                  onClick={() => setShowImageModal(true)}
-                  className="absolute right-4 text-blue-700 font-medium"
-                >
-                  View
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* ACCOUNT */}
-          <Section title="Account Details">
-            <Select label="Account Type" name="accountType" options={["Saving Account","Current Account"]} handleChange={handleChange}/>
-            <Input label="Preferred Branch" name="branch" handleChange={handleChange}/>
-          </Section>
-
-          {/* NOMINEE */}
-          <Section title="Nominee Details">
-            <Input label="Nominee Name" name="nomineeName" handleChange={handleChange}/>
-            <Input label="Relation with Nominee" name="nomineeRelation" handleChange={handleChange}/>
-          </Section>
-
-          {/* TERMS */}
-          <div className="flex gap-3 items-start">
-            <input type="checkbox" name="agree" onChange={handleChange}/>
-            <p className="text-sm text-gray-600">
-              I confirm that all provided details are correct.
-            </p>
-          </div>
-
-          {/* SUBMIT */}
-          <div className="flex justify-center pt-4">
-            <button
-              type="submit"
-              className="px-10 py-3 bg-blue-800 text-white rounded-full font-medium tracking-wide"
-            >
-              Open New Account
-            </button>
-          </div>
->>>>>>> Stashed changes
 
         </form>
       </div>
 
-<<<<<<< Updated upstream
       {/* Signature Modal */}
       {showSignatureModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50
@@ -394,52 +295,14 @@ export default function OpenAccountPage() {
                 className="flex-1 py-2 bg-blue-900 rounded-xl text-white text-sm font-semibold hover:bg-blue-800">
                 Save
               </button>
-=======
-      {/* MODAL */}
-      {showImageModal && photo && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-          onClick={() => setShowImageModal(false)}
-        >
-          <div
-            className="relative w-full max-w-5xl h-[90vh] bg-white rounded-2xl overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setShowImageModal(false)}
-              className="absolute top-4 right-4 bg-white rounded-full p-2"
-            >
-              <X size={24}/>
-            </button>
-
-            <div className="w-full h-full overflow-auto p-8">
-              {isPDF ? (
-                <iframe
-                  src={URL.createObjectURL(photo)}
-                  className="w-full h-full min-h-[800px]"
-                  title="PDF"
-                />
-              ) : (
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt="Preview"
-                  className="w-full h-auto object-contain"
-                />
-              )}
->>>>>>> Stashed changes
             </div>
           </div>
         </div>
       )}
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     </div>
   );
 }
 
-<<<<<<< Updated upstream
 /* ── Reusable Components ── */
 
 function Section({ title, children }) {
@@ -447,27 +310,12 @@ function Section({ title, children }) {
     <div className="rounded-xl p-3 bg-gray-50">
       <h3 className="text-base font-semibold text-blue-900 mb-2">{title}</h3>
       <div className="grid md:grid-cols-2 gap-3">{children}</div>
-=======
-/* ---------- COMPONENTS ---------- */
-
-function Section({ title, children }) {
-  return (
-    <div className="p-6">
-      <h3 className="text-xl font-semibold text-blue-900 mb-5">
-        {title}
-      </h3>
-
-      <div className="grid md:grid-cols-2 gap-5">
-        {children}
-      </div>
->>>>>>> Stashed changes
     </div>
   );
 }
 
 function Input({ label, type = "text", name, value, handleChange }) {
   return (
-<<<<<<< Updated upstream
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
@@ -475,19 +323,6 @@ function Input({ label, type = "text", name, value, handleChange }) {
       <input
         type={type} name={name} value={value} onChange={handleChange}
         className="rounded-xl p-2 bg-white border focus:ring-2 focus:ring-blue-500 outline-none"
-=======
-    <div>
-      <label className="font-medium">
-        {label} <span className="text-red-500">*</span>
-      </label>
-
-      <input
-        type={type}
-        name={name}
-        onChange={handleChange}
-        className="rounded-xl p-3 w-full bg-gray-50 mt-1
-        focus:ring-2 focus:ring-blue-500 outline-none"
->>>>>>> Stashed changes
         required
       />
     </div>
@@ -496,7 +331,6 @@ function Input({ label, type = "text", name, value, handleChange }) {
 
 function Select({ label, name, value, options, handleChange }) {
   return (
-<<<<<<< Updated upstream
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
@@ -506,25 +340,6 @@ function Select({ label, name, value, options, handleChange }) {
         required>
         <option value="">Select {label}</option>
         {options.map(opt => <option key={opt}>{opt}</option>)}
-=======
-    <div>
-      <label className="font-medium">
-        {label} <span className="text-red-500">*</span>
-      </label>
-
-      <select
-        name={name}
-        onChange={handleChange}
-        className="rounded-xl p-3 w-full bg-gray-50 mt-1
-        focus:ring-2 focus:ring-blue-500 outline-none"
-        required
-      >
-        <option value="">Select {label}</option>
-
-        {options.map((opt) => (
-          <option key={opt}>{opt}</option>
-        ))}
->>>>>>> Stashed changes
       </select>
     </div>
   );
@@ -532,7 +347,6 @@ function Select({ label, name, value, options, handleChange }) {
 
 function Textarea({ label, name, value, handleChange }) {
   return (
-<<<<<<< Updated upstream
     <div className="flex flex-col gap-1 md:col-span-2">
       <label className="text-sm font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
@@ -540,20 +354,6 @@ function Textarea({ label, name, value, handleChange }) {
       <textarea name={name} value={value} onChange={handleChange}
         className="rounded-xl p-2 bg-white border h-20 focus:ring-2 focus:ring-blue-500 outline-none"
         required />
-=======
-    <div className="md:col-span-2">
-      <label className="font-medium">
-        {label} <span className="text-red-500">*</span>
-      </label>
-
-      <textarea
-        name={name}
-        onChange={handleChange}
-        className="rounded-xl p-3 w-full bg-gray-50 mt-1 h-24
-        focus:ring-2 focus:ring-blue-500 outline-none"
-        required
-      />
->>>>>>> Stashed changes
     </div>
   );
 }

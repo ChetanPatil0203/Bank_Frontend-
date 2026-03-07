@@ -8,10 +8,7 @@ import {
   Headphones,
   BadgeCheckIcon,
   Landmark,
-<<<<<<< Updated upstream
   Settings,
-=======
->>>>>>> Stashed changes
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -34,7 +31,6 @@ function PayZenLogo() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
 
-        /* ─── Fixed top-left container ─── */
         .pzl-fixed {
           position: fixed;
           top: 20px;
@@ -46,8 +42,6 @@ function PayZenLogo() {
           gap: 0;
         }
 
-        
-        /* ─── ICON BLOCK ─── */
         .pzl-icon-block {
           position: relative;
           width: 58px;
@@ -55,8 +49,6 @@ function PayZenLogo() {
           margin-bottom: 10px;
         }
 
-      
-        /* Glow blob behind icon */
         .pzl-glow {
           position: absolute;
           inset: -14px;
@@ -73,7 +65,6 @@ function PayZenLogo() {
           50%      { opacity: 0.7;  transform: scale(1.08); }
         }
 
-        /* Main icon card */
         .pzl-card {
           position: relative;
           z-index: 2;
@@ -100,7 +91,6 @@ function PayZenLogo() {
             inset 0 1px 0 rgba(255,255,255,0.15);
         }
 
-        /* Diagonal stripe texture inside card */
         .pzl-card-texture {
           position: absolute;
           inset: 0;
@@ -114,8 +104,6 @@ function PayZenLogo() {
           border-radius: 18px;
         }
 
-
-        /* Corner accent dot */
         .pzl-corner-dot {
           position: absolute;
           top: 8px;
@@ -133,7 +121,6 @@ function PayZenLogo() {
           50%      { opacity: 0.5; box-shadow: 0 0 12px #22d3ee; }
         }
 
-        /* ─── NAME BLOCK ─── */
         .pzl-name-block {
           display: flex;
           flex-direction: column;
@@ -144,7 +131,6 @@ function PayZenLogo() {
         }
         .pzl-wrap.on .pzl-name-block { opacity: 1; transform: translateX(0); }
 
-        /* Logo text */
         .pzl-name {
           font-family: 'Syne', sans-serif;
           font-weight: 800;
@@ -161,7 +147,6 @@ function PayZenLogo() {
           background-clip: text;
         }
 
-        /* Underline accent */
         .pzl-underline {
           height: 2px;
           width: 0;
@@ -172,7 +157,6 @@ function PayZenLogo() {
         }
         .pzl-wrap.on .pzl-underline { width: 100%; }
 
-        /* Tagline */
         .pzl-tag {
           font-family: 'DM Sans', sans-serif;
           font-size: 8.5px;
@@ -186,63 +170,47 @@ function PayZenLogo() {
         }
         .pzl-wrap.on .pzl-tag { opacity: 1; }
 
-        /* ─── Page content push ─── */
         .pzl-page { padding-top: 0; }
       `}</style>
 
       <div className="pzl-fixed">
         <div className={`pzl-wrap ${on ? "on" : ""}`}>
 
-    {/* ICON */}
-<div
-  className="pzl-icon-block"
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  }}
->
-
-  <div className="pzl-orbit" />
-
-  <div
-    className="pzl-card"
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-    }}
-  >
-    <div className="pzl-card-texture" />
-    <div className="pzl-shimmer" />
-
-    {/* Unique icon */}
-    <svg className="pzl-svg" viewBox="0 0 32 32" fill="none">
-      <path
-        d="M16 2 L28 8.5 L28 23.5 L16 30 L4 23.5 L4 8.5 Z"
-        fill="rgba(255,255,255,0.07)"
-        stroke="rgba(255,255,255,0.25)"
-        strokeWidth="1"
-      />
-      <circle
-        cx="16"
-        cy="16"
-        r="7"
-        fill="rgba(255,255,255,0.1)"
-        stroke="rgba(255,255,255,0.4)"
-        strokeWidth="1.2"
-      />
-      <path
-        d="M13.5 12.5 L13.5 19.5 M13.5 12.5 L17 12.5 Q19 12.5 19 14.5 Q19 16.5 17 16.5 L13.5 16.5"
-        stroke="white"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-     
-    </svg>
-  </div>
-</div>
+          {/* ICON */}
+          <div
+            className="pzl-icon-block"
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+          >
+            <div className="pzl-orbit" />
+            <div
+              className="pzl-card"
+              style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            >
+              <div className="pzl-card-texture" />
+              <div className="pzl-shimmer" />
+              <svg className="pzl-svg" viewBox="0 0 32 32" fill="none">
+                <path
+                  d="M16 2 L28 8.5 L28 23.5 L16 30 L4 23.5 L4 8.5 Z"
+                  fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.25)"
+                  strokeWidth="1"
+                />
+                <circle
+                  cx="16" cy="16" r="7"
+                  fill="rgba(255,255,255,0.1)"
+                  stroke="rgba(255,255,255,0.4)"
+                  strokeWidth="1.2"
+                />
+                <path
+                  d="M13.5 12.5 L13.5 19.5 M13.5 12.5 L17 12.5 Q19 12.5 19 14.5 Q19 16.5 17 16.5 L13.5 16.5"
+                  stroke="white"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
 
           {/* NAME + TAGLINE */}
           <div className="pzl-name-block">
@@ -268,7 +236,6 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
-<<<<<<< Updated upstream
     { name: "Dashboard",           icon: <LayoutDashboard size={23} />, path: "/dashboard" },
     { name: "My Profile",          icon: <CircleUserRound size={23} />, path: "/profile" },
     { name: "Open New Account",    icon: <UserCheck size={23} />,       path: "/open-account" },
@@ -278,26 +245,12 @@ function Sidebar() {
     { name: "Transaction History", icon: <ArrowLeftRight size={23} />,  path: "/transactions" },
     { name: "Account Details",     icon: <Landmark size={23} />,        path: "/details" },
     { name: "Help & Support",      icon: <Headphones size={23} />,      path: "/helpsupport" },
-    { name: "Settings",             icon: <Settings size={23} />,        path: "/setting" },
+    { name: "Settings",            icon: <Settings size={23} />,        path: "/setting" },
     { name: "LogOut",              icon: <LogOut size={23} />,          path: "/logout" },
-=======
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/dashboard" },
-    { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
-    { name: "Open New Account", icon: <UserCheck size={20} />, path: "/open-account" },
-    { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
-    { name: "Withdraw Money", icon: < Wallet size={20} />, path: "/withdraw" },
-    { name: "KYC Verification", icon: <BadgeCheckIcon size={20} />, path:"/kyc"},
-    { name: "Transaction History", icon: <ArrowLeftRight size={20} />, path: "/transactions" },
-    { name: "Account Balance", icon: <CheckCircle size={20} />, path: "/balance" },
-     { name: "Account Details", icon: <Landmark size={20} />, path: "/details" },
-    { name: "Help & Support", icon: <Headphones size={20} />, path: "/helpsupport" },
-    { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
->>>>>>> Stashed changes
   ];
 
   return (
     <aside
-<<<<<<< Updated upstream
       className={`fixed top-0 left-0 h-screen flex flex-col z-50 overflow-hidden
         bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)]
         border-r border-white/[.08]
@@ -305,11 +258,6 @@ function Sidebar() {
         transition-[width] duration-[280ms] ease-in-out
         font-[Inter,sans-serif]
         ${isOpen ? "w-[230px]" : "w-[60px]"}`}
-=======
-      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70   text-white px-5 py-2 rounded-lg backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
-        isOpen ? "w-64" : "w-20"
-      }`}
->>>>>>> Stashed changes
     >
 
       {/* Toggle Button */}
@@ -324,11 +272,10 @@ function Sidebar() {
         </button>
       </div>
 
-      {/* ✅ PayZen Logo — only when sidebar is open */}
+      {/* PayZen Logo — only when sidebar is open */}
       {isOpen && (
         <>
           <PayZenLogo />
-          {/* Divider */}
           <div className="h-px mx-4 mb-3 bg-white/10" />
         </>
       )}
