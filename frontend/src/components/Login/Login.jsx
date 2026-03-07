@@ -167,6 +167,25 @@ function BrandPanel() {
 }
 
 /* ═══════════════════════════════════════
+   MOBILE LOGO — only shown on small screens
+═══════════════════════════════════════ */
+function MobileLogo() {
+  return (
+    <div className="lg-hide-logo" style={{ flexDirection: "column", alignItems: "center", marginBottom: 20 }}>
+      <svg width="46" height="46" viewBox="0 0 100 100" fill="none" style={{ marginBottom: 6 }}>
+        <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z" fill="rgba(29,78,216,0.25)" stroke="rgba(56,189,248,0.8)" strokeWidth="2" />
+        <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900" fill="white" textAnchor="middle">P</text>
+      </svg>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+        <span style={{ fontFamily: "'Georgia', serif", fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: -1 }}>Pay</span>
+        <span style={{ fontFamily: "'Georgia', serif", fontSize: 24, fontWeight: 900, letterSpacing: -1, background: "linear-gradient(135deg,#38bdf8,#818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Zen</span>
+      </div>
+      <p style={{ fontSize: 9, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(180,210,255,0.35)", marginTop: 3 }}>Private Banking</p>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
    LOGIN PAGE
 ═══════════════════════════════════════ */
 export default function LoginPage() {
@@ -258,7 +277,15 @@ export default function LoginPage() {
         @keyframes alertPulse { 0%,100%{opacity:0} 50%{opacity:1} }
         input::placeholder { color: rgba(148,163,184,0.3); }
         * { box-sizing: border-box; }
-        @media (min-width: 1024px) { .lg-brand-panel { display: flex !important; } }
+        @media (min-width: 1024px) {
+          .lg-brand-panel { display: flex !important; }
+          .lg-hide-logo   { display: none !important; }
+        }
+        @media (max-width: 1023px) {
+          .lg-hide-logo { display: flex !important; }
+          .lg-card      { padding: 24px 18px 20px !important; border-radius: 18px !important; }
+          .lg-title     { font-size: 22px !important; }
+        }
       `}</style>
 
       {toast.show && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
@@ -276,7 +303,7 @@ export default function LoginPage() {
         <GridBackground />
         <Particles />
 
-        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
+        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 1100 }}>
 
           <BrandPanel />
 
@@ -284,8 +311,9 @@ export default function LoginPage() {
           <div style={{
             animation: `${shakeCard ? "shakeX 0.5s ease-in-out" : "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s"}`,
             width: "100%", maxWidth: 460,
+            margin: "0 auto",
           }}>
-            <div style={{
+            <div className="lg-card" style={{
               borderRadius: 24,
               background: alertActive ? "rgba(60,8,8,0.7)" : "rgba(8,16,60,0.7)",
               border: `1px solid ${alertActive ? "rgba(239,68,68,0.35)" : "rgba(99,102,241,0.2)"}`,
@@ -297,8 +325,11 @@ export default function LoginPage() {
               transition: "all 0.4s ease",
             }}>
 
+              {/* Mobile logo — only on small screens */}
+              <MobileLogo />
+
               <div style={{ textAlign: "center", marginBottom: 28 }}>
-                <h2 style={{
+                <h2 className="lg-title" style={{
                   fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", margin: 0, marginBottom: 6,
                   color: alertActive ? "#fca5a5" : "#f1f5f9",
                   transition: "color 0.4s ease",
@@ -306,7 +337,7 @@ export default function LoginPage() {
                   User Login
                 </h2>
                 <p style={{ fontSize: 13, fontWeight: 400, color: "rgba(148,163,184,0.6)", margin: 0 }}>
-                  Access your banking dashboard safely
+                  Access Your Banking Dashboard Safely
                 </p>
               </div>
 
@@ -315,7 +346,7 @@ export default function LoginPage() {
 
                   {/* Email */}
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em"}}>
                       Email Address <span style={{ color: "#f87171" }}>*</span>
                     </label>
                     <div style={{ position: "relative" }}>
@@ -331,7 +362,7 @@ export default function LoginPage() {
 
                   {/* Password */}
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em"}}>
                       Password <span style={{ color: "#f87171" }}>*</span>
                     </label>
                     <div style={{ position: "relative" }}>
