@@ -164,12 +164,31 @@ function BrandPanel() {
 }
 
 /* ═══════════════════════════════════════
+   MOBILE LOGO — only shown on small screens
+═══════════════════════════════════════ */
+function MobileLogo() {
+  return (
+    <div className="flex lg:hidden" style={{ flexDirection: "column", alignItems: "center", marginBottom: 20 }}>
+      <svg width="46" height="46" viewBox="0 0 100 100" fill="none" style={{ marginBottom: 6 }}>
+        <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z" fill="rgba(29,78,216,0.25)" stroke="rgba(56,189,248,0.8)" strokeWidth="2" />
+        <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34" fontWeight="900" fill="white" textAnchor="middle">P</text>
+      </svg>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+        <span style={{ fontFamily: "'Georgia', serif", fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: -1 }}>Pay</span>
+        <span style={{ fontFamily: "'Georgia', serif", fontSize: 24, fontWeight: 900, letterSpacing: -1, background: "linear-gradient(135deg,#38bdf8,#818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Zen</span>
+      </div>
+      <p style={{ fontSize: 9, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(180,210,255,0.35)", marginTop: 3 }}>Private Banking</p>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
    INPUT FIELD
 ═══════════════════════════════════════ */
 function Field({ label, icon: Icon, children, hint }) {
   return (
     <div>
-      <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+      <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em" }}>
         {label} <span style={{ color: "#f87171" }}>*</span>
       </label>
       <div style={{ position: "relative" }}>
@@ -256,6 +275,14 @@ export default function RegistrationPage() {
         input::placeholder, select::placeholder { color: rgba(148,163,184,0.3); }
         select option { background: #0a1040; color: #e2e8f0; }
         * { box-sizing: border-box; }
+
+        /* ── MOBILE RESPONSIVE ── */
+        .rg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 540px) {
+          .rg-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+          .rg-card  { padding: 24px 18px 20px !important; border-radius: 18px !important; }
+          .rg-title { font-size: 22px !important; }
+        }
       `}</style>
 
       {toast.show && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
@@ -265,30 +292,32 @@ export default function RegistrationPage() {
         <GridBackground />
         <Particles />
 
-        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 960 }}>
+        <div style={{ position: "relative", zIndex: 10, display: "flex", alignItems: "center", width: "100%", maxWidth: 1300 }}>
 
           <BrandPanel />
 
           {/* ════ RIGHT CARD ════ */}
-          <div style={{
-            width: "100%", maxWidth: 460, borderRadius: 24,
+          <div className="rg-card" style={{
+            width: "100%", maxWidth: 650, borderRadius: 24,
             background: "rgba(8,16,60,0.7)",
             border: "1px solid rgba(99,102,241,0.2)",
             backdropFilter: "blur(32px)",
             boxShadow: "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)",
             padding: "36px 36px 32px",
             animation: "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s",
+            margin: "0 auto",
           }}>
 
-            {/* ❌ Top bar (PayZen Bank + Secure badge) REMOVED */}
+            {/* Mobile logo — only on small screens */}
+            <MobileLogo />
 
             {/* Heading */}
             <div style={{ textAlign: "center", marginBottom: 28 }}>
-              <h2 style={{ fontSize: 26, fontWeight: 800, color: "#f1f5f9", letterSpacing: "-0.03em", margin: 0, marginBottom: 6 }}>
+              <h2 className="rg-title" style={{ fontSize: 26, fontWeight: 800, color: "#f1f5f9", letterSpacing: "-0.03em", margin: 0, marginBottom: 6 }}>
                 Registration
               </h2>
               <p style={{ fontSize: 13, fontWeight: 400, color: "rgba(148,163,184,0.6)", margin: 0 }}>
-                Join PayZen — fill all details carefully
+                Join PayZen - Fill All Details Carefully
               </p>
             </div>
 
@@ -297,14 +326,14 @@ export default function RegistrationPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
                 {/* Row 1 — Name & Email */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                  <Field label="Full Name" icon={User}>
-                    <input type="text" name="name" placeholder="Your name"
+                <div className="rg-grid">
+                  <Field label="Full Name" icon={User}> 
+                    <input type="text" name="name" placeholder="Full Name"
                       value={formData.name} onChange={handleChange} required
                       onFocus={() => setFocusedField("name")} onBlur={() => setFocusedField(null)}
                       style={inputStyle("name")} />
                   </Field>
-                  <Field label="Email" icon={Mail}>
+                  <Field label="Email Address" icon={Mail}>
                     <input type="email" name="email" placeholder="you@email.com"
                       value={formData.email} onChange={handleChange} required
                       onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
@@ -313,14 +342,14 @@ export default function RegistrationPage() {
                 </div>
 
                 {/* Row 2 — Mobile & Gender */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                  <Field label="Mobile" icon={Phone}>
-                    <input type="tel" name="mobile" placeholder="+91 00000 00000"
+                <div className="rg-grid">
+                  <Field label="Mobile No" icon={Phone}>
+                    <input type="tel" name="mobile" placeholder="Mobile No"
                       value={formData.mobile} onChange={handleChange} required
                       onFocus={() => setFocusedField("mobile")} onBlur={() => setFocusedField(null)}
                       style={inputStyle("mobile")} />
                   </Field>
-                  <Field label="Gender" icon={Users}>
+                  <Field label="Select Gender" icon={Users}>
                     <select name="gender" value={formData.gender} onChange={handleChange} required
                       onFocus={() => setFocusedField("gender")} onBlur={() => setFocusedField(null)}
                       style={selectStyle("gender")}>
@@ -336,10 +365,10 @@ export default function RegistrationPage() {
                 </div>
 
                 {/* Row 3 — Passwords */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="rg-grid">
                   <div>
                     <Field label="Password" icon={Lock}>
-                      <input type={showPw ? "text" : "password"} name="password" placeholder="Min 6 chars"
+                      <input type={showPw ? "text" : "password"} name="password" placeholder="Password"
                         value={formData.password} onChange={handleChange} required
                         onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)}
                         style={inputStyle("password")} />
@@ -355,7 +384,7 @@ export default function RegistrationPage() {
 
                   <div>
                     <Field label="Confirm Password" icon={Lock}>
-                      <input type={showCpw ? "text" : "password"} name="confirmPassword" placeholder="Repeat password"
+                      <input type={showCpw ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password"
                         value={formData.confirmPassword} onChange={handleChange} required
                         onFocus={() => setFocusedField("confirmPassword")} onBlur={() => setFocusedField(null)}
                         style={inputStyle("confirmPassword")} />
@@ -387,11 +416,11 @@ export default function RegistrationPage() {
                 <button type="submit" disabled={loading} style={{
                   width: "100%", marginTop: 4,
                   padding: "14px 24px", borderRadius: 14, border: "none",
-                  background: loading ? "rgba(79,70,229,0.5)" : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
+                  background: loading ? "rgba(59,54,163,0.55)" : "linear-gradient(135deg,#2563eb 0%,#4f46e5 50%,#2563eb 100%)",
                   backgroundSize: "200%",
                   color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
                   cursor: loading ? "not-allowed" : "pointer",
-                  boxShadow: loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
+                  boxShadow: loading ? "none" : "0 4px 24px rgba(37,99,235,0.5),0 0 40px rgba(79,70,229,0.18)",
                   transition: "all 0.2s ease",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   fontFamily: "inherit",
@@ -403,7 +432,7 @@ export default function RegistrationPage() {
                       Registering...
                     </>
                   ) : (
-                    <><UserPlus size={16} /> Create Account</>
+                    <>Registration</>
                   )}
                 </button>
 
