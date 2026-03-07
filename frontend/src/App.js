@@ -15,10 +15,14 @@ import HelpSupport from "./components/HelpSupport/HelpSupport.jsx";
 import KYCPage from "./components/kyc/kyc.jsx";
 import DashboardHome from "./components/DashboardHome/DashboardHome.jsx";
 import Registration from "./components/Registration/Registration.jsx";
+<<<<<<< Updated upstream
 import AccountDetails from "./components/AccountDetail/AccountDetails.jsx";
 import Settings from "./components/Setting/Setting.jsx";
 import SplashScreen from "./components/SplashScreen/SplashScreen.jsx";
 import ForgotPassword from "./components/Forgot/Forgot.jsx";
+=======
+import AccountDetails from "./components/AccountDetails/AccountDetails.jsx";
+>>>>>>> Stashed changes
 
 function AppContent() {
   const location = useLocation();
@@ -44,6 +48,7 @@ function AppContent() {
 
             <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/create-account" element={<CreateAccount />} />
+<<<<<<< Updated upstream
             <Route path="/deposit" element={<Deposit />} />
             <Route path="/withdraw" element={<Withdraw />} />
             <Route path="/details" element={<AccountDetails />} />
@@ -55,6 +60,18 @@ function AppContent() {
             <Route path="/setting" element={<Settings />} />
             <Route path="/kyc" element={<KYCPage />} />
 
+=======
+            <Route path="/deposit" element={<Deposit/>} />
+            <Route path="/withdraw" element={<Withdraw/>} />
+            <Route path="/balance" element={<BalanceCheck/>} />
+            <Route path="/transactions" element={<Transactions/>} />
+            <Route path="/logout" element={<Logout/>} />
+            <Route path="/open-account" element={<OpenAccount/>}/>
+            <Route path="/profile" element={<ProfilePage/>}/>
+            <Route path="/helpsupport" element={<HelpSupport/>}/>
+            <Route path="/kyc" element={<KYCPage/>}/>
+            <Route path="/details" element={<AccountDetails/>}/>
+>>>>>>> Stashed changes
             <Route path="/flights" element={<h2>Flights Page</h2>} />
             <Route path="/hotels" element={<h2>Hotels Page</h2>} />
             <Route path="/shop" element={<h2>Shop & Earn Page</h2>} />

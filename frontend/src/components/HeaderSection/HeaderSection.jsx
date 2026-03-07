@@ -2,9 +2,21 @@ import { Bell, ChevronDown } from "lucide-react";
 
 function HeaderSection({ onMenuClick, sidebarOpen }) {
 
+<<<<<<< Updated upstream
   // ✅ LocalStorage मधून user चं नाव घ्या
   const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
   const userName = payzenUser?.name || "User";
+=======
+    return (
+      <header
+        className={`bg-white text-black shadow-md sticky top-0 z-40 border-b
+        transition-all duration-300 ${
+          sidebarOpen ? "ml-[240px]" : "ml-0"
+        }`}
+        
+      >
+        <div className="w-full px-8 py-4 flex items-center justify-between">
+>>>>>>> Stashed changes
 
   // ✅ Avatar initials बनवा (e.g. "Chetan Patil" → "CP")
   const initials = userName

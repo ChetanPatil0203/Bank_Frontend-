@@ -8,7 +8,10 @@ import {
   Headphones,
   BadgeCheckIcon,
   Landmark,
+<<<<<<< Updated upstream
   Settings,
+=======
+>>>>>>> Stashed changes
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -265,6 +268,7 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
+<<<<<<< Updated upstream
     { name: "Dashboard",           icon: <LayoutDashboard size={23} />, path: "/dashboard" },
     { name: "My Profile",          icon: <CircleUserRound size={23} />, path: "/profile" },
     { name: "Open New Account",    icon: <UserCheck size={23} />,       path: "/open-account" },
@@ -276,10 +280,24 @@ function Sidebar() {
     { name: "Help & Support",      icon: <Headphones size={23} />,      path: "/helpsupport" },
     { name: "Settings",             icon: <Settings size={23} />,        path: "/setting" },
     { name: "LogOut",              icon: <LogOut size={23} />,          path: "/logout" },
+=======
+    { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/dashboard" },
+    { name: "My Profile", icon: <CircleUserRound size={20} />, path: "/profile" },
+    { name: "Open New Account", icon: <UserCheck size={20} />, path: "/open-account" },
+    { name: "Deposit Money", icon: <CreditCard size={20} />, path: "/deposit" },
+    { name: "Withdraw Money", icon: < Wallet size={20} />, path: "/withdraw" },
+    { name: "KYC Verification", icon: <BadgeCheckIcon size={20} />, path:"/kyc"},
+    { name: "Transaction History", icon: <ArrowLeftRight size={20} />, path: "/transactions" },
+    { name: "Account Balance", icon: <CheckCircle size={20} />, path: "/balance" },
+     { name: "Account Details", icon: <Landmark size={20} />, path: "/details" },
+    { name: "Help & Support", icon: <Headphones size={20} />, path: "/helpsupport" },
+    { name: "Logout", icon: <LogOut size={20} />, path: "/logout" },
+>>>>>>> Stashed changes
   ];
 
   return (
     <aside
+<<<<<<< Updated upstream
       className={`fixed top-0 left-0 h-screen flex flex-col z-50 overflow-hidden
         bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)]
         border-r border-white/[.08]
@@ -287,6 +305,11 @@ function Sidebar() {
         transition-[width] duration-[280ms] ease-in-out
         font-[Inter,sans-serif]
         ${isOpen ? "w-[230px]" : "w-[60px]"}`}
+=======
+      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-[#0047AB]/90 to-[#0047AB]/70   text-white px-5 py-2 rounded-lg backdrop-blur-md border-r border-white/20 shadow-lg p-4 flex flex-col text-white z-50 transition-all duration-300 ${
+        isOpen ? "w-64" : "w-20"
+      }`}
+>>>>>>> Stashed changes
     >
 
       {/* Toggle Button */}

@@ -1,13 +1,49 @@
+<<<<<<< Updated upstream
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ArrowRight, LogIn } from "lucide-react";
+=======
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+>>>>>>> Stashed changes
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../utils/apiServices";
 
+<<<<<<< Updated upstream
 /* ═══════════════════════════════════════
    TOAST
 ═══════════════════════════════════════ */
 function Toast({ message, type, onClose }) {
   useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, [onClose]);
+=======
+export default function LoginPage() {
+
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    accountNumber: "",
+    password: "",
+    remember: false
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    alert("Login Successful ✅");
+    navigate("/dashboard");
+  };
+
+>>>>>>> Stashed changes
   return (
     <div style={{
       position: "fixed", top: 24, right: 24, zIndex: 50,
@@ -29,6 +65,7 @@ function Toast({ message, type, onClose }) {
   );
 }
 
+<<<<<<< Updated upstream
 /* ═══════════════════════════════════════
    GRID BACKGROUND
 ═══════════════════════════════════════ */
@@ -161,11 +198,92 @@ function BrandPanel() {
           Secure, intelligent banking <br />always at your fingertips.
         </p>
         <p style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(100,160,255,0.35)", whiteSpace: "nowrap", marginTop: 14, opacity: 0, animation: "fadeUp .7s ease both 1.5s" }}>Secure · Smart · Banking</p>
+=======
+      <div className="max-w-md w-full bg-[#18181b]/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+
+        {/* HEADER */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-medium text-white">
+            User Login
+          </h2>
+
+          <p className="text-gray-500 mt-2">
+            Access your banking dashboard safely
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Account Number */}
+          <Input
+            label="Account Number"
+            name="accountNumber"
+            placeholder="Enter Account Number"
+            handleChange={handleChange}
+          />
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-400 mb-1">
+              Password
+            </label>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter Password"
+                onChange={handleChange}
+                className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+                required
+              />
+
+              {/* Show / Hide */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 flex items-center gap-1 text-gray-500 hover:text-gray-300"
+              >
+                <span className="text-xs font-medium">
+                  {showPassword ? "Hide" : "Show"}
+                </span>
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Remember + Forgot */}
+          <div className="flex justify-between items-center text-sm">
+            <label className="flex items-center gap-2 text-zinc-400">
+              <input
+                type="checkbox"
+                name="remember"
+                onChange={handleChange}
+              />
+              Remember Me
+            </label>
+
+            <span className="text-blue-600 cursor-pointer hover:underline">
+              Forgot Password?
+            </span>
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            className="w-full bg-[#6F5FE7] hover:bg-[#5b4ec2] text-white font-semibold rounded-xl py-3.5 transition-all transform active:scale-[0.98] shadow-lg shadow-purple-900/20"
+          >
+            Login
+          </button>
+
+        </form>
+>>>>>>> Stashed changes
       </div>
     </div>
   );
 }
 
+<<<<<<< Updated upstream
 /* ═══════════════════════════════════════
    LOGIN PAGE
 ═══════════════════════════════════════ */
@@ -432,5 +550,25 @@ export default function LoginPage() {
         </div>
       </div>
     </>
+=======
+/* ---------- Reusable Input ---------- */
+
+function Input({ label, name, type = "text", placeholder, handleChange }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-zinc-400 mb-1">
+        {label}
+      </label>
+
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className="w-full bg-[#27272a]/50 text-white text-sm border border-white/10 rounded-xl px-4 py-3.5 focus:outline-none focus:border-[#6F5FE7] focus:ring-1 focus:ring-[#6F5FE7] transition-all placeholder:text-zinc-600"
+        required
+      />
+    </div>
+>>>>>>> Stashed changes
   );
 }
