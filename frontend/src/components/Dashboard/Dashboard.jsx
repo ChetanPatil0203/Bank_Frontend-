@@ -16,7 +16,7 @@ import { X, Menu } from "lucide-react";
 import { useEffect } from "react";
 
 /* ═══════════════════════════════════════════════════════════
-   PAYZEN LOGO — Same as Login / Registration / Forgot
+   PAYZEN LOGO — inline flow (same as before)
 ═══════════════════════════════════════════════════════════ */
 function PayZenLogo() {
   const [on, setOn] = useState(false);
@@ -28,200 +28,85 @@ function PayZenLogo() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap');
+      <div style={{
+        display:"flex", flexDirection:"column", alignItems:"center",
+        padding:"8px 14px 10px", gap:8,
+      }}>
 
-        .pzl-fixed {
-          position: fixed;
-          top: 20px;
-          left: 24px;
-          z-index: 999;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0;
-        }
+        {/* Icon */}
+        <div style={{
+          position:"relative", width:52, height:52, flexShrink:0,
+          overflow:"hidden",
+          animation:"pzIn 0.9s cubic-bezier(.16,1,.3,1) both 0.1s",
+        }}>
+          <div className="pz-orbit-1"><div className="pz-orbit-dot-1" /></div>
+          <div className="pz-orbit-2"><div className="pz-orbit-dot-2" /></div>
+          <div style={{
+            position:"absolute", inset:-8, borderRadius:"50%",
+            background:"radial-gradient(circle,rgba(37,99,235,0.55) 0%,transparent 65%)",
+            filter:"blur(12px)", animation:"pzGlow 3s ease-in-out infinite", pointerEvents:"none",
+          }} />
+          <svg width="52" height="52" viewBox="0 0 100 100" fill="none"
+            style={{ position:"absolute", top:0, left:0, animation:"pzFloat 5s ease-in-out infinite" }}>
+            <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z"
+              fill="rgba(29,78,216,0.2)" stroke="url(#pzS1)" strokeWidth="1.5"/>
+            <path d="M50 16 L80 32 L80 68 L50 84 L20 68 L20 32 Z"
+              fill="rgba(37,99,235,0.08)" stroke="rgba(56,189,248,0.3)" strokeWidth="1"/>
+            <text x="50" y="63" fontFamily="Georgia,serif" fontSize="34"
+              fontWeight="900" fill="url(#pzS2)" textAnchor="middle">P</text>
+            {[[50,4],[90,26],[90,74],[50,96],[10,74],[10,26]].map(([x,y],i) => (
+              <circle key={i} cx={x} cy={y} r="2.5" fill="rgba(56,189,248,0.85)"/>
+            ))}
+            <defs>
+              <linearGradient id="pzS1" x1="10" y1="4" x2="90" y2="96" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stopColor="rgba(56,189,248,0.9)"/>
+                <stop offset="50%"  stopColor="rgba(129,140,248,0.6)"/>
+                <stop offset="100%" stopColor="rgba(56,189,248,0.9)"/>
+              </linearGradient>
+              <linearGradient id="pzS2" x1="0" y1="0" x2="0" y2="70" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stopColor="#fff"/>
+                <stop offset="100%" stopColor="rgba(56,189,248,0.85)"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
 
-        .pzl-icon-block {
-          position: relative;
-          width: 58px;
-          height: 58px;
-          margin-bottom: 10px;
-        }
-
-        .pzl-glow {
-          position: absolute;
-          inset: -14px;
-          border-radius: 28px;
-          background: radial-gradient(ellipse at center, #3b82f6 0%, #6366f1 40%, transparent 72%);
-          opacity: 0;
-          filter: blur(14px);
-          transition: opacity 0.5s ease 0.25s;
-          animation: pzl-glow-pulse 3s ease-in-out infinite;
-        }
-        .pzl-wrap.on .pzl-glow { opacity: 0.55; }
-        @keyframes pzl-glow-pulse {
-          0%,100% { opacity: 0.45; transform: scale(1); }
-          50%      { opacity: 0.7;  transform: scale(1.08); }
-        }
-
-        .pzl-card {
-          position: relative;
-          z-index: 2;
-          width: 58px;
-          height: 58px;
-          border-radius: 18px;
-          background: linear-gradient(145deg, #1a2e6b 0%, #1e40af 45%, #2563eb 100%);
-          box-shadow:
-            0 0 0 1px rgba(99,102,241,0.5),
-            0 6px 24px rgba(37,99,235,0.5),
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 -1px 0 rgba(0,0,0,0.2);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-        .pzl-card:hover {
-          transform: scale(1.06) translateY(-1px);
-          box-shadow:
-            0 0 0 1.5px rgba(99,102,241,0.75),
-            0 10px 32px rgba(37,99,235,0.65),
-            inset 0 1px 0 rgba(255,255,255,0.15);
-        }
-
-        .pzl-card-texture {
-          position: absolute;
-          inset: 0;
-          background: repeating-linear-gradient(
-            -55deg,
-            transparent,
-            transparent 6px,
-            rgba(255,255,255,0.025) 6px,
-            rgba(255,255,255,0.025) 12px
-          );
-          border-radius: 18px;
-        }
-
-        .pzl-corner-dot {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #22d3ee;
-          box-shadow: 0 0 6px #22d3ee;
-          z-index: 4;
-          animation: pzl-dot-blink 2.2s ease-in-out infinite;
-        }
-        @keyframes pzl-dot-blink {
-          0%,100% { opacity: 1; box-shadow: 0 0 6px #22d3ee; }
-          50%      { opacity: 0.5; box-shadow: 0 0 12px #22d3ee; }
-        }
-
-        .pzl-name-block {
-          display: flex;
-          flex-direction: column;
-          gap: 1px;
-          opacity: 0;
-          transform: translateX(-6px);
-          transition: opacity 0.45s ease 0.35s, transform 0.45s ease 0.35s;
-        }
-        .pzl-wrap.on .pzl-name-block { opacity: 1; transform: translateX(0); }
-
-        .pzl-name {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 22px;
-          letter-spacing: -0.5px;
-          line-height: 1;
-          color: #fff;
-        }
-        .pzl-pay { color: #f8fafc; }
-        .pzl-zen {
-          background: linear-gradient(90deg, #38bdf8, #818cf8);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .pzl-underline {
-          height: 2px;
-          width: 0;
-          border-radius: 99px;
-          background: linear-gradient(90deg, #3b82f6, #a78bfa);
-          transition: width 0.6s cubic-bezier(.22,1,.36,1) 0.55s;
-          margin-top: 3px;
-        }
-        .pzl-wrap.on .pzl-underline { width: 100%; }
-
-        .pzl-tag {
-          font-family: 'DM Sans', sans-serif;
-          font-size: 8.5px;
-          font-weight: 500;
-          letter-spacing: 2.8px;
-          text-transform: uppercase;
-          color: rgba(148,163,184,0.58);
-          margin-top: 4px;
-          opacity: 0;
-          transition: opacity 0.4s ease 0.65s;
-        }
-        .pzl-wrap.on .pzl-tag { opacity: 1; }
-
-        .pzl-page { padding-top: 0; }
-      `}</style>
-
-      <div className="pzl-fixed">
-        <div className={`pzl-wrap ${on ? "on" : ""}`}>
-
-          {/* ICON */}
-          <div
-            className="pzl-icon-block"
-            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-          >
-            <div className="pzl-orbit" />
-            <div
-              className="pzl-card"
-              style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-            >
-              <div className="pzl-card-texture" />
-              <div className="pzl-shimmer" />
-              <svg className="pzl-svg" viewBox="0 0 32 32" fill="none">
-                <path
-                  d="M16 2 L28 8.5 L28 23.5 L16 30 L4 23.5 L4 8.5 Z"
-                  fill="rgba(255,255,255,0.07)"
-                  stroke="rgba(255,255,255,0.25)"
-                  strokeWidth="1"
-                />
-                <circle
-                  cx="16" cy="16" r="7"
-                  fill="rgba(255,255,255,0.1)"
-                  stroke="rgba(255,255,255,0.4)"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M13.5 12.5 L13.5 19.5 M13.5 12.5 L17 12.5 Q19 12.5 19 14.5 Q19 16.5 17 16.5 L13.5 16.5"
-                  stroke="white"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+        {/* Name */}
+        <div style={{
+          opacity: on ? 1 : 0,
+          transform: on ? "translateY(0)" : "translateY(4px)",
+          transition:"opacity 0.4s ease 0.3s, transform 0.4s ease 0.3s",
+          display:"flex", flexDirection:"column", alignItems:"center",
+        }}>
+          <div style={{ display:"flex", alignItems:"baseline", gap:2 }}>
+            <span style={{
+              fontFamily:"Georgia,serif", fontSize:20, fontWeight:900,
+              color:"#fff", letterSpacing:-1, lineHeight:1,
+              textShadow:"0 0 20px rgba(255,255,255,0.12)",
+            }}>Pay</span>
+            <span style={{
+              fontFamily:"Georgia,serif", fontSize:20, fontWeight:900,
+              letterSpacing:-1, lineHeight:1,
+              backgroundImage:"linear-gradient(135deg,#38bdf8 0%,#818cf8 45%,#38bdf8 90%)",
+              backgroundSize:"200%",
+              WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text",
+              animation:"pzShimmer 3s linear infinite",
+            }}>Zen</span>
           </div>
-
-          {/* NAME + TAGLINE */}
-          <div className="pzl-name-block">
-            <div className="pzl-name">
-              <span className="pzl-pay">Pay</span>
-              <span className="pzl-zen">Zen</span>
-            </div>
-            <div className="pzl-underline" />
-            <div className="pzl-tag">SECURE · SMART · BANKING</div>
-          </div>
-
+          <div style={{
+            height:2, borderRadius:99, marginTop:4,
+            backgroundImage:"linear-gradient(90deg,#2563eb,#38bdf8,#818cf8,#38bdf8,#2563eb)",
+            backgroundSize:"200%",
+            animation: on ? "pzGrow 0.8s cubic-bezier(.22,1,.36,1) forwards 0.5s, pzShimmer 3s linear infinite 1s" : "none",
+            width: on ? undefined : 0, alignSelf:"stretch",
+          }}/>
+          <div style={{
+            fontFamily:"'Plus Jakarta Sans',sans-serif",
+            fontSize:7.5, fontWeight:500, letterSpacing:"2.2px",
+            textTransform:"uppercase", color:"rgba(148,163,184,0.4)",
+            marginTop:5, opacity: on ? 1 : 0,
+            transition:"opacity 0.4s ease 0.8s", whiteSpace:"nowrap",
+          }}>Secure · Smart · Banking</div>
         </div>
       </div>
     </>
@@ -229,41 +114,25 @@ function PayZenLogo() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR INNER — shared between desktop & mobile drawer
 ═══════════════════════════════════════════════════════════ */
-function Sidebar() {
+function SidebarInner({ isOpen, onToggle, menuItems }) {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(true);
-
-  const menuItems = [
-    { name: "Dashboard",           icon: <LayoutDashboard size={23} />, path: "/dashboard" },
-    { name: "My Profile",          icon: <CircleUserRound size={23} />, path: "/profile" },
-    { name: "Open New Account",    icon: <UserCheck size={23} />,       path: "/open-account" },
-    { name: "Deposit Money",       icon: <Wallet size={23} />,          path: "/deposit" },
-    { name: "Withdraw Money",      icon: <Wallet size={23} />,          path: "/withdraw" },
-    { name: "KYC Verification",    icon: <BadgeCheckIcon size={23} />,  path: "/kyc" },
-    { name: "Transaction History", icon: <ArrowLeftRight size={23} />,  path: "/transactions" },
-    { name: "Account Details",     icon: <Landmark size={23} />,        path: "/details" },
-    { name: "Help & Support",      icon: <Headphones size={23} />,      path: "/helpsupport" },
-    { name: "Settings",            icon: <Settings size={23} />,        path: "/setting" },
-    { name: "LogOut",              icon: <LogOut size={23} />,          path: "/logout" },
-  ];
 
   return (
-    <aside
-      className={`fixed top-0 left-0 h-screen flex flex-col z-50 overflow-hidden
-        bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)]
-        border-r border-white/[.08]
-        shadow-[4px_0_20px_rgba(0,0,0,0.35)]
-        transition-[width] duration-[280ms] ease-in-out
-        font-[Inter,sans-serif]
-        ${isOpen ? "w-[230px]" : "w-[60px]"}`}
-    >
+    <div className={`
+      flex flex-col h-full
+      bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)]
+      border-r border-white/[.08]
+      shadow-[4px_0_20px_rgba(0,0,0,0.35)]
+      font-[Inter,sans-serif]
+      overflow-hidden
+    `}>
 
       {/* Toggle Button */}
       <div className="flex justify-end px-3 pt-[14px] pb-2">
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={onToggle}
           className="flex items-center justify-center rounded-[6px] px-2 py-[6px]
                      bg-white/[.08] border-none cursor-pointer text-white/70
                      hover:bg-white/[.14] transition-colors duration-200"
@@ -272,7 +141,7 @@ function Sidebar() {
         </button>
       </div>
 
-      {/* PayZen Logo — only when sidebar is open */}
+      {/* Logo — only when open */}
       {isOpen && (
         <>
           <PayZenLogo />
@@ -281,7 +150,7 @@ function Sidebar() {
       )}
 
       {/* Menu Items */}
-      <nav className="flex-1 flex flex-col gap-[2px] px-[10px] py-1 overflow-hidden">
+      <nav className="flex-1 flex flex-col gap-[2px] px-[10px] py-1 overflow-y-auto overflow-x-hidden">
         {menuItems.map((item, index) => {
           const active   = location.pathname === item.path;
           const isLogout = item.path === "/logout";
@@ -300,18 +169,10 @@ function Sidebar() {
                             : "text-white/[.72] font-medium hover:bg-white/[.08]"
                           }`}
             >
-              <span
-                className={`flex items-center flex-shrink-0
-                  ${isLogout
-                    ? "text-[#ff1b1e]"
-                    : active
-                    ? "text-white"
-                    : "text-white/60"
-                  }`}
-              >
+              <span className={`flex items-center flex-shrink-0
+                ${isLogout ? "text-[#ff1b1e]" : active ? "text-white" : "text-white/60"}`}>
                 {item.icon}
               </span>
-
               {isOpen && <span>{item.name}</span>}
             </Link>
           );
@@ -319,7 +180,97 @@ function Sidebar() {
       </nav>
 
       <div className="h-4" />
-    </aside>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN SIDEBAR
+═══════════════════════════════════════════════════════════ */
+function Sidebar() {
+  const [isOpen,    setIsOpen]    = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const menuItems = [
+    { name:"Dashboard",           icon:<LayoutDashboard size={23}/>, path:"/dashboard"   },
+    { name:"My Profile",          icon:<CircleUserRound size={23}/>, path:"/profile"      },
+    { name:"Open New Account",    icon:<UserCheck size={23}/>,       path:"/open-account" },
+    { name:"Deposit Money",       icon:<Wallet size={23}/>,          path:"/deposit"      },
+    { name:"Withdraw Money",      icon:<Wallet size={23}/>,          path:"/withdraw"     },
+    { name:"KYC Verification",    icon:<BadgeCheckIcon size={23}/>,  path:"/kyc"          },
+    { name:"Transaction History", icon:<ArrowLeftRight size={23}/>,  path:"/transactions" },
+    { name:"Account Details",     icon:<Landmark size={23}/>,        path:"/details"      },
+    { name:"Help & Support",      icon:<Headphones size={23}/>,      path:"/helpsupport"  },
+    { name:"Settings",            icon:<Settings size={23}/>,        path:"/setting"      },
+    { name:"LogOut",              icon:<LogOut size={23}/>,          path:"/logout"       },
+  ];
+
+  /* Close mobile drawer on route change */
+  const location = useLocation();
+  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+  return (
+    <>
+      <style>{`
+        @keyframes sbSlideIn { from{transform:translateX(-100%)} to{transform:translateX(0)} }
+        @keyframes sbFadeIn  { from{opacity:0} to{opacity:1} }
+      `}</style>
+
+      {/* ══ MOBILE — hamburger + drawer (md से छोटं) ══ */}
+      <div className="md:hidden">
+
+        {/* Hamburger button — top left, always visible */}
+        {!mobileOpen && (
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="fixed top-3 left-3 z-[999] w-10 h-10 flex items-center justify-center
+                       rounded-xl border border-white/20
+                       bg-[rgba(8,16,60,0.88)] backdrop-blur-md
+                       text-white/85 cursor-pointer
+                       shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+          >
+            <Menu size={18} />
+          </button>
+        )}
+
+        {/* Backdrop */}
+        {mobileOpen && (
+          <div
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-[998] bg-black/60 backdrop-blur-sm"
+            style={{ animation:"sbFadeIn 0.25s ease" }}
+          />
+        )}
+
+        {/* Drawer */}
+        {mobileOpen && (
+          <div
+            className="fixed top-0 left-0 z-[999] w-[240px] h-[100dvh]"
+            style={{ animation:"sbSlideIn 0.3s cubic-bezier(.16,1,.3,1)" }}
+          >
+            <SidebarInner
+              isOpen={true}
+              onToggle={() => setMobileOpen(false)}
+              menuItems={menuItems}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* ══ DESKTOP — fixed sidebar (md और ऊपर) ══ */}
+      <aside className={`
+        hidden md:flex
+        fixed top-0 left-0 h-screen flex-col z-50
+        transition-[width] duration-[280ms] ease-in-out
+        ${isOpen ? "w-[230px]" : "w-[60px]"}
+      `}>
+        <SidebarInner
+          isOpen={isOpen}
+          onToggle={() => setIsOpen(!isOpen)}
+          menuItems={menuItems}
+        />
+      </aside>
+    </>
   );
 }
 
