@@ -255,7 +255,6 @@ export default function LoginPage() {
     paddingLeft: 38, paddingRight: name === "password" ? 40 : 16, paddingTop: 12, paddingBottom: 12,
     color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
     outline: "none", transition: "all 0.2s ease",
-    boxShadow: alertActive ? "0 0 0 3px rgba(239,68,68,0.1)" : focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
 
   return (
