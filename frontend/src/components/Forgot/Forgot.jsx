@@ -192,7 +192,6 @@ export default function ForgotPassword() {
     borderRadius:12, paddingLeft:38, paddingRight: name==="newP"||name==="conP" ? 40 : 16,
     paddingTop:12, paddingBottom:12, color:"#e2e8f0", fontSize:13, fontFamily:"inherit",
     outline:"none", transition:"all 0.2s ease",
-    boxShadow: focusedField===name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
 
   const btnStyle = (active = true) => ({
