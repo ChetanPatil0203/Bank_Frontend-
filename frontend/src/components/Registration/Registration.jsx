@@ -250,7 +250,6 @@ export default function RegistrationPage() {
     paddingLeft: 36, paddingRight: 36, paddingTop: 12, paddingBottom: 12,
     color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
     outline: "none", transition: "all 0.2s ease",
-    boxShadow: focusedField === name ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
   });
 
   const selectStyle = (name) => ({
@@ -413,19 +412,20 @@ export default function RegistrationPage() {
                 </div>
 
                 {/* Submit Button */}
-                <button type="submit" disabled={loading} style={{
-                  width: "100%", marginTop: 4,
-                  padding: "14px 24px", borderRadius: 14, border: "none",
-                  background: loading ? "rgba(59,54,163,0.55)" : "linear-gradient(135deg,#2563eb 0%,#4f46e5 50%,#2563eb 100%)",
-                  backgroundSize: "200%",
-                  color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  boxShadow: loading ? "none" : "0 4px 24px rgba(37,99,235,0.5),0 0 40px rgba(79,70,229,0.18)",
-                  transition: "all 0.2s ease",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  fontFamily: "inherit",
-                  animation: !loading ? "shimmer 3s linear infinite" : "none",
-                }}>
+                <button type="submit" disabled={loading}
+               style={{
+  width: "100%", marginTop: 4, padding: "14px 24px",
+  borderRadius: 14, border: "none",
+  background: loading ? "rgba(79,70,229,0.5)" : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
+  backgroundSize: "200%",
+  color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
+  cursor: loading ? "not-allowed" : "pointer",
+  boxShadow: loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
+  transition: "all 0.3s ease",
+  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+  fontFamily: "inherit",
+  animation: !loading ? "shimmer 3s linear infinite" : "none",
+}}>
                   {loading ? (
                     <>
                       <span style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", animation: "spin 0.7s linear infinite", display: "inline-block" }} />
