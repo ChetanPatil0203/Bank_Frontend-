@@ -242,7 +242,7 @@ export default function LoginPage() {
     }
     showToast("Login Successful! 🎉", "success");
     localStorage.setItem("payzen_user", JSON.stringify(result.data.user));
-    localStorage.setItem("token", result.data.token);
+    localStorage.setItem("payzen_token", result.data.token);
     setTimeout(() => navigate("/dashboard"), 1500);
     setLoading(false);
   };
