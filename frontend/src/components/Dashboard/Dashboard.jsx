@@ -195,8 +195,6 @@ function Sidebar() {
     { name:"Dashboard",           icon:<LayoutDashboard size={23}/>, path:"/dashboard"   },
     { name:"My Profile",          icon:<CircleUserRound size={23}/>, path:"/profile"      },
     { name:"Open New Account",    icon:<UserCheck size={23}/>,       path:"/open-account" },
-    { name:"Deposit Money",       icon:<Wallet size={23}/>,          path:"/deposit"      },
-    { name:"Withdraw Money",      icon:<Wallet size={23}/>,          path:"/withdraw"     },
     { name:"KYC Verification",    icon:<BadgeCheckIcon size={23}/>,  path:"/kyc"          },
     { name:"Transaction History", icon:<ArrowLeftRight size={23}/>,  path:"/transactions" },
     { name:"Account Details",     icon:<Landmark size={23}/>,        path:"/details"      },

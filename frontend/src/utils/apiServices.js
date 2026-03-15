@@ -4,7 +4,6 @@ const apiCall = async (endpoint, method = "GET", body = null, auth = false) => {
   try {
     const headers = { "Content-Type": "application/json" };
 
-    // ✅ Auth token add करतो
     if (auth) {
       const token = localStorage.getItem("payzen_token");
       if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -28,12 +27,12 @@ const apiCall = async (endpoint, method = "GET", body = null, auth = false) => {
 // ── 1. REGISTER ──────────────────────────────────────────
 export const registerUser = async (formData) => {
   return await apiCall("/auth/register", "POST", {
-    name:          formData.name,          // ✅ backend ला "name" हवं
-    email:         formData.email,
-    mobile:        formData.mobile,        // ✅ "mobile_number" नाही
-    gender:        formData.gender,
-    date_of_birth: formData.date_of_birth, // ✅ DOB add केला
-    password:      formData.password,
+    name:            formData.name,
+    email:           formData.email,
+    mobile:          formData.mobile,
+    gender:          formData.gender,
+    date_of_birth:   formData.date_of_birth,
+    password:        formData.password,
     confirmPassword: formData.confirmPassword,
   });
 };
@@ -43,34 +42,56 @@ export const loginUser = async (email, password) => {
   return await apiCall("/auth/login", "POST", { email, password });
 };
 
-// ── 3. GET PROFILE ───────────────────────────────────────
+// ── 3. LOGOUT ────────────────────────────────────────────
+// Backend ला POST /auth/logout → user_sessions मध्ये is_active = 0
+export const logoutUser = async () => {
+  return await apiCall("/auth/logout", "POST", null, true);
+};
+
+// ── 4. GET PROFILE ───────────────────────────────────────
 export const getProfile = async () => {
   return await apiCall("/users/profile", "GET", null, true);
 };
 
-// ── 4. UPDATE PROFILE ────────────────────────────────────
+// ── 5. UPDATE PROFILE ────────────────────────────────────
 export const updateProfile = async (data) => {
   return await apiCall("/users/profile", "PUT", data, true);
 };
 
-// ── 5. OPEN ACCOUNT ──────────────────────────────────────
+// ── 6. OPEN ACCOUNT ──────────────────────────────────────
 export const openAccount = async (data) => {
   return await apiCall("/users/open-account", "POST", data, true);
 };
 
-// ── 6. SEND OTP ──────────────────────────────────────────
+// ── 7. SEND OTP ──────────────────────────────────────────
 export const sendOtp = async (email) => {
   return await apiCall("/auth/send-otp", "POST", { email });
 };
 
-// ── 7. VERIFY OTP ────────────────────────────────────────
+// ── 8. VERIFY OTP ────────────────────────────────────────
 export const verifyOtp = async (email, otp) => {
   return await apiCall("/auth/verify-otp", "POST", { email, otp });
 };
 
-// ── 8. RESET PASSWORD ────────────────────────────────────
+// ── 9. RESET PASSWORD ────────────────────────────────────
 export const resetPassword = async (email, newPass, confirmPass) => {
   return await apiCall("/auth/reset-password", "POST", {
     email, newPass, confirmPass
   });
+};
+
+// apiServices.js madhye he function add kar (loginUser chya khali)
+
+export const loginAdmin = async (email, password) => {
+  try {
+    const response = await fetch(`${BASE_URL}/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    return { ok: response.ok, data };
+  } catch (error) {
+    return { ok: false, data: { message: "Network error. Please try again." } };
+  }
 };

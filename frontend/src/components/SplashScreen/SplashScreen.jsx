@@ -17,23 +17,7 @@ export default function SplashScreen() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  /* VOICE */
-  useEffect(() => {
-    const speak = () => {
-      if ("speechSynthesis" in window) {
-        const msg = new SpeechSynthesisUtterance("Welcome to PayZen Bank");
-        const voices = window.speechSynthesis.getVoices();
-        msg.voice = voices.find(v => v.lang === "en-US");
-        msg.rate = 0.95;
-        msg.pitch = 1.15;
-        speechRef.current = msg;
-        window.speechSynthesis.speak(msg);
-      }
-    };
-    setTimeout(speak, 1000);
-    return () => window.speechSynthesis.cancel();
-  }, []);
-
+  
   /* PROGRESS */
   useEffect(() => {
     let val = 0;
