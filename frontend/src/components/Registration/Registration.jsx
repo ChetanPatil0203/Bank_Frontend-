@@ -248,17 +248,12 @@ export default function RegistrationPage() {
 
             {/* Mobile logo */}
             <div className="brand-panel" style={{ display:"none", flexDirection:"column", alignItems:"center", marginBottom:20 }}>
-              <div style={{ display:"flex", alignItems:"baseline", gap:2 }}>
-                <span style={{ fontFamily:"'Georgia',serif", fontSize:25, fontWeight:900, color:"#fff", letterSpacing:-1 }}>Pay</span>
-                <span style={{ fontFamily:"'Georgia',serif", fontSize:25, fontWeight:900, letterSpacing:-1, background:"linear-gradient(135deg,#38bdf8,#818cf8)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Zen</span>
-              </div>
-              <p style={{ fontSize:9, letterSpacing:"0.3em", textTransform:"uppercase", color:"rgba(180,210,255,0.28)", marginTop:2 }}>Private Banking</p>
             </div>
 
             {/* Heading */}
             <div style={{ textAlign:"center", marginBottom:28 }}>
               <h2 className="rg-title" style={{ fontSize:24, fontWeight:800, color:"#f1f5f9", letterSpacing:"-0.03em", margin:"0 0 6px" }}>
-                Create Account
+              Registration
               </h2>
               <p style={{ fontSize:12.5, color:"rgba(148,163,184,0.48)", margin:0 }}>
                 Join PayZen — Fill all details carefully
@@ -318,7 +313,7 @@ export default function RegistrationPage() {
                   <select name="gender" value={formData.gender} onChange={handleChange} required
                     onFocus={() => setFocused("gender")} onBlur={() => setFocused(null)}
                     style={sel("gender")}>
-                    <option value="">-- Select Gender --</option>
+                    <option value="">Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
