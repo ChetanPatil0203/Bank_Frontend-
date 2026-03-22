@@ -252,11 +252,22 @@ export default function Setting() {
               </p>
               <button
                 onClick={saveProfile}
-                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
-                  profileSaved ? "bg-green-500 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
+                className="w-full md:w-40
+                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                  hover:bg-[#5b4ec2]
+                  text-white
+                  font-semibold
+                  rounded-xl
+                  py-3.5
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  transform
+                  active:scale-[0.98]
+                  shadow-lg"
               >
-                {profileSaved ? "✓ Saved!" : "Save Profile"}
+                {profileSaved ? "Saved" : "Save Profile"}
               </button>
             </div>
           </div>
