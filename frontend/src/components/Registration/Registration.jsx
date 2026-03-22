@@ -266,7 +266,7 @@ export default function RegistrationPage() {
                 {/* Row 1 — Name + Email */}
                 <div className="f2">
                   <Field label="Full Name" icon={User}>
-                    <input type="text" name="name" placeholder="Your full name"
+                    <input type="text" name="name" placeholder="Full Name"
                       value={formData.name} onChange={handleChange} required
                       onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
                       style={inp("name")} />
@@ -282,7 +282,7 @@ export default function RegistrationPage() {
                 {/* Row 2 — Mobile + DOB */}
                 <div className="f2">
                   <Field label="Mobile No" icon={Phone}>
-                    <input type="tel" name="mobile" placeholder="10-digit number"
+                    <input type="tel" name="mobile" placeholder="Mobile No"
                       value={formData.mobile} onChange={handleChange} required
                       onFocus={() => setFocused("mobile")} onBlur={() => setFocused(null)}
                       style={inp("mobile")} />
