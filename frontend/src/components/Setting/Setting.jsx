@@ -302,7 +302,19 @@ export default function Setting() {
                 </div>
                 <button
                   onClick={() => { setShowPwd(v => !v); setPwdMsg(null); }}
-                  className="text-xs font-bold px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white transition-colors"
+                  className="text-xs font-bold px-4 py-2
+                  bg-amber-500
+                  text-white
+                  font-semibold
+                  rounded-xl
+                  py-3.5
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  transform
+                  active:scale-[0.98]
+                  shadow-lg"
                 >
                   {showPwd ? "Cancel" : "Change"}
                 </button>
