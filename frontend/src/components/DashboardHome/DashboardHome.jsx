@@ -131,7 +131,7 @@ export default function DashboardHome() {
        : "bg-white/[.62] shadow-sm shadow-blue-900/[.07]"}`;
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#f0f4ff]" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
 
       {/* ── Ambient blobs ── */}
       <div className="fixed -top-32 left-[8%]  w-[520px] h-[520px] rounded-full bg-indigo-400/10  blur-3xl pointer-events-none -z-10" />
