@@ -104,7 +104,7 @@ export default function KYCPage() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="min-h-screen py-6 px-4 bg-gray-100">
+    <div className="min-h-screen py-6 px-4">
 
       <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-6">
 

@@ -80,7 +80,7 @@ export default function TransactionHistory() {
   const totalWithdraw = transactions.filter(t=>t.type==="Withdraw").length;
 
   return (
-    <div className="min-h-screen bg-[#f0f4ff] py-10 px-6"
+    <div className="min-h-screen py-10 px-6"
          style={{ fontFamily:"'Sora','DM Sans',sans-serif" }}>
 
       {/* Ambient blobs */}
