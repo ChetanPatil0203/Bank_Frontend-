@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Eye, CheckCircle, XCircle, Trash2, Clock, Plus, Search, UserPlus,
+  CreditCard, CheckCircle2, PauseCircle, Ban
 } from "lucide-react";
 
 const C = {
@@ -11,36 +12,36 @@ const C = {
 };
 
 const ACCOUNTS = [
-  { id: "ACC001", holder: "Chetan Patil",   account: "482910372846", type: "Savings", balance: "₹1,24,500", ifsc: "PYZN0001", branch: "Nashik Main",  opened: "12 Jan 2025", status: "Active"   },
-  { id: "ACC002", holder: "Rohit Sharma",   account: "193847562031", type: "Current", balance: "₹3,80,200", ifsc: "PYZN0001", branch: "Nashik Main",  opened: "03 Feb 2025", status: "Active"   },
-  { id: "ACC003", holder: "Priya Desai",    account: "847291038475", type: "Savings", balance: "₹45,000",   ifsc: "PYZN0002", branch: "Pune Central", opened: "27 Feb 2025", status: "Inactive" },
-  { id: "ACC004", holder: "Amit Joshi",     account: "302948172635", type: "Savings", balance: "₹92,750",   ifsc: "PYZN0001", branch: "Nashik Main",  opened: "15 Mar 2025", status: "Active"   },
-  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: "₹2,15,300", ifsc: "PYZN0003", branch: "Mumbai West",  opened: "01 Apr 2025", status: "Active"   },
-  { id: "ACC006", holder: "Vikas Nair",     account: "583920174628", type: "Savings", balance: "₹12,400",   ifsc: "PYZN0002", branch: "Pune Central", opened: "18 Apr 2025", status: "Closed"   },
+  { id: "ACC001", holder: "Chetan Patil", account: "482910372846", type: "Savings", balance: "₹1,24,500", ifsc: "PYZN0001", branch: "Nashik Main", opened: "12 Jan 2025", status: "Active" },
+  { id: "ACC002", holder: "Rohit Sharma", account: "193847562031", type: "Current", balance: "₹3,80,200", ifsc: "PYZN0001", branch: "Nashik Main", opened: "03 Feb 2025", status: "Active" },
+  { id: "ACC003", holder: "Priya Desai", account: "847291038475", type: "Savings", balance: "₹45,000", ifsc: "PYZN0002", branch: "Pune Central", opened: "27 Feb 2025", status: "Inactive" },
+  { id: "ACC004", holder: "Amit Joshi", account: "302948172635", type: "Savings", balance: "₹92,750", ifsc: "PYZN0001", branch: "Nashik Main", opened: "15 Mar 2025", status: "Active" },
+  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: "₹2,15,300", ifsc: "PYZN0003", branch: "Mumbai West", opened: "01 Apr 2025", status: "Active" },
+  { id: "ACC006", holder: "Vikas Nair", account: "583920174628", type: "Savings", balance: "₹12,400", ifsc: "PYZN0002", branch: "Pune Central", opened: "18 Apr 2025", status: "Closed" },
 ];
 
 const PENDING_REQUESTS = [
-  { id: "REQ001", name: "Rahul Mehta",     email: "rahul@gmail.com", type: "Savings", applied: "10 Mar 2026", kyc: "Verified" },
-  { id: "REQ002", name: "Pooja Singh",     email: "pooja@gmail.com", type: "Current", applied: "11 Mar 2026", kyc: "Verified" },
-  { id: "REQ003", name: "Karan Deshmukh", email: "karan@gmail.com", type: "Savings", applied: "12 Mar 2026", kyc: "Pending"  },
-  { id: "REQ004", name: "Neha Patil",     email: "neha@gmail.com",  type: "Savings", applied: "13 Mar 2026", kyc: "Verified" },
+  { id: "REQ001", name: "Rahul Mehta", email: "rahul@gmail.com", type: "Savings", applied: "10 Mar 2026", kyc: "Verified" },
+  { id: "REQ002", name: "Pooja Singh", email: "pooja@gmail.com", type: "Current", applied: "11 Mar 2026", kyc: "Verified" },
+  { id: "REQ003", name: "Karan Deshmukh", email: "karan@gmail.com", type: "Savings", applied: "12 Mar 2026", kyc: "Pending" },
+  { id: "REQ004", name: "Neha Patil", email: "neha@gmail.com", type: "Savings", applied: "13 Mar 2026", kyc: "Verified" },
 ];
 
 const NEW_ACCOUNT_REQUESTS = [
-  { id: "NAR001", name: "Arjun Bhosale",  email: "arjun@gmail.com",  phone: "9823456781", type: "Savings", reason: "Personal savings",     applied: "14 Mar 2026", kyc: "Verified" },
-  { id: "NAR002", name: "Divya Shinde",   email: "divya@gmail.com",  phone: "9712345678", type: "Current", reason: "Business transactions", applied: "14 Mar 2026", kyc: "Pending"  },
-  { id: "NAR003", name: "Mahesh Gaikwad", email: "mahesh@gmail.com", phone: "9654321987", type: "Savings", reason: "Salary account",        applied: "15 Mar 2026", kyc: "Verified" },
-  { id: "NAR004", name: "Anjali Patil",   email: "anjali@gmail.com", phone: "9876543210", type: "Savings", reason: "Student account",       applied: "15 Mar 2026", kyc: "Verified" },
-  { id: "NAR005", name: "Rohan Kulkarni", email: "rohan@gmail.com",  phone: "9988776655", type: "Current", reason: "Freelance payments",    applied: "15 Mar 2026", kyc: "Pending"  },
+  { id: "NAR001", name: "Arjun Bhosale", email: "arjun@gmail.com", phone: "9823456781", type: "Savings", reason: "Personal savings", applied: "14 Mar 2026", kyc: "Verified" },
+  { id: "NAR002", name: "Divya Shinde", email: "divya@gmail.com", phone: "9712345678", type: "Current", reason: "Business transactions", applied: "14 Mar 2026", kyc: "Pending" },
+  { id: "NAR003", name: "Mahesh Gaikwad", email: "mahesh@gmail.com", phone: "9654321987", type: "Savings", reason: "Salary account", applied: "15 Mar 2026", kyc: "Verified" },
+  { id: "NAR004", name: "Anjali Patil", email: "anjali@gmail.com", phone: "9876543210", type: "Savings", reason: "Student account", applied: "15 Mar 2026", kyc: "Verified" },
+  { id: "NAR005", name: "Rohan Kulkarni", email: "rohan@gmail.com", phone: "9988776655", type: "Current", reason: "Freelance payments", applied: "15 Mar 2026", kyc: "Pending" },
 ];
 
 function Badge({ status }) {
   const map = {
-    Active:   { bg: "#dcfce7", color: "#15803d" },
+    Active: { bg: "#dcfce7", color: "#15803d" },
     Inactive: { bg: "#fef9c3", color: "#854d0e" },
-    Closed:   { bg: "#fee2e2", color: "#b91c1c" },
+    Closed: { bg: "#fee2e2", color: "#b91c1c" },
     Verified: { bg: "#dcfce7", color: "#15803d" },
-    Pending:  { bg: "#fef9c3", color: "#854d0e" },
+    Pending: { bg: "#fef9c3", color: "#854d0e" },
     Rejected: { bg: "#fee2e2", color: "#b91c1c" },
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
@@ -86,16 +87,16 @@ function Field({ label, placeholder, type = "text", value, onChange, options }) 
 }
 
 export default function AccountsView() {
-  const [tab, setTab]                 = useState("all");
-  const [search, setSearch]           = useState("");
-  const [narSearch, setNarSearch]     = useState("");
-  const [modal, setModal]             = useState(null);
-  const [selected, setSelected]       = useState(null);
+  const [tab, setTab] = useState("all");
+  const [search, setSearch] = useState("");
+  const [narSearch, setNarSearch] = useState("");
+  const [modal, setModal] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [selectedNar, setSelectedNar] = useState(null);
-  const [accounts, setAccounts]       = useState(ACCOUNTS);
-  const [requests, setRequests]       = useState(PENDING_REQUESTS);
-  const [newReqs, setNewReqs]         = useState(NEW_ACCOUNT_REQUESTS);
-  const [form, setForm]               = useState({ name: "", email: "", phone: "", type: "Savings", branch: "Nashik Main" });
+  const [accounts, setAccounts] = useState(ACCOUNTS);
+  const [requests, setRequests] = useState(PENDING_REQUESTS);
+  const [newReqs, setNewReqs] = useState(NEW_ACCOUNT_REQUESTS);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", type: "Savings", branch: "Nashik Main" });
 
   const filtered = accounts.filter(a =>
     a.holder.toLowerCase().includes(search.toLowerCase()) ||
@@ -174,9 +175,9 @@ export default function AccountsView() {
   }
 
   const TABS = [
-    { id: "all",     label: "All Accounts",        count: accounts.length },
-    { id: "new",     label: "New Account Requests", count: newReqs.length  },
-    { id: "pending", label: "Pending Requests",     count: requests.length },
+    { id: "all", label: "All Accounts", count: accounts.length },
+    { id: "new", label: "New Account Requests", count: newReqs.length },
+    { id: "pending", label: "Pending Requests", count: requests.length },
   ];
 
   return (
@@ -185,55 +186,63 @@ export default function AccountsView() {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Accounts Management</h2>
-          <p style={{ fontSize: 13, color: C.muted, margin: "4px 0 0" }}>Manage all bank accounts</p>
         </div>
         <button onClick={() => setModal("create")} style={{ display: "flex", alignItems: "center", gap: 8, background: C.navy, color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
           <Plus size={15} /> Create New Account
         </button>
       </div>
 
-      {/* Summary Cards */}
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
         {[
-          { label: "Total Accounts", value: accounts.length,                                     color: C.accent,  emoji: "💳" },
-          { label: "Active",         value: accounts.filter(a => a.status === "Active").length,   color: C.green,   emoji: "✅" },
-          { label: "Inactive",       value: accounts.filter(a => a.status === "Inactive").length, color: C.gold,    emoji: "⏸️" },
-          { label: "Closed",         value: accounts.filter(a => a.status === "Closed").length,   color: C.red,     emoji: "🚫" },
-          { label: "New Requests",   value: newReqs.length,                                       color: C.accent,  emoji: "🆕" },
-          { label: "Pending",        value: requests.length,                                      color: C.purple,  emoji: "🕐" },
-        ].map((s, i) => (
-          <div key={i} style={{ background: C.card, borderRadius: 14, padding: "16px 14px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8, flex: "1 1 160px", minWidth: 160, maxWidth: "calc(33% - 8px)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ fontSize: 14, color: C.muted, margin: 0, fontWeight: 600 }}>{s.label}</p>
-              <div style={{ width: 40, height: 40, borderRadius: 11, background: s.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                {s.emoji}
+          { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard },
+          { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2 },
+          { label: "Inactive", value: accounts.filter(a => a.status === "Inactive").length, color: C.gold, icon: PauseCircle },
+          { label: "Closed", value: accounts.filter(a => a.status === "Closed").length, color: C.red, icon: Ban },
+          { label: "New Requests", value: newReqs.length, color: C.accent, icon: UserPlus },
+          { label: "Pending", value: requests.length, color: C.purple, icon: Clock },
+        ].map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "16px 14px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8, flex: "1 1 160px", minWidth: 160, maxWidth: "calc(33% - 8px)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ fontSize: 14, color: C.muted, margin: 0, fontWeight: 600 }}>{s.label}</p>
+                <div style={{ width: 40, height: 40, borderRadius: 11, background: s.color + "18", display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>
+                  <Icon size={20} />
+                </div>
               </div>
+              <p style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: 0 }}>{s.value}</p>
             </div>
-            <p style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: 0 }}>{s.value}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, marginBottom: 16, width: "fit-content", flexWrap: "wrap" }}>
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: tab === t.id ? C.navy : "transparent", color: tab === t.id ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
-            {t.label}
-            <span style={{ background: tab === t.id ? "rgba(255,255,255,0.2)" : C.border, color: tab === t.id ? "#fff" : C.muted, fontSize: 10, fontWeight: 800, padding: "1px 7px", borderRadius: 99 }}>{t.count}</span>
-          </button>
-        ))}
+      {/* Tabs and Search Row */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, width: "fit-content" }}>
+          {TABS.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: tab === t.id ? C.navy : "transparent", color: tab === t.id ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
+              {t.label}
+              <span style={{ background: tab === t.id ? "rgba(255,255,255,0.2)" : C.border, color: tab === t.id ? "#fff" : C.muted, fontSize: 10, fontWeight: 800, padding: "1px 7px", borderRadius: 99 }}>{t.count}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Unified Search Bar on the Right */}
+        <div style={{ position: "relative", width: "100%", maxWidth: 320 }}>
+          <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
+          <input
+            value={tab === "all" ? search : narSearch}
+            onChange={e => tab === "all" ? setSearch(e.target.value) : setNarSearch(e.target.value)}
+            placeholder={tab === "all" ? "Search by name or account no..." : "Search by name or email..."}
+            style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: C.card, fontFamily: "inherit" }}
+          />
+        </div>
       </div>
 
       {/* TAB 1 — ALL ACCOUNTS */}
       {tab === "all" && (
         <>
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ position: "relative", maxWidth: 320 }}>
-              <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or account no..."
-                style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: C.card, fontFamily: "inherit" }} />
-            </div>
-          </div>
+          {/* Search box removed from here and moved to top row */}
           <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -296,13 +305,7 @@ export default function AccountsView() {
               <span><strong>{newReqs.length} new account request{newReqs.length > 1 ? "s" : ""}</strong> waiting for your approval.</span>
             </div>
           )}
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ position: "relative", maxWidth: 320 }}>
-              <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-              <input value={narSearch} onChange={e => setNarSearch(e.target.value)} placeholder="Search by name or email..."
-                style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: C.card, fontFamily: "inherit" }} />
-            </div>
-          </div>
+          {/* Search box removed from here and moved to top row */}
           <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
             {filteredNar.length === 0 ? (
               <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
@@ -418,11 +421,11 @@ export default function AccountsView() {
       {/* Create Account */}
       {modal === "create" && (
         <Modal title="➕ Create New Account" onClose={() => setModal(null)}>
-          <Field label="Full Name"    placeholder="e.g. Rahul Mehta"  value={form.name}   onChange={e => setForm({...form, name: e.target.value})} />
-          <Field label="Email"        placeholder="email@example.com" value={form.email}  onChange={e => setForm({...form, email: e.target.value})} type="email" />
-          <Field label="Phone"        placeholder="+91 XXXXX XXXXX"   value={form.phone}  onChange={e => setForm({...form, phone: e.target.value})} />
-          <Field label="Account Type" value={form.type}   onChange={e => setForm({...form, type: e.target.value})}   options={["Savings", "Current"]} />
-          <Field label="Branch"       value={form.branch} onChange={e => setForm({...form, branch: e.target.value})} options={["Nashik Main", "Pune Central", "Mumbai West"]} />
+          <Field label="Full Name" placeholder="e.g. Rahul Mehta" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+          <Field label="Email" placeholder="email@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} type="email" />
+          <Field label="Phone" placeholder="+91 XXXXX XXXXX" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+          <Field label="Account Type" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} options={["Savings", "Current"]} />
+          <Field label="Branch" value={form.branch} onChange={e => setForm({ ...form, branch: e.target.value })} options={["Nashik Main", "Pune Central", "Mumbai West"]} />
           <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
             <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
             <button onClick={handleCreate} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Create Account</button>
@@ -436,12 +439,12 @@ export default function AccountsView() {
           {[
             ["Account Holder", selected.holder],
             ["Account Number", selected.account],
-            ["Account Type",   selected.type],
-            ["Balance",        selected.balance],
-            ["IFSC Code",      selected.ifsc],
-            ["Branch",         selected.branch],
-            ["Opened On",      selected.opened],
-            ["Status",         selected.status],
+            ["Account Type", selected.type],
+            ["Balance", selected.balance],
+            ["IFSC Code", selected.ifsc],
+            ["Branch", selected.branch],
+            ["Opened On", selected.opened],
+            ["Status", selected.status],
           ].map(([k, v]) => (
             <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{k}</span>
@@ -485,13 +488,13 @@ export default function AccountsView() {
       {modal === "nar-details" && selectedNar && (
         <Modal title="👤 New Account Request Details" onClose={() => setModal(null)}>
           {[
-            ["Full Name",    selectedNar.name],
-            ["Email",        selectedNar.email],
-            ["Phone",        selectedNar.phone],
+            ["Full Name", selectedNar.name],
+            ["Email", selectedNar.email],
+            ["Phone", selectedNar.phone],
             ["Account Type", selectedNar.type],
-            ["Reason",       selectedNar.reason],
-            ["Applied On",   selectedNar.applied],
-            ["KYC Status",   selectedNar.kyc],
+            ["Reason", selectedNar.reason],
+            ["Applied On", selectedNar.applied],
+            ["KYC Status", selectedNar.kyc],
           ].map(([k, v]) => (
             <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{k}</span>

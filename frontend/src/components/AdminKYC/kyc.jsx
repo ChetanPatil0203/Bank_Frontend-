@@ -4,7 +4,7 @@ import {
   FileText, AlertTriangle, Plus, User,
   Phone, Mail, MapPin, Calendar,
   ShieldCheck, CreditCard, KeyRound,
-  Send, RefreshCw, Upload,
+  Send, RefreshCw, Upload, CheckCircle2
 } from "lucide-react";
 
 const KYC_DATA = [
@@ -462,7 +462,7 @@ export default function AdminKYC() {
       {/* Stat Cards */}
       <div style={{ display: "flex", flexDirection: "row", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
         <StatCard label="Total KYC"  value={counts.All}      icon={FileText}    iconBg="#eff6ff" iconColor={C.accent} />
-        <StatCard label="Verified"   value={counts.Verified} icon={CheckCircle} iconBg="#f0fdf4" iconColor={C.green}  />
+        <StatCard label="Verified"   value={counts.Verified} icon={CheckCircle2} iconBg="#f0fdf4" iconColor={C.green}  />
         <StatCard label="Pending"    value={counts.Pending}  icon={Clock}       iconBg="#fffbeb" iconColor={C.gold}   />
         <StatCard label="Rejected"   value={counts.Rejected} icon={XCircle}     iconBg="#fef2f2" iconColor={C.red}    />
       </div>
@@ -476,18 +476,21 @@ export default function AdminKYC() {
       )}
 
       {/* Search + Filter */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", marginBottom: 16 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        {/* Tabs on the Left */}
+        <div style={{ display: "flex", gap: 4, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4 }}>
+          {FILTERS.map(f => (
+            <button key={f} onClick={() => setFilter(f)} style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: filter === f ? C.navy : "transparent", color: filter === f ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s" }}>
+              {f} <span style={{ background: filter === f ? "rgba(255,255,255,0.2)" : C.border, color: filter === f ? "#fff" : C.muted, fontSize: 10, fontWeight: 800, padding: "1px 7px", borderRadius: 99, marginLeft: 4 }}>{counts[f]}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Search on the Right */}
         <div style={{ position: "relative", flex: 1, minWidth: 200, maxWidth: 320 }}>
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, email or PAN..."
             style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: C.card, fontFamily: "inherit" }} />
-        </div>
-        <div style={{ display: "flex", gap: 4, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4 }}>
-          {FILTERS.map(f => (
-            <button key={f} onClick={() => setFilter(f)} style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: filter === f ? C.navy : "transparent", color: filter === f ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-              {f} ({counts[f]})
-            </button>
-          ))}
         </div>
       </div>
 
