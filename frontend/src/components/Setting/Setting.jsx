@@ -175,24 +175,24 @@ export default function Setting() {
 
   /* ══ MAIN PAGE ═══════════════════════════════════════════ */
   return (
-    <div className="min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="min-h-screen py-3 px-3 bg-white">
+      <div className="w-full">
 
         {/* Page Title */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-black text-slate-800">Settings</h1>
-          <p className="text-sm text-slate-400 mt-1">Manage your account preferences</p>
+        <div className="mb-4">
+          <h1 className="text-lg font-black text-slate-800">Settings</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Manage your account preferences</p>
         </div>
 
         {/* ── TAB BAR ── */}
-        <div className="flex flex-wrap gap-2 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm mb-6 w-fit">
+        <div className="flex flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-sm mb-4 w-fit">
           {tabs.map(t => {
             const isActive = tab === t.id;
             return (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                   isActive
                     ? `${t.activeBg} text-white shadow-md scale-105`
                     : `text-slate-500 ${t.hoverBg} hover:text-slate-800`
@@ -200,7 +200,7 @@ export default function Setting() {
               >
                 <Ico
                   path={t.icon}
-                  size={14}
+                  size={13}
                   cls={isActive ? "text-white" : t.inactiveIcon}
                 />
                 {t.label}
@@ -211,12 +211,12 @@ export default function Setting() {
 
         {/* ════ PROFILE TAB ════ */}
         {tab === "profile" && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
 
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
               <div>
-                <h2 className="text-base font-black text-slate-900">Profile Information</h2>
+                <h2 className="text-sm font-black text-slate-900">Profile Information</h2>
                 <p className="text-xs text-slate-400 mt-0.5">Click any row to edit your details</p>
               </div>
 
@@ -228,44 +228,43 @@ export default function Setting() {
                 <button
                   key={key}
                   onClick={() => openDetail(key)}
-                  className="w-full flex items-center gap-4 px-6 py-4 hover:bg-blue-50 transition-colors text-left group"
+                  className="w-full flex items-center gap-3 px-5 py-3 hover:bg-blue-50 transition-colors text-left group"
                 >
-                  <div className={`w-9 h-9 rounded-xl ${f.bg} ${f.color} flex items-center justify-center shrink-0`}>
-                    <Ico path={f.icon} size={16} />
+                  <div className={`w-8 h-8 rounded-lg ${f.bg} ${f.color} flex items-center justify-center shrink-0`}>
+                    <Ico path={f.icon} size={15} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">{f.label}</p>
-                    <p className="text-sm font-semibold text-slate-800 truncate mt-0.5">{f.value}</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{f.label}</p>
+                    <p className="text-xs font-semibold text-slate-800 truncate mt-0.5">{f.value}</p>
                   </div>
                   <span className="text-slate-300 group-hover:text-blue-500 transition-colors">
-                    <Ico path={P.chevR} size={16} />
+                    <Ico path={P.chevR} size={15} />
                   </span>
                 </button>
               ))}
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
-              <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                <Ico path={P.shield} size={12} cls="text-slate-400" />
+            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50">
+              <p className="text-xs text-slate-400 flex items-center gap-1">
+                <Ico path={P.shield} size={11} cls="text-slate-400" />
                 Your data is encrypted and secure.
               </p>
               <button
                 onClick={saveProfile}
-                className="w-full md:w-40
+                className="px-4 py-2
                   bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
-                  hover:bg-[#5b4ec2]
+                  hover:bg-[#2d5a9e]
                   text-white
                   font-semibold
-                  rounded-xl
-                  py-3.5
+                  rounded-lg
                   flex items-center
                   justify-center
                   gap-2
                   transition-all
                   transform
                   active:scale-[0.98]
-                  shadow-lg"
+                  shadow-md text-xs"
               >
                 {profileSaved ? "Saved" : "Save Profile"}
               </button>
@@ -275,46 +274,40 @@ export default function Setting() {
 
         {/* ════ SECURITY TAB ════ */}
         {tab === "security" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
 
             {/* Password Card */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-red-50 to-white">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-red-50 to-white">
                 <div>
-                  <h2 className="text-base font-black text-slate-900">Security Settings</h2>
+                  <h2 className="text-sm font-black text-slate-900">Security Settings</h2>
                   <p className="text-xs text-slate-400 mt-0.5">Manage your account protection</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-red-100 text-red-500 flex items-center justify-center">
-                  <Ico path={P.shield} size={18} />
+                <div className="w-9 h-9 rounded-lg bg-red-100 text-red-500 flex items-center justify-center">
+                  <Ico path={P.shield} size={16} />
                 </div>
               </div>
 
               {/* Change Password Row */}
-              <div className="px-6 py-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                    <Ico path={P.key} size={17} />
+              <div className="px-5 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <Ico path={P.key} size={15} />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">Change Password</p>
+                    <p className="text-xs font-bold text-slate-800">Change Password</p>
                     <p className="text-xs text-slate-400">Update your login password regularly</p>
                   </div>
                 </div>
                 <button
                   onClick={() => { setShowPwd(v => !v); setPwdMsg(null); }}
-                  className="text-xs font-bold px-4 py-2
+                  className="text-xs font-bold px-3 py-1.5
                   bg-amber-500
                   text-white
-                  font-semibold
-                  rounded-xl
-                  py-3.5
-                  flex items-center
-                  justify-center
-                  gap-2
+                  rounded-lg
                   transition-all
                   transform
-                  active:scale-[0.98]
-                  shadow-lg"
+                  active:scale-[0.98]"
                 >
                   {showPwd ? "Cancel" : "Change"}
                 </button>
@@ -322,25 +315,25 @@ export default function Setting() {
 
               {/* Password Form */}
               {showPwd && (
-                <div className="px-6 pb-6 pt-5 border-t border-slate-100">
+                <div className="px-5 pb-4 pt-3 border-t border-slate-100">
                   {pwdMsg && (
-                    <div className={`mb-5 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                    <div className={`mb-3 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 ${
                       pwdMsg.ok
                         ? "bg-green-50 text-green-700 border border-green-200"
                         : "bg-red-50 text-red-600 border border-red-200"
                     }`}>
-                      <Ico path={pwdMsg.ok ? P.check : P.lock} size={13} />
+                      <Ico path={pwdMsg.ok ? P.check : P.lock} size={12} />
                       {pwdMsg.text}
                     </div>
                   )}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                       { k: "old",     l: "Current Password" },
                       { k: "new",     l: "New Password"      },
                       { k: "confirm", l: "Confirm Password"  },
                     ].map(({ k, l }) => (
                       <div key={k}>
-                        <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+                        <label className="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">
                           {l}
                         </label>
                         <input
@@ -348,14 +341,14 @@ export default function Setting() {
                           value={pwd[k]}
                           onChange={e => setPwd(p => ({ ...p, [k]: e.target.value }))}
                           placeholder="••••••••"
-                          className="w-full border-2 border-slate-200 focus:border-red-400 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none transition-all"
+                          className="w-full border-2 border-slate-200 focus:border-red-400 rounded-lg px-3 py-2 text-xs bg-white focus:outline-none transition-all"
                         />
                       </div>
                     ))}
                   </div>
                   <button
                     onClick={updatePwd}
-                    className="mt-4 px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white text-xs font-black rounded-xl transition-all"
+                    className="mt-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-lg transition-all"
                   >
                     Update Password
                   </button>
@@ -364,20 +357,20 @@ export default function Setting() {
             </div>
 
             {/* Security Status Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { icon: P.shield, label: "Two-Factor Auth",   status: "Enabled",   dot: "bg-green-500",  iconBg: "bg-green-50",  iconTx: "text-green-600"  },
                 { icon: P.device, label: "Device Management", status: "2 Devices", dot: "bg-blue-500",   iconBg: "bg-blue-50",   iconTx: "text-blue-600"   },
                 { icon: P.eye,    label: "Login Alerts",       status: "Active",    dot: "bg-indigo-500", iconBg: "bg-indigo-50", iconTx: "text-indigo-600" },
               ].map((c, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-                  <div className={`w-10 h-10 rounded-xl ${c.iconBg} ${c.iconTx} flex items-center justify-center mb-3`}>
-                    <Ico path={c.icon} size={17} />
+                <div key={i} className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                  <div className={`w-9 h-9 rounded-lg ${c.iconBg} ${c.iconTx} flex items-center justify-center mb-2`}>
+                    <Ico path={c.icon} size={15} />
                   </div>
                   <p className="text-xs font-black text-slate-700">{c.label}</p>
                   <div className="flex items-center gap-1.5 mt-1">
                     <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
-                    <span className="text-[11px] text-slate-400 font-semibold">{c.status}</span>
+                    <span className="text-[10px] text-slate-400 font-semibold">{c.status}</span>
                   </div>
                 </div>
               ))}
@@ -387,32 +380,32 @@ export default function Setting() {
 
         {/* ════ NOTIFICATIONS TAB ════ */}
         {tab === "notifications" && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
 
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-violet-50 to-white">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-violet-50 to-white">
               <div>
-                <h2 className="text-base font-black text-slate-900">Notification Preferences</h2>
+                <h2 className="text-sm font-black text-slate-900">Notification Preferences</h2>
                 <p className="text-xs text-slate-400 mt-0.5">Control what alerts you receive</p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-violet-100 text-violet-600 flex items-center justify-center">
-                <Ico path={P.bell} size={18} />
+              <div className="w-9 h-9 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center">
+                <Ico path={P.bell} size={16} />
               </div>
             </div>
 
             {/* Notification Rows */}
             <div className="divide-y divide-slate-100">
               {Object.entries(notifs).map(([key, item]) => (
-                <div key={key} className="px-6 py-4 flex items-center justify-between hover:bg-violet-50 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-9 h-9 rounded-xl ${item.iconBg} ${item.iconTx} flex items-center justify-center shrink-0`}>
-                      <Ico path={item.icon} size={16} />
+                <div key={key} className="px-5 py-3 flex items-center justify-between hover:bg-violet-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.iconTx} flex items-center justify-center shrink-0`}>
+                      <Ico path={item.icon} size={15} />
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-bold text-slate-800">{item.label}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-bold text-slate-800">{item.label}</p>
                         {item.badge && (
-                          <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
+                          <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${
                             item.badge === "Critical"  ? "bg-red-100 text-red-600"     :
                             item.badge === "Important" ? "bg-amber-100 text-amber-600" :
                                                          "bg-blue-100 text-blue-600"
@@ -421,7 +414,7 @@ export default function Setting() {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-400 mt-0.5">{item.desc}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{item.desc}</p>
                     </div>
                   </div>
                   <Toggle on={item.on} onChange={() => toggleNotif(key)} />
@@ -430,14 +423,14 @@ export default function Setting() {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-slate-100 flex justify-end bg-slate-50">
+            <div className="px-5 py-3 border-t border-slate-100 flex justify-end bg-slate-50">
               <button
                 onClick={saveNotif}
-                className={`px-5 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                   notifSaved ? "bg-green-500 text-white" : "bg-violet-600 hover:bg-violet-700 text-white"
                 }`}
               >
-                {notifSaved ? <><Ico path={P.check} size={13} /> Saved!</> : "Save Preferences"}
+                {notifSaved ? <><Ico path={P.check} size={12} /> Saved!</> : "Save Preferences"}
               </button>
             </div>
           </div>
@@ -445,21 +438,21 @@ export default function Setting() {
 
         {/* ════ HELP TAB ════ */}
         {tab === "help" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
 
             {/* Contact Cards */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
                 <div>
-                  <h2 className="text-base font-black text-slate-900">Help and Support</h2>
+                  <h2 className="text-sm font-black text-slate-900">Help and Support</h2>
                   <p className="text-xs text-slate-400 mt-0.5">We are here to help you 24/7</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                  <Ico path={P.help} size={18} />
+                <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                  <Ico path={P.help} size={16} />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 p-5">
+              <div className="grid grid-cols-2 gap-3 p-4">
                 {[
                   { icon: P.phone, label: "Call Us",       val: "1800-11-2211",      sub: "Toll Free · 24/7",    iconBg: "bg-blue-600",    tx: "text-blue-600"    },
                   { icon: P.mail,  label: "Email Support", val: "support@payzen.in", sub: "Reply within 24 hrs", iconBg: "bg-emerald-500", tx: "text-emerald-600" },
@@ -468,23 +461,23 @@ export default function Setting() {
                 ].map((c, i) => (
                   <button
                     key={i}
-                    className="text-left p-5 rounded-xl border border-slate-100 hover:border-emerald-200 hover:shadow-md transition-all group"
+                    className="text-left p-3 rounded-lg border border-slate-100 hover:border-emerald-200 hover:shadow-md transition-all group"
                   >
-                    <div className={`w-11 h-11 rounded-xl ${c.iconBg} flex items-center justify-center text-white shadow mb-4`}>
-                      <Ico path={c.icon} size={19} />
+                    <div className={`w-10 h-10 rounded-lg ${c.iconBg} flex items-center justify-center text-white shadow mb-3`}>
+                      <Ico path={c.icon} size={17} />
                     </div>
-                    <p className={`text-sm font-black ${c.tx}`}>{c.label}</p>
-                    <p className="text-sm font-semibold text-slate-700 mt-0.5">{c.val}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{c.sub}</p>
+                    <p className={`text-xs font-black ${c.tx}`}>{c.label}</p>
+                    <p className="text-xs font-semibold text-slate-700 mt-0.5">{c.val}</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{c.sub}</p>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* FAQ */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-100">
-                <h3 className="text-sm font-black text-slate-800">Frequently Asked Questions</h3>
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-3 border-b border-slate-100">
+                <h3 className="text-xs font-black text-slate-800">Frequently Asked Questions</h3>
               </div>
               <div className="divide-y divide-slate-100">
                 {[
@@ -496,13 +489,13 @@ export default function Setting() {
                 ].map((q, i) => (
                   <button
                     key={i}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-emerald-50 transition-colors group"
+                    className="w-full px-5 py-3 flex items-center justify-between text-left hover:bg-emerald-50 transition-colors group"
                   >
-                    <span className="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">
+                    <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">
                       {q}
                     </span>
-                    <span className="text-slate-300 group-hover:text-emerald-500 transition-colors ml-4 shrink-0">
-                      <Ico path={P.chevR} size={15} />
+                    <span className="text-slate-300 group-hover:text-emerald-500 transition-colors ml-3 shrink-0">
+                      <Ico path={P.chevR} size={13} />
                     </span>
                   </button>
                 ))}

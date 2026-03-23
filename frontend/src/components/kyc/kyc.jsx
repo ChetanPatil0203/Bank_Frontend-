@@ -129,32 +129,32 @@ export default function KYCPage() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white py-4 px-3">
 
-      <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-6">
+      <div className="w-full bg-white shadow-lg rounded-xl p-5 border border-gray-100">
 
         {/* HEADER */}
         <div className="flex items-center gap-2 mb-1">
-          <ClipboardList size={20} className="text-[#1e3a7b]" />
-          <h2 className="text-xl font-semibold text-gray-900">Submit New KYC</h2>
+          <ClipboardList size={18} className="text-blue-900" />
+          <h2 className="text-lg font-semibold text-gray-900">Submit New KYC</h2>
         </div>
 
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-xs text-gray-500 mb-4">
           {step === 1 ? "Step 1 of 3 — Personal Information" : step === 2 ? "Step 2 of 3 — Document Details" : "Step 3 of 3 — OTP Verification"}
         </p>
 
         {/* STEPPER */}
-        <div className="flex items-center gap-2 mb-6">
-          <StepDot number={1} label="Personal Info" active={step === 1} done={step > 1} />
-          <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 1 ? "bg-[#1e3a7b]" : "bg-gray-200"}`} />
+        <div className="flex items-center gap-2 mb-5">
+          <StepDot number={1} label="Personal" active={step === 1} done={step > 1} />
+          <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 1 ? "bg-blue-900" : "bg-gray-200"}`} />
           <StepDot number={2} label="Documents" active={step === 2} done={step > 2} />
-          <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 2 ? "bg-[#1e3a7b]" : "bg-gray-200"}`} />
+          <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 2 ? "bg-blue-900" : "bg-gray-200"}`} />
           <StepDot number={3} label="OTP" active={step === 3} done={otpVerified} />
         </div>
 
         {/* ERROR */}
         {error && (
-          <p className="text-red-600 text-center mb-4 text-sm font-medium">{error}</p>
+          <p className="text-red-600 text-center mb-3 text-xs font-medium">{error}</p>
         )}
 
         {/* -------- STEP 1: PERSONAL INFO -------- */}
@@ -162,46 +162,46 @@ export default function KYCPage() {
           <>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Personal Information</p>
 
-            <div className="mb-4">
-              <Input label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="e.g. Rahul Mehta" icon={<User size={15} />} required />
+            <div className="mb-3">
+              <Input label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="e.g. Rahul Mehta" icon={<User size={14} />} required />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="email@gmail.com" icon={<Mail size={15} />} required />
-              <Input label="Phone" name="mobile" value={formData.mobile} onChange={handleChange} maxLength={10} placeholder="9XXXXXXXXX" icon={<Phone size={15} />} required />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+              <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange} placeholder="email@gmail.com" icon={<Mail size={14} />} required />
+              <Input label="Phone" name="mobile" value={formData.mobile} onChange={handleChange} maxLength={10} placeholder="9XXXXXXXXX" icon={<Phone size={14} />} required />
             </div>
 
-            <div className="mb-4">
-              <Input label="Date of Birth" type="date" name="dob" value={formData.dob} onChange={handleChange} icon={<Calendar size={15} />} required />
+            <div className="mb-3">
+              <Input label="Date of Birth" type="date" name="dob" value={formData.dob} onChange={handleChange} icon={<Calendar size={14} />} required />
             </div>
 
-            <div className="mb-6">
-              <label className="text-sm font-medium text-gray-700 block mb-1">
+            <div className="mb-5">
+              <label className="text-xs font-medium text-gray-700 block mb-1.5">
                 Address <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <MapPin size={15} className="absolute left-3 top-3 text-gray-400" />
+                <MapPin size={14} className="absolute left-2.5 top-2 text-gray-400" />
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Full address with city & pincode"
-                  rows={3}
-                  className="w-full border border-gray-200 rounded-xl pl-8 pr-3 py-2.5 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                  rows={2}
+                  className="w-full border border-gray-200 rounded-lg pl-7 pr-3 py-2 text-xs bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none"
                   required
                 />
               </div>
             </div>
 
             <div className="flex justify-between items-center">
-              <button className="px-5 py-2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+              <button className="px-4 py-2 text-xs text-gray-600 hover:text-gray-800 font-medium">
                 Cancel
               </button>
               <button
                 onClick={handleNext}
-                className="px-6 py-2.5 bg-[#1e3a7b] hover:bg-[#162e66] text-white text-sm font-semibold rounded-xl transition-colors shadow-md flex items-center gap-2"
+                className="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors shadow-md flex items-center gap-1.5"
               >
-                Next <ArrowRight size={15} />
+                Next <ArrowRight size={14} />
               </button>
             </div>
           </>
@@ -213,41 +213,41 @@ export default function KYCPage() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Document Details</p>
 
             <div className="mb-1">
-              <Input label="Aadhaar Number" name="aadhaar" value={formData.aadhaar} onChange={handleChange} maxLength={12} placeholder="12-digit Aadhaar number" icon={<ShieldCheck size={15} />} required />
+              <Input label="Aadhaar Number" name="aadhaar" value={formData.aadhaar} onChange={handleChange} maxLength={12} placeholder="12-digit Aadhaar number" icon={<ShieldCheck size={14} />} required />
             </div>
-            <p className="text-xs text-gray-400 mb-4">Only the last 4 digits will be stored for security.</p>
+            <p className="text-[10px] text-gray-400 mb-3">Only the last 4 digits will be stored for security.</p>
 
-            <div className="mb-4">
-              <Input label="PAN Number" name="pan" value={formData.pan} onChange={handleChange} maxLength={10} placeholder="E.G. ABCDE1234F" icon={<CreditCard size={15} />} required />
+            <div className="mb-3">
+              <Input label="PAN Number" name="pan" value={formData.pan} onChange={handleChange} maxLength={10} placeholder="E.G. ABCDE1234F" icon={<CreditCard size={14} />} required />
             </div>
 
-            <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-1">Aadhaar Document Upload</p>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl py-5 cursor-pointer hover:border-[#1e3a7b] transition-colors bg-gray-50 gap-1">
-                <Upload size={18} className="text-gray-400" />
-                <span className="text-sm text-gray-500">
+            <div className="mb-3">
+              <p className="text-xs font-medium text-gray-700 mb-1.5">Aadhaar Document Upload</p>
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg py-6 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50 gap-1.5">
+                <Upload size={16} className="text-gray-400" />
+                <span className="text-xs text-gray-500">
                   {formData.aadhaarFile ? formData.aadhaarFile.name : "Upload Aadhaar PDF or Image"}
                 </span>
-                <span className="text-xs text-gray-400">Accepted: PDF, JPG, PNG — Max 5MB</span>
+                <span className="text-[10px] text-gray-400">Accepted: PDF, JPG, PNG — Max 5MB</span>
                 <input name="aadhaarFile" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} className="hidden" />
               </label>
             </div>
 
-            <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-1">PAN Document Upload</p>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl py-5 cursor-pointer hover:border-[#1e3a7b] transition-colors bg-gray-50 gap-1">
-                <Upload size={18} className="text-gray-400" />
-                <span className="text-sm text-gray-500">
+            <div className="mb-3">
+              <p className="text-xs font-medium text-gray-700 mb-1.5">PAN Document Upload</p>
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg py-6 cursor-pointer hover:border-blue-400 transition-colors bg-gray-50 gap-1.5">
+                <Upload size={16} className="text-gray-400" />
+                <span className="text-xs text-gray-500">
                   {formData.panFile ? formData.panFile.name : "Upload PAN PDF or Image"}
                 </span>
-                <span className="text-xs text-gray-400">Accepted: PDF, JPG, PNG — Max 5MB</span>
+                <span className="text-[10px] text-gray-400">Accepted: PDF, JPG, PNG — Max 5MB</span>
                 <input name="panFile" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} className="hidden" />
               </label>
             </div>
 
-            <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 mb-6">
-              <Info size={15} className="text-blue-500 mt-0.5 shrink-0" />
-              <p className="text-xs text-blue-700">
+            <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 mb-5">
+              <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
+              <p className="text-[11px] text-blue-700">
                 After submission, KYC will be set to <strong>Pending</strong> status and will be reviewed by an admin.
               </p>
             </div>
@@ -255,15 +255,15 @@ export default function KYCPage() {
             <div className="flex justify-between items-center">
               <button
                 onClick={() => { setStep(1); setError(""); }}
-                className="px-5 py-2 text-sm text-gray-600 hover:text-gray-800 font-medium flex items-center gap-1"
+                className="px-4 py-2 text-xs text-gray-600 hover:text-gray-800 font-medium flex items-center gap-1"
               >
-                <ArrowLeft size={15} /> Back
+                <ArrowLeft size={14} /> Back
               </button>
               <button
                 onClick={handleNextStep2}
-                className="px-6 py-2.5 bg-[#1e3a7b] hover:bg-[#162e66] text-white text-sm font-semibold rounded-xl transition-colors shadow-md flex items-center gap-2"
+                className="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors shadow-md flex items-center gap-1.5"
               >
-                Next <ArrowRight size={15} />
+                Next <ArrowRight size={14} />
               </button>
             </div>
           </>
@@ -275,16 +275,16 @@ export default function KYCPage() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">OTP Verification</p>
 
             {otpVerified ? (
-              <div className="flex flex-col items-center justify-center py-8 gap-3">
-                <CheckCircle2 size={48} className="text-green-500" />
-                <p className="text-green-600 font-semibold text-base">KYC Successfully Verified!</p>
-                <p className="text-xs text-gray-400">Your KYC has been submitted and is under review.</p>
+              <div className="flex flex-col items-center justify-center py-6 gap-2.5">
+                <CheckCircle2 size={40} className="text-green-500" />
+                <p className="text-green-600 font-semibold text-sm">KYC Successfully Verified!</p>
+                <p className="text-[11px] text-gray-400">Your KYC has been submitted and is under review.</p>
               </div>
             ) : (
               <>
-                <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 mb-5">
-                  <Send size={14} className="text-blue-500 mt-0.5 shrink-0" />
-                  <p className="text-xs text-blue-700">
+                <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 mb-4">
+                  <Send size={13} className="text-blue-600 mt-0.5 shrink-0" />
+                  <p className="text-[11px] text-blue-700">
                     OTP will be sent to <strong>{formData.mobile}</strong>. Please enter it below to verify and submit your KYC.
                   </p>
                 </div>
@@ -297,13 +297,13 @@ export default function KYCPage() {
                     onChange={(e) => setOtp(e.target.value)}
                     maxLength={6}
                     placeholder="6-digit OTP"
-                    icon={<KeyRound size={15} />}
+                    icon={<KeyRound size={14} />}
                     required
                   />
                 </div>
 
                 {otpSent && (
-                  <p className="text-xs text-gray-500 mb-4">
+                  <p className="text-[10px] text-gray-500 mb-3">
                     {timer > 0 ? `OTP expires in ${timer} seconds` : "OTP expired."}
                   </p>
                 )}
@@ -311,24 +311,24 @@ export default function KYCPage() {
                 {(timer === 0 || !otpSent) && (
                   <button
                     onClick={handleGenerateOtp}
-                    className="flex items-center gap-1 text-[#1e3a7b] text-xs font-medium underline mb-4"
+                    className="flex items-center gap-1 text-blue-900 text-xs font-medium underline mb-4"
                   >
-                    <RefreshCw size={12} /> {otpSent ? "Resend OTP" : "Send OTP"}
+                    <RefreshCw size={11} /> {otpSent ? "Resend OTP" : "Send OTP"}
                   </button>
                 )}
 
-                <div className="flex justify-between items-center mt-2">
+                <div className="flex justify-between items-center">
                   <button
                     onClick={() => { setStep(2); setError(""); setOtpSent(false); setOtp(""); }}
-                    className="px-5 py-2 text-sm text-gray-600 hover:text-gray-800 font-medium flex items-center gap-1"
+                    className="px-4 py-2 text-xs text-gray-600 hover:text-gray-800 font-medium flex items-center gap-1"
                   >
-                    <ArrowLeft size={15} /> Back
+                    <ArrowLeft size={14} /> Back
                   </button>
                   <button
                     onClick={handleSubmit}
-                    className="px-6 py-2.5 bg-[#1e3a7b] hover:bg-[#162e66] text-white text-sm font-semibold rounded-xl transition-colors shadow-md flex items-center gap-2"
+                    className="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors shadow-md flex items-center gap-1.5"
                   >
-                    <CheckCircle2 size={15} /> Submit KYC
+                    <CheckCircle2 size={14} /> Submit KYC
                   </button>
                 </div>
               </>
@@ -346,12 +346,12 @@ export default function KYCPage() {
 function Input({ type = "text", label, name, value, onChange, maxLength, placeholder, icon, required }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">
+      <label className="text-xs font-medium text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         {icon && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">{icon}</span>
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">{icon}</span>
         )}
         <input
           type={type}
@@ -360,7 +360,7 @@ function Input({ type = "text", label, name, value, onChange, maxLength, placeho
           maxLength={maxLength}
           placeholder={placeholder}
           onChange={onChange}
-          className={`w-full border border-gray-200 rounded-xl py-2.5 text-sm bg-white focus:ring-2 focus:ring-blue-500 outline-none ${icon ? "pl-8 pr-3" : "px-3"}`}
+          className={`w-full border border-gray-200 rounded-lg py-2 text-xs bg-white focus:ring-2 focus:ring-blue-500 outline-none ${icon ? "pl-7 pr-3" : "px-3"}`}
           required={required}
         />
       </div>
@@ -372,14 +372,14 @@ function Input({ type = "text", label, name, value, onChange, maxLength, placeho
 
 function StepDot({ number, label, active, done }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1">
       <div
         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all
-          ${active || done ? "bg-[#1e3a7b] text-white" : "bg-gray-200 text-gray-500"}`}
+          ${active || done ? "bg-blue-900 text-white" : "bg-gray-200 text-gray-500"}`}
       >
         {done ? "✓" : number}
       </div>
-      <span className={`text-xs font-medium ${active ? "text-[#1e3a7b]" : "text-gray-400"}`}>{label}</span>
+      <span className={`text-xs font-medium hidden sm:block ${active ? "text-blue-900" : "text-gray-400"}`}>{label}</span>
     </div>
   );
 }

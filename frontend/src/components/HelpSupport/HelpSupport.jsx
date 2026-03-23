@@ -52,27 +52,27 @@ export default function HelpSupport() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="min-h-screen py-6 px-4">
+    <div className="min-h-screen py-4 px-3 bg-white">
 
-      <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6">
+      <div className="w-full bg-white shadow-lg rounded-xl p-5 border border-gray-100">
 
         {/* HEADER */}
         <div className="text-center mb-4">
-          <h2 className="text-xl font-semibold text-blue-900">
+          <h2 className="text-lg font-semibold text-blue-900">
             Help & Support
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs text-gray-500">
             Customer Assistance & Issue Resolution
           </p>
         </div>
 
         {error && (
-          <p className="text-red-600 text-center mb-3 text-sm font-medium">
+          <p className="text-red-600 text-center mb-3 text-xs font-medium">
             {error}
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
 
           {/* CUSTOMER DETAILS */}
           <Section title="Customer Details">
@@ -129,15 +129,15 @@ export default function HelpSupport() {
             />
 
             <div className="md:col-span-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs font-medium text-gray-700">
                 Issue Description <span className="text-red-500">*</span>
               </label>
               <textarea
                 name="description"
                 placeholder="Describe your issue"
                 onChange={handleChange}
-                className="border rounded-xl p-2 w-full h-24 bg-white
-                  focus:ring-2 focus:ring-blue-500 outline-none mt-1"
+                className="border border-gray-200 rounded-lg p-2.5 w-full h-20 bg-white text-xs
+                  focus:ring-2 focus:ring-blue-500 outline-none mt-1.5 resize-none"
                 required
               />
             </div>
@@ -145,22 +145,22 @@ export default function HelpSupport() {
           </Section>
 
           {/* SUBMIT */}
-          <div className="flex justify-center pt-2">
+          <div className="flex justify-center pt-1">
             <button
-              className="w-full md:w-40
+              className="w-full md:w-48
                   bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
-                  hover:bg-[#5b4ec2]
+                  hover:bg-[#2d5a9e]
                   text-white
                   font-semibold
-                  rounded-xl
-                  py-3.5
+                  rounded-lg
+                  py-3
                   flex items-center
                   justify-center
                   gap-2
                   transition-all
                   transform
                   active:scale-[0.98]
-                  shadow-lg"
+                  shadow-md text-sm"
             >
               Submit Request
             </button>
@@ -177,11 +177,11 @@ export default function HelpSupport() {
 
 function Section({ title, children }) {
   return (
-    <div className="rounded-xl p-4 bg-gray-50">
-      <h3 className="text-base font-semibold text-blue-900 mb-3">
+    <div className="rounded-lg p-3 bg-gray-50">
+      <h3 className="text-sm font-semibold text-blue-900 mb-2.5">
         {title}
       </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {children}
       </div>
     </div>
@@ -193,7 +193,7 @@ function Section({ title, children }) {
 function Input({ type = "text", label, name, placeholder, handleChange, maxLength, required }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">
+      <label className="text-xs font-medium text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <input
@@ -202,7 +202,7 @@ function Input({ type = "text", label, name, placeholder, handleChange, maxLengt
         placeholder={placeholder}
         maxLength={maxLength}
         onChange={handleChange}
-        className="border rounded-xl p-2 bg-white
+        className="border border-gray-200 rounded-lg p-2 bg-white text-xs
           focus:ring-2 focus:ring-blue-500 outline-none"
         required={required}
       />
@@ -215,13 +215,13 @@ function Input({ type = "text", label, name, placeholder, handleChange, maxLengt
 function SelectInput({ label, name, options, handleChange, required }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">
+      <label className="text-xs font-medium text-gray-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <select
         name={name}
         onChange={handleChange}
-        className="border rounded-xl p-2 bg-white
+        className="border border-gray-200 rounded-lg p-2 bg-white text-xs
           focus:ring-2 focus:ring-blue-500 outline-none"
         required={required}
       >
