@@ -193,17 +193,41 @@ export default function KYCPage() {
               </div>
             </div>
 
-            <div className="flex justify-between items-center">
-              <button className="px-4 py-2 text-xs text-gray-600 hover:text-gray-800 font-medium">
+          <div className="flex justify-end items-center gap-2.5">
+
+              <button className="px-4 py-2
+                bg-red-600
+                text-white
+                font-semibold
+                rounded-lg
+                flex items-center
+                justify-center
+                gap-2
+                transition-all
+                active:scale-[0.98]
+                shadow-md text-xs">
                 Cancel
               </button>
+
               <button
                 onClick={handleNext}
-                className="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors shadow-md flex items-center gap-1.5"
+                className="px-4 py-2
+                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                  text-white
+                  font-semibold
+                  rounded-lg
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  active:scale-[0.98]
+                  shadow-md text-xs"
               >
                 Next <ArrowRight size={14} />
               </button>
+
             </div>
+            
           </>
         )}
 
