@@ -531,27 +531,43 @@ export default function Setting() {
                   <Ico path={P.help} size={16} />
                 </div>
               </div>
+                <div className="grid grid-cols-2 gap-3 p-4">
+                  {[
+                    { 
+                      icon: P.phone, label: "Call Us", val: "1800-11-2211", sub: "Toll Free · 24/7",
+                      iconBg: "bg-blue-600", tx: "text-blue-600",
+                      hover: "hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+                    },
+                    { 
+                      icon: P.mail, label: "Email Support", val: "support@payzen.in", sub: "Reply within 24 hrs",
+                      iconBg: "bg-emerald-500", tx: "text-emerald-600",
+                      hover: "hover:border-emerald-300 hover:bg-emerald-50 hover:shadow-md"
+                    },
+                    { 
+                      icon: P.sms, label: "Live Chat", val: "Talk to an agent", sub: "Avg wait < 2 min",
+                      iconBg: "bg-violet-600", tx: "text-violet-600",
+                      hover: "hover:border-violet-300 hover:bg-violet-50 hover:shadow-md"
+                    },
+                    { 
+                      icon: P.map, label: "Find Branch", val: "Nearest branch", sub: "View on map",
+                      iconBg: "bg-rose-500", tx: "text-rose-600",
+                      hover: "hover:border-rose-300 hover:bg-rose-50 hover:shadow-md"
+                    },
+                  ].map((c, i) => (
+                    <button
+                      key={i}
+                      className={`text-left p-3 rounded-lg border border-slate-100 transition-all duration-200 group ${c.hover}`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg ${c.iconBg} flex items-center justify-center text-white shadow mb-3`}>
+                        <Ico path={c.icon} size={17} />
+                      </div>
 
-              <div className="grid grid-cols-2 gap-3 p-4">
-                {[
-                  { icon: P.phone, label: "Call Us",       val: "1800-11-2211",      sub: "Toll Free · 24/7",    iconBg: "bg-blue-600",    tx: "text-blue-600"    },
-                  { icon: P.mail,  label: "Email Support", val: "support@payzen.in", sub: "Reply within 24 hrs", iconBg: "bg-emerald-500", tx: "text-emerald-600" },
-                  { icon: P.sms,   label: "Live Chat",     val: "Talk to an agent",  sub: "Avg wait < 2 min",    iconBg: "bg-violet-600",  tx: "text-violet-600"  },
-                  { icon: P.map,   label: "Find Branch",   val: "Nearest branch",    sub: "View on map",         iconBg: "bg-rose-500",    tx: "text-rose-600"    },
-                ].map((c, i) => (
-                  <button
-                    key={i}
-                    className="text-left p-3 rounded-lg border border-slate-100 hover:border-emerald-200 hover:shadow-md transition-all group"
-                  >
-                    <div className={`w-10 h-10 rounded-lg ${c.iconBg} flex items-center justify-center text-white shadow mb-3`}>
-                      <Ico path={c.icon} size={17} />
-                    </div>
-                    <p className={`text-xs font-black ${c.tx}`}>{c.label}</p>
-                    <p className="text-xs font-semibold text-slate-700 mt-0.5">{c.val}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">{c.sub}</p>
-                  </button>
-                ))}
-              </div>
+                      <p className={`text-xs font-black ${c.tx}`}>{c.label}</p>
+                      <p className="text-xs font-semibold text-slate-700 mt-0.5">{c.val}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">{c.sub}</p>
+                    </button>
+                  ))}
+                </div>
             </div>
 
             {/* FAQ */}

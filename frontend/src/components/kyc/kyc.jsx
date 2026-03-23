@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  ClipboardList, User, FileText, ShieldCheck,
+  ClipboardList, User, ShieldCheck,
   Mail, Phone, Calendar, MapPin, CreditCard,
   Upload, Info, ArrowRight, ArrowLeft, Send,
   CheckCircle2, RefreshCw, KeyRound
