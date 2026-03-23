@@ -83,7 +83,6 @@ function PendingPopup({ name, onClose }) {
         boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
         animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
       }}>
-        {/* Header */}
         <div style={{
           background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)",
           padding: "36px 32px 28px", textAlign: "center", position: "relative", overflow: "hidden",
@@ -91,7 +90,6 @@ function PendingPopup({ name, onClose }) {
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
           <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
 
-          {/* Animated Clock Icon */}
           <div style={{
             display:"flex", justifyContent:"center", marginBottom: 16, position:"relative", zIndex:1
           }}>
@@ -99,7 +97,6 @@ function PendingPopup({ name, onClose }) {
               width: 72, height: 72, borderRadius: "50%",
               background: "rgba(255,255,255,0.12)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              border: "2px solid rgba(255,255,255,0.2)",
               boxShadow: "0 0 0 8px rgba(255,255,255,0.06)",
               animation: "pulseRing 2s ease-in-out infinite",
             }}>
@@ -119,10 +116,7 @@ function PendingPopup({ name, onClose }) {
           </p>
         </div>
 
-        {/* Body */}
         <div style={{ padding: "24px 28px 28px", background: "#f8faff" }}>
-
-          {/* Status card */}
           <div style={{
             background: "#fff", border: "1.5px solid #dbeafe", borderRadius: 16,
             padding: "16px 20px", marginBottom: 16,
@@ -150,7 +144,6 @@ function PendingPopup({ name, onClose }) {
             </div>
           </div>
 
-          {/* Steps */}
           <div style={{ marginBottom: 20 }}>
             {[
               { label: "Application Submitted", done: true },
@@ -211,8 +204,8 @@ function PendingPopup({ name, onClose }) {
   );
 }
 
-/* ── SIGNATURE PAD (Type only) ── */
-function SignaturePad({ onSave }) {
+/* ── SIGNATURE MODAL ── */
+function SignatureModal({ isOpen, onClose, onSave }) {
   const canvasRef = useRef(null);
   const [signatureName, setSignatureName] = useState("");
   const [applied, setApplied] = useState(false);
@@ -239,51 +232,125 @@ function SignaturePad({ onSave }) {
   const handleSave = () => {
     if (!signatureName.trim() || !applied) return;
     onSave({ dataUrl: canvasRef.current.toDataURL("image/png"), name: signatureName });
+    setSignatureName("");
+    setApplied(false);
   };
 
+  const handleClose = () => {
+    setSignatureName("");
+    setApplied(false);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <>
-      <h3 className="text-xs font-semibold text-blue-900 mb-2 flex items-center gap-1.5">
-        <PenLine size={13} className="text-blue-700"/>
-        Signature <span className="text-red-500">*</span>
-      </h3>
-
-      {/* Name input */}
-      <div className="relative mb-2">
-        <User size={12} className="absolute left-2.5 top-2.5 text-gray-400 pointer-events-none"/>
-        <input
-          type="text" value={signatureName}
-          onChange={handleNameChange}
-          placeholder="Type full name"
-          className="rounded-lg pl-7 pr-3 py-1.5 bg-white border w-full focus:ring-2 focus:ring-blue-500 outline-none text-xs"
-        />
-      </div>
-
-      {/* Canvas preview */}
-      <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden mb-2" style={{ height: 52 }}>
-        <canvas ref={canvasRef} width={500} height={80} className="w-full" style={{ display:"block", height:"100%" }}/>
-        {!applied && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-gray-300 text-xs select-none">Preview appears here</p>
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 9998,
+      background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 16,
+    }}>
+      <div style={{
+        background: "#fff", borderRadius: 20, overflow: "hidden",
+        maxWidth: 480, width: "100%",
+        boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
+        animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
+      }}>
+        <div style={{
+          background: "linear-gradient(135deg, #1e3a7b 0%, #2d5a9e 100%)",
+          padding: "28px 32px", textAlign: "center", position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
+          <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", position:"relative", zIndex:1 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>
+              <PenLine size={18} style={{ display: "inline-block", marginRight: 8 }}/>
+              Add Signature
+            </h2>
+            <button onClick={handleClose} style={{
+              background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", cursor: "pointer",
+              padding: "6px 8px", borderRadius: 6, fontSize: 18, display: "flex", alignItems: "center"
+            }}>
+              <X size={20}/>
+            </button>
           </div>
-        )}
-        <div className="absolute bottom-2 left-3 right-3 border-b border-dashed border-gray-200 pointer-events-none"/>
-      </div>
+        </div>
 
-      {/* Buttons */}
-      <div className="flex gap-1.5">
-        <button type="button" onClick={() => renderTyped(signatureName)}
-          disabled={!signatureName.trim()}
-          className="flex-1 py-1 rounded-lg bg-blue-50 text-blue-700 font-semibold text-xs border border-blue-200 hover:bg-blue-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-          Preview
-        </button>
-        <button type="button" onClick={handleSave}
-          disabled={!applied}
-          className="flex-1 py-1 rounded-lg bg-blue-900 text-white font-semibold text-xs hover:bg-blue-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-          ✓ Save
-        </button>
+        <div style={{ padding: "24px 28px" }}>
+          <p style={{ fontSize: 12, color: "#64748b", marginBottom: 16, marginTop: 0 }}>
+            Type your full name to create your signature
+          </p>
+
+          {/* Name input */}
+          <div style={{ position: "relative", marginBottom: 12 }}>
+            <User size={14} style={{ position: "absolute", left: 10, top: 10, color: "#94a3b8", pointerEvents: "none" }}/>
+            <input
+              type="text"
+              value={signatureName}
+              onChange={handleNameChange}
+              placeholder="Type your full name"
+              style={{
+                width: "100%", paddingLeft: 36, paddingRight: 12, paddingTop: 10, paddingBottom: 10,
+                borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13,
+                outline: "none", boxSizing: "border-box",
+              }}
+              onFocus={(e) => e.target.style.borderColor = "#3b82f6"}
+              onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
+            />
+          </div>
+
+          {/* Canvas preview */}
+          <div style={{
+            position: "relative", backgroundColor: "#fff", border: "1.5px solid #e2e8f0",
+            borderRadius: 12, overflow: "hidden", marginBottom: 16, height: 80,
+          }}>
+            <canvas ref={canvasRef} width={500} height={80} style={{ display:"block", width: "100%", height: "100%" }}/>
+            {!applied && (
+              <div style={{
+                position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                pointerEvents: "none", backgroundColor: "rgba(248,250,252,0.5)"
+              }}>
+                <p style={{ color: "#cbd5e1", fontSize: 12, margin: 0, userSelect: "none" }}>Preview appears here</p>
+              </div>
+            )}
+            <div style={{
+              position: "absolute", bottom: 16, left: 12, right: 12,
+              borderBottom: "1.5px dashed #e2e8f0", pointerEvents: "none"
+            }}/>
+          </div>
+
+          {/* Buttons */}
+          <div style={{ display: "flex", gap: 10 }}>
+            <button type="button" onClick={() => renderTyped(signatureName)}
+              disabled={!signatureName.trim()}
+              style={{
+                flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                border: "1.5px solid #3b82f6", background: "#eff6ff", color: "#1e40af", cursor: "pointer",
+                transition: "all 0.2s", opacity: signatureName.trim() ? 1 : 0.4,
+              }}
+              onMouseEnter={(e) => signatureName.trim() && (e.target.style.background = "#dbeafe")}
+              onMouseLeave={(e) => signatureName.trim() && (e.target.style.background = "#eff6ff")}
+            >
+              Preview
+            </button>
+            <button type="button" onClick={handleSave}
+              disabled={!applied}
+              style={{
+                flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                border: "none", background: "#1e3a7b", color: "#fff", cursor: "pointer",
+                transition: "all 0.2s", opacity: applied ? 1 : 0.4,
+              }}
+              onMouseEnter={(e) => applied && (e.target.style.background = "#2d5a9e")}
+              onMouseLeave={(e) => applied && (e.target.style.background = "#1e3a7b")}
+            >
+              ✓ Save Signature
+            </button>
+          </div>
+        </div>
       </div>
-    </>
+      <style>{`@keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }`}</style>
+    </div>
   );
 }
 
@@ -302,11 +369,11 @@ export default function OpenAccountPage() {
   const [showPending, setShowPending]     = useState(false);
   const [photo, setPhoto]                 = useState(null);
   const [photoPreview, setPhotoPreview]   = useState(null);
-  const [signature, setSignature]         = useState(null); // { dataUrl, name }
+  const [signature, setSignature]         = useState(null);
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [loading, setLoading]             = useState(false);
   const [alert, setAlert]                 = useState({ show: false, type: "", msg: "" });
 
-  // Pre-fill from localStorage
   useEffect(() => {
     try {
       const user = JSON.parse(localStorage.getItem("payzen_user") || "{}");
@@ -356,6 +423,12 @@ export default function OpenAccountPage() {
     if (type === "error") setTimeout(() => setAlert({ show: false }), 4000);
   };
 
+  const handleSignatureSave = (sig) => {
+    setSignature(sig);
+    setShowSignatureModal(false);
+    showAlertMsg("success", `Signature saved for "${sig.name}"`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.agree)                { showAlertMsg("error", "Please accept the Terms & Conditions"); return; }
@@ -382,7 +455,6 @@ export default function OpenAccountPage() {
       nominee_name:     formData.nominee_name,
       nominee_relation: formData.nominee_relation,
       signature_name:   signature.name,
-      // signature_image: signature.dataUrl,  // uncomment if your API supports it
     });
 
     setLoading(false);
@@ -392,7 +464,6 @@ export default function OpenAccountPage() {
       setSuccessData(res.data.data);
       setTimeout(() => navigate("/dashboard"), 3500);
     } else {
-      // ── Show Pending popup instead of plain error ──
       setShowPending(true);
     }
   };
@@ -407,25 +478,31 @@ export default function OpenAccountPage() {
         />
       )}
 
-      <div className="min-h-screen py-6 px-4 bg-white">
-        <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6">
+      <SignatureModal 
+        isOpen={showSignatureModal} 
+        onClose={() => setShowSignatureModal(false)}
+        onSave={handleSignatureSave}
+      />
 
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold text-blue-900">Open New Account</h2>
-            <p className="text-gray-500 text-sm">Secure Banking Registration Portal</p>
+      <div className="min-h-screen py-4 px-3 bg-white">
+        <div className="w-full bg-white shadow-lg rounded-xl p-5 border border-gray-100">
+
+          <div className="text-center mb-5">
+            <h2 className="text-lg font-semibold text-blue-900">Open New Account</h2>
+            <p className="text-gray-500 text-xs">Secure Banking Registration Portal</p>
           </div>
 
           {alert.show && (
-            <div className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-5 text-sm font-medium
+            <div className={`flex items-center gap-2 px-3 py-2.5 rounded-lg mb-4 text-xs font-medium
               ${alert.type === "success"
                 ? "bg-green-50 border border-green-200 text-green-700"
                 : "bg-red-50 border border-red-200 text-red-700"}`}>
-              {alert.type === "success" ? <CheckCircle size={18}/> : <AlertCircle size={18}/>}
+              {alert.type === "success" ? <CheckCircle size={16}/> : <AlertCircle size={16}/>}
               {alert.msg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
 
             {/* Personal Details */}
             <Section title="Personal Details">
@@ -472,12 +549,12 @@ export default function OpenAccountPage() {
                 </IconInput>
               </Field>
               <div className="md:col-span-2 flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Residential Address <span className="text-red-500">*</span></label>
+                <label className="text-xs font-medium text-gray-700">Residential Address <span className="text-red-500">*</span></label>
                 <div className="relative">
-                  <MapPin size={15} className="absolute left-3 top-3 text-gray-400"/>
+                  <MapPin size={14} className="absolute left-2.5 top-2 text-gray-400"/>
                   <textarea name="address" value={formData.address} onChange={handleChange} required
                     placeholder="Enter your full address"
-                    className="rounded-xl pl-8 pr-3 py-2 bg-white border h-20 w-full focus:ring-2 focus:ring-blue-500 outline-none resize-none text-sm"/>
+                    className="rounded-lg pl-7 pr-3 py-2 bg-white border h-16 w-full focus:ring-2 focus:ring-blue-500 outline-none resize-none text-xs"/>
                 </div>
               </div>
             </Section>
@@ -535,81 +612,101 @@ export default function OpenAccountPage() {
               </Field>
             </Section>
 
-            {/* ── Photo Upload (full width tall) + Signature below ── */}
-            <div className="rounded-xl p-3 bg-gray-50">
-              <h3 className="text-sm font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                <ImagePlus size={15} className="text-blue-700"/>
+            {/* ── Photo Upload ── */}
+            <div className="rounded-lg p-3 bg-gray-50">
+              <h3 className="text-xs font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                <ImagePlus size={14} className="text-blue-700"/>
                 Upload Photo <span className="text-red-500">*</span>
               </h3>
 
               {!photo ? (
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-xl py-10 cursor-pointer hover:border-blue-400 transition-colors bg-white gap-2 mb-3">
-                  <ImagePlus size={28} className="text-gray-300"/>
-                  <span className="text-sm text-gray-500">Click to upload photo or document</span>
-                  <span className="text-xs text-gray-400">JPG, PNG, PDF — Max 5MB</span>
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg py-8 cursor-pointer hover:border-blue-400 transition-colors bg-white gap-2 mb-3">
+                  <ImagePlus size={24} className="text-gray-300"/>
+                  <span className="text-xs text-gray-500">Click to upload photo or document</span>
+                  <span className="text-[10px] text-gray-400">JPG, PNG, PDF — Max 5MB</span>
                   <input type="file" accept="image/*,application/pdf" onChange={handlePhoto} className="hidden" required/>
                 </label>
               ) : (
-                <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl p-3 mb-3">
+                <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 mb-3">
                   {photoPreview ? (
-                    <img src={photoPreview} alt="preview" className="w-14 h-14 rounded-lg object-cover border flex-shrink-0"/>
+                    <img src={photoPreview} alt="preview" className="w-12 h-12 rounded-lg object-cover border flex-shrink-0"/>
                   ) : (
-                    <div className="w-14 h-14 rounded-lg bg-blue-50 flex items-center justify-center border flex-shrink-0">
-                      <FileText size={20} className="text-blue-400"/>
+                    <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center border flex-shrink-0">
+                      <FileText size={18} className="text-blue-400"/>
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-gray-700 truncate">{photo.name}</p>
-                    <p className="text-xs text-gray-400">{(photo.size / 1024).toFixed(1)} KB</p>
+                    <p className="text-[10px] text-gray-400">{(photo.size / 1024).toFixed(1)} KB</p>
                   </div>
                   <button type="button" onClick={removePhoto}
-                    className="text-red-400 hover:text-red-600 p-1 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0">
-                    <X size={14}/>
+                    className="text-red-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors flex-shrink-0">
+                    <X size={13}/>
                   </button>
                 </div>
               )}
-
-              {/* Signature — below photo, compact */}
-              <SignaturePad onSave={(sig) => {
-                setSignature(sig);
-                showAlertMsg("success", `Signature saved for "${sig.name}"`);
-              }}/>
             </div>
 
-            {/* Signature Preview (after saved) */}
-            {signature && (
-              <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-                <CheckCircle size={18} className="text-green-600 flex-shrink-0"/>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-green-800">Signature Saved</p>
-                  <p className="text-xs text-green-600">{signature.name}</p>
-                </div>
-                <img src={signature.dataUrl} alt="sig" className="h-10 object-contain border border-green-200 rounded bg-white px-2"/>
-                <button type="button" onClick={() => setSignature(null)}
-                  className="text-red-400 hover:text-red-600">
-                  <X size={15}/>
-                </button>
-              </div>
-            )}
-
             {/* Terms */}
-            <div className="flex gap-2 items-start">
-              <input type="checkbox" name="agree" onChange={handleChange} className="mt-1" required/>
-              <p className="text-xs text-gray-600">
+            <div className="flex gap-1.5 items-start">
+              <input type="checkbox" name="agree" onChange={handleChange} className="mt-0.5" required/>
+              <p className="text-[11px] text-gray-600">
                 I confirm that all the information provided is accurate and correct.{" "}
                 <span className="text-red-500">*</span>
               </p>
             </div>
 
-            {/* Submit */}
-            <button type="submit" disabled={loading}
-              className="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold
-                rounded-xl py-3 flex items-center justify-center gap-2
-                disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-lg">
-              {loading
-                ? <><Loader size={18} className="animate-spin"/> Opening Account...</>
-                : "Open Account"}
-            </button>
+            {/* Submit + Professional Signature Field */}
+            <div className="flex flex-col sm:flex-row gap-3 items-end">
+
+              {/* Submit Button */}
+              <button type="submit" disabled={loading}
+                className="w-full md:w-40
+                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                  hover:bg-[#5b4ec2]
+                  text-white
+                  font-semibold
+                  rounded-xl
+                  py-3.5
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  transform
+                  active:scale-[0.98]
+                  shadow-lg">
+                {loading
+                  ? <><Loader size={16} className="animate-spin"/> Opening...</>
+                  : "Open Account"}
+              </button>
+
+              {/* Professional Signature Field - Right Side */}
+              <div onClick={() => setShowSignatureModal(true)} className="w-full sm:w-72 cursor-pointer">
+        
+             <div className={`h-12 rounded-lg border-2 px-4 flex items-center transition-all shadow-sm
+                  ${signature
+                    ? "border-green-400 bg-gradient-to-r from-green-50 to-emerald-50"
+                    : "border-blue-300 bg-blue-50 hover:border-blue-500 hover:shadow-md"}
+                `}>
+                  {signature ? (
+                    <div className="flex items-center gap-2 w-full">
+                      <div className="w-7 h-7 rounded-full bg-green-300 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle size={16} className="text-green-700"/>
+                      </div>
+                      <span className="text-sm font-semibold text-green-800 truncate">
+                        {signature.name}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-blue-700">
+                      <PenLine size={16}/>
+                      <span className="text-sm font-medium">Add Signature</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </div>
 
           </form>
         </div>
@@ -622,9 +719,9 @@ export default function OpenAccountPage() {
 
 function Section({ title, children }) {
   return (
-    <div className="rounded-xl p-4 bg-gray-50">
-      <h3 className="text-base font-semibold text-blue-900 mb-3">{title}</h3>
-      <div className="grid md:grid-cols-2 gap-4">{children}</div>
+    <div className="rounded-lg p-3 bg-gray-50">
+      <h3 className="text-sm font-semibold text-blue-900 mb-2.5">{title}</h3>
+      <div className="grid md:grid-cols-2 gap-3">{children}</div>
     </div>
   );
 }
@@ -632,11 +729,11 @@ function Section({ title, children }) {
 function Field({ label, hint, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">
+      <label className="text-xs font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
       </label>
       {children}
-      {hint && <p className="text-xs text-gray-400">{hint}</p>}
+      {hint && <p className="text-[10px] text-gray-400">{hint}</p>}
     </div>
   );
 }
@@ -644,9 +741,9 @@ function Field({ label, hint, children }) {
 function IconInput({ icon, children }) {
   return (
     <div className="relative flex items-center">
-      <span className="absolute left-3 text-gray-400 pointer-events-none">{icon}</span>
-      <div className="w-full [&>input]:rounded-xl [&>input]:pl-8 [&>input]:pr-3 [&>input]:py-2 [&>input]:bg-white [&>input]:border [&>input]:w-full [&>input]:focus:ring-2 [&>input]:focus:ring-blue-500 [&>input]:outline-none [&>input]:text-sm
-                      [&>select]:rounded-xl [&>select]:pl-8 [&>select]:pr-3 [&>select]:py-2 [&>select]:bg-white [&>select]:border [&>select]:w-full [&>select]:focus:ring-2 [&>select]:focus:ring-blue-500 [&>select]:outline-none [&>select]:text-sm [&>select]:appearance-none">
+      <span className="absolute left-2.5 text-gray-400 pointer-events-none text-sm">{icon}</span>
+      <div className="w-full [&>input]:rounded-lg [&>input]:pl-7 [&>input]:pr-2.5 [&>input]:py-1.5 [&>input]:bg-white [&>input]:border [&>input]:w-full [&>input]:focus:ring-2 [&>input]:focus:ring-blue-500 [&>input]:outline-none [&>input]:text-xs
+                      [&>select]:rounded-lg [&>select]:pl-7 [&>select]:pr-2.5 [&>select]:py-1.5 [&>select]:bg-white [&>select]:border [&>select]:w-full [&>select]:focus:ring-2 [&>select]:focus:ring-blue-500 [&>select]:outline-none [&>select]:text-xs [&>select]:appearance-none">
         {children}
       </div>
     </div>
