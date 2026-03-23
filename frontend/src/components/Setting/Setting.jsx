@@ -58,8 +58,8 @@ function Toggle({ on, onChange }) {
 /* ─── Main Component ─────────────────────────────────────── */
 export default function Setting() {
   const [tab, setTab] = useState("profile");
-  const [detailKey, setDetailKey] = useState(null);
-  const [editVal, setEditVal] = useState("");
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editFormData, setEditFormData] = useState({});
   const [fieldSaved, setFieldSaved] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [pwd, setPwd] = useState({ old: "", new: "", confirm: "" });
@@ -85,12 +85,36 @@ export default function Setting() {
   });
 
   /* ── Handlers ── */
-  const openDetail  = (key) => { setEditVal(profile[key].value); setDetailKey(key); setFieldSaved(false); };
-  const saveDetail  = () => {
-    setProfile(p => ({ ...p, [detailKey]: { ...p[detailKey], value: editVal } }));
-    setFieldSaved(true);
-    setTimeout(() => { setFieldSaved(false); setDetailKey(null); }, 1200);
+  const openEditProfile = () => {
+    setEditFormData(Object.keys(profile).reduce((acc, key) => {
+      acc[key] = profile[key].value;
+      return acc;
+    }, {}));
+    setIsEditingProfile(true);
   };
+
+  const saveEditProfile = () => {
+    setProfile(p => {
+      const updated = { ...p };
+      Object.keys(editFormData).forEach(key => {
+        updated[key] = { ...updated[key], value: editFormData[key] };
+      });
+      return updated;
+    });
+    setFieldSaved(true);
+    setTimeout(() => {
+      setFieldSaved(false);
+      setIsEditingProfile(false);
+      setEditFormData({});
+    }, 1200);
+  };
+
+  const cancelEditProfile = () => {
+    setIsEditingProfile(false);
+    setEditFormData({});
+    setFieldSaved(false);
+  };
+
   const toggleNotif = (k) => setNotifs(p => ({ ...p, [k]: { ...p[k], on: !p[k].on } }));
   const saveNotif   = () => { setNotifSaved(true);   setTimeout(() => setNotifSaved(false),   1800); };
   const saveProfile = () => { setProfileSaved(true); setTimeout(() => setProfileSaved(false), 1800); };
@@ -102,7 +126,7 @@ export default function Setting() {
     setTimeout(() => { setPwdMsg(null); setShowPwd(false); }, 2000);
   };
 
-  /* ── Tab Config with individual colors ── */
+  /* ── Tab Config ── */
   const tabs = [
     { id: "profile",       label: "Profile",        icon: P.user,   activeBg: "bg-blue-600",    inactiveIcon: "text-blue-500",    hoverBg: "hover:bg-blue-50"    },
     { id: "security",      label: "Security",        icon: P.shield, activeBg: "bg-red-500",     inactiveIcon: "text-red-500",     hoverBg: "hover:bg-red-50"     },
@@ -110,64 +134,95 @@ export default function Setting() {
     { id: "help",          label: "Help & Support",  icon: P.help,   activeBg: "bg-emerald-600", inactiveIcon: "text-emerald-500", hoverBg: "hover:bg-emerald-50" },
   ];
 
-  /* ══ DETAIL EDIT PAGE ════════════════════════════════════ */
-  if (detailKey) {
-    const f = profile[detailKey];
+  /* ══ EDIT PROFILE INLINE FORM ════════════════════════════ */
+  if (isEditingProfile && tab === "profile") {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="min-h-screen py-3 px-3 bg-white">
+        <div className="w-full">
 
-          {/* Header */}
-          <div className="px-6 py-7 bg-gradient-to-br from-blue-700 to-blue-500 text-white">
-            <button
-              onClick={() => setDetailKey(null)}
-              className="flex items-center gap-1.5 text-blue-200 hover:text-white text-xs font-semibold mb-5 transition-colors"
-            >
-              <Ico path={P.back} size={14} /> Back to Settings
-            </button>
-            <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl ${f.bg} ${f.color} flex items-center justify-center`}>
-                <Ico path={f.icon} size={22} />
-              </div>
-              <div>
-                <p className="text-blue-200 text-[10px] font-bold uppercase tracking-widest">Editing</p>
-                <h2 className="text-xl font-bold mt-0.5">{f.label}</h2>
-              </div>
-            </div>
+          {/* Page Title */}
+          <div className="mb-4">
+            <h1 className="text-lg font-black text-slate-800">Edit Profile</h1>
+            <p className="text-xs text-slate-400 mt-0.5">Update your profile information</p>
           </div>
 
-          {/* Form */}
-          <div className="px-6 py-7">
-            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
-              {f.label}
-            </label>
-            <input
-              autoFocus
-              type={f.type}
-              value={editVal}
-              onChange={e => setEditVal(e.target.value)}
-              className="w-full border-2 border-slate-200 focus:border-blue-500 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 bg-slate-50 focus:bg-white focus:outline-none transition-all"
-            />
-            <p className="text-xs text-slate-400 mt-2">
-              Current: <span className="text-slate-600 font-semibold">{f.value}</span>
-            </p>
-            <div className="mt-7 flex gap-3">
+          {/* Edit Form Card */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
+              <div>
+                <h2 className="text-sm font-black text-slate-900">Edit Information</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Update all your profile details</p>
+              </div>
+            </div>
+
+            {/* Form Fields */}
+            <div className="px-5 py-4 space-y-3">
+              {Object.entries(profile).map(([key, field]) => (
+                <div key={key} className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-lg ${field.bg} ${field.color} flex items-center justify-center shrink-0`}>
+                    <Ico path={field.icon} size={16} />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">
+                      {field.label}
+                    </label>
+                    <input
+                      type={field.type}
+                      value={editFormData[key] || ""}
+                      onChange={(e) => setEditFormData(prev => ({ ...prev, [key]: e.target.value }))}
+                      placeholder={field.label}
+                      className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs
+                        focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none
+                        focus:bg-white bg-slate-50 transition-all"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Footer with Buttons */}
+            <div className="px-5 py-3 border-t border-slate-100 flex justify-end gap-2.5 bg-slate-50">
+
               <button
-                onClick={() => setDetailKey(null)}
-                className="flex-1 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                onClick={cancelEditProfile}
+                className="px-4 py-2
+                  bg-red-600
+                  text-white
+                  font-semibold
+                  rounded-lg
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  active:scale-[0.98]
+                  shadow-md text-xs"
               >
                 Cancel
               </button>
+
               <button
-                onClick={saveDetail}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-                  fieldSaved ? "bg-green-500 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
+                onClick={saveEditProfile}
+                className={`px-4 py-2
+                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                  text-white
+                  font-semibold
+                  rounded-lg
+                  flex items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                  active:scale-[0.98]
+                  shadow-md text-xs`}
               >
-                {fieldSaved ? <><Ico path={P.check} size={15} /> Saved!</> : "Save Changes"}
+                {fieldSaved 
+                  ? <><Ico path={P.check} size={13} /> Saved</> 
+                  : "Save Changes"}
               </button>
+
             </div>
           </div>
+
         </div>
       </div>
     );
@@ -217,18 +272,16 @@ export default function Setting() {
             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
               <div>
                 <h2 className="text-sm font-black text-slate-900">Profile Information</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Click any row to edit your details</p>
+                <p className="text-xs text-slate-400 mt-0.5">Your profile details</p>
               </div>
-
             </div>
 
             {/* Field Rows */}
             <div className="divide-y divide-slate-100">
               {Object.entries(profile).map(([key, f]) => (
-                <button
+                <div
                   key={key}
-                  onClick={() => openDetail(key)}
-                  className="w-full flex items-center gap-3 px-5 py-3 hover:bg-blue-50 transition-colors text-left group"
+                  className="w-full flex items-center gap-3 px-5 py-3 text-left group"
                 >
                   <div className={`w-8 h-8 rounded-lg ${f.bg} ${f.color} flex items-center justify-center shrink-0`}>
                     <Ico path={f.icon} size={15} />
@@ -237,10 +290,7 @@ export default function Setting() {
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{f.label}</p>
                     <p className="text-xs font-semibold text-slate-800 truncate mt-0.5">{f.value}</p>
                   </div>
-                  <span className="text-slate-300 group-hover:text-blue-500 transition-colors">
-                    <Ico path={P.chevR} size={15} />
-                  </span>
-                </button>
+                </div>
               ))}
             </div>
 
@@ -250,24 +300,47 @@ export default function Setting() {
                 <Ico path={P.shield} size={11} cls="text-slate-400" />
                 Your data is encrypted and secure.
               </p>
-              <button
-                onClick={saveProfile}
-                className="px-4 py-2
-                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
-                  hover:bg-[#2d5a9e]
-                  text-white
-                  font-semibold
-                  rounded-lg
-                  flex items-center
-                  justify-center
-                  gap-2
-                  transition-all
-                  transform
-                  active:scale-[0.98]
-                  shadow-md text-xs"
-              >
-                {profileSaved ? "Saved" : "Save Profile"}
-              </button>
+              <div className="flex gap-2.5">
+                <button
+                  onClick={openEditProfile}
+                  className="px-4 py-2
+                    bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                    hover:bg-[#2d5a9e]
+                    text-white
+                    font-semibold
+                    rounded-lg
+                    flex items-center
+                    justify-center
+                    gap-2
+                    transition-all
+                    transform
+                    active:scale-[0.98]
+                    shadow-md text-xs"
+                >
+                  Edit Profile
+                </button>
+                <button
+                  onClick={saveProfile}
+                  className="px-4 py-2
+                    bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                    hover:bg-[#2d5a9e]
+                    text-white
+                    font-semibold
+                    rounded-lg
+                    flex items-center
+                    justify-center
+                    gap-2
+                    transition-all
+                    transform
+                    active:scale-[0.98]
+                    shadow-md text-xs"
+                >
+                  {profileSaved ? <>
+                    <Ico path={P.check} size={12} />
+                    Saved
+                  </> : "Save Profile"}
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -430,7 +503,7 @@ export default function Setting() {
                   notifSaved ? "bg-green-500 text-white" : "bg-violet-600 hover:bg-violet-700 text-white"
                 }`}
               >
-                {notifSaved ? <><Ico path={P.check} size={12} /> Saved!</> : "Save Preferences"}
+                {notifSaved ? <><Ico path={P.check} size={12} /> Saved</> : "Save Preferences"}
               </button>
             </div>
           </div>
@@ -452,26 +525,26 @@ export default function Setting() {
                 </div>
               </div>
 
-<div className="grid grid-cols-2 gap-3 p-4">
-  {[
-    { icon: P.phone, label: "Call Us",       val: "1800-11-2211",      sub: "Toll Free · 24/7",    iconBg: "bg-blue-600",    tx: "text-blue-600",    hoverBorder: "hover:border-blue-300",    hoverBg: "hover:bg-blue-50"    },
-    { icon: P.mail,  label: "Email Support", val: "support@payzen.in", sub: "Reply within 24 hrs", iconBg: "bg-emerald-500", tx: "text-emerald-600", hoverBorder: "hover:border-emerald-300", hoverBg: "hover:bg-emerald-50" },
-    { icon: P.sms,   label: "Live Chat",     val: "Talk to an agent",  sub: "Avg wait < 2 min",    iconBg: "bg-violet-600",  tx: "text-violet-600",  hoverBorder: "hover:border-violet-300",  hoverBg: "hover:bg-violet-50"  },
-    { icon: P.map,   label: "Find Branch",   val: "Nearest branch",    sub: "View on map",         iconBg: "bg-rose-500",    tx: "text-rose-600",    hoverBorder: "hover:border-rose-300",    hoverBg: "hover:bg-rose-50"    },
-  ].map((c, i) => (
-    <button
-      key={i}
-      className={`text-left p-3 rounded-lg border border-slate-100 ${c.hoverBorder} ${c.hoverBg} hover:shadow-md transition-all group`}
-    >
-      <div className={`w-10 h-10 rounded-lg ${c.iconBg} flex items-center justify-center text-white shadow mb-3`}>
-        <Ico path={c.icon} size={17} />
-      </div>
-      <p className={`text-xs font-black ${c.tx}`}>{c.label}</p>
-      <p className="text-xs font-semibold text-slate-700 mt-0.5">{c.val}</p>
-      <p className="text-[10px] text-slate-400 mt-0.5">{c.sub}</p>
-    </button>
-  ))}
-</div>
+              <div className="grid grid-cols-2 gap-3 p-4">
+                {[
+                  { icon: P.phone, label: "Call Us",       val: "1800-11-2211",      sub: "Toll Free · 24/7",    iconBg: "bg-blue-600",    tx: "text-blue-600"    },
+                  { icon: P.mail,  label: "Email Support", val: "support@payzen.in", sub: "Reply within 24 hrs", iconBg: "bg-emerald-500", tx: "text-emerald-600" },
+                  { icon: P.sms,   label: "Live Chat",     val: "Talk to an agent",  sub: "Avg wait < 2 min",    iconBg: "bg-violet-600",  tx: "text-violet-600"  },
+                  { icon: P.map,   label: "Find Branch",   val: "Nearest branch",    sub: "View on map",         iconBg: "bg-rose-500",    tx: "text-rose-600"    },
+                ].map((c, i) => (
+                  <button
+                    key={i}
+                    className="text-left p-3 rounded-lg border border-slate-100 hover:border-emerald-200 hover:shadow-md transition-all group"
+                  >
+                    <div className={`w-10 h-10 rounded-lg ${c.iconBg} flex items-center justify-center text-white shadow mb-3`}>
+                      <Ico path={c.icon} size={17} />
+                    </div>
+                    <p className={`text-xs font-black ${c.tx}`}>{c.label}</p>
+                    <p className="text-xs font-semibold text-slate-700 mt-0.5">{c.val}</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{c.sub}</p>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* FAQ */}
