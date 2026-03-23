@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search, Eye, CheckCircle, XCircle, Clock,
   FileText, AlertTriangle, Plus, User,
   Phone, Mail, MapPin, Calendar,
+  ShieldCheck, CreditCard, KeyRound,
+  Send, RefreshCw, Upload,
 } from "lucide-react";
 
 const KYC_DATA = [
@@ -52,18 +54,38 @@ function StatCard({ label, value, icon: Icon, iconBg, iconColor }) {
   );
 }
 
+/* ─────────────────────────────────────────
+   KYC FORM  —  3 steps: Personal → Docs → OTP
+───────────────────────────────────────── */
 function KYCForm({ onSubmit, onCancel }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", dob: "", aadhaar: "", pan: "", address: "", aadhaarDoc: null, panDoc: null });
-  const [errors, setErrors] = useState({});
-  const [step, setStep] = useState(1);
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "", dob: "", address: "",
+    aadhaar: "", pan: "", aadhaarDoc: null, panDoc: null,
+  });
+  const [errors, setErrors]           = useState({});
+  const [step, setStep]               = useState(1);
+
+  // OTP state
+  const [otp, setOtp]                 = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const [otpSent, setOtpSent]         = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [timer, setTimer]             = useState(0);
+
+  useEffect(() => {
+    let interval;
+    if (timer > 0) interval = setInterval(() => setTimer(p => p - 1), 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const f = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
+  /* ── Validations ── */
   function validateStep1() {
     const err = {};
     if (!form.name.trim())        err.name    = "Full name is required";
     if (!form.email.trim())       err.email   = "Email is required";
-    if (!form.phone.trim())       err.phone   = "Phone number is required";
-    if (form.phone.length !== 10) err.phone   = "Please enter a valid 10-digit phone number";
+    if (!form.phone.trim() || form.phone.length !== 10) err.phone = "Please enter a valid 10-digit phone number";
     if (!form.dob.trim())         err.dob     = "Date of birth is required";
     if (!form.address.trim())     err.address = "Address is required";
     setErrors(err);
@@ -72,18 +94,37 @@ function KYCForm({ onSubmit, onCancel }) {
 
   function validateStep2() {
     const err = {};
-    if (!form.aadhaar.trim())                         err.aadhaar = "Aadhaar number is required";
-    if (form.aadhaar.replace(/-/g, "").length !== 12) err.aadhaar = "Please enter a valid 12-digit Aadhaar number";
-    if (!form.pan.trim())                             err.pan     = "PAN number is required";
-    if (form.pan.length !== 10)                       err.pan     = "Please enter a valid 10-character PAN number";
+    if (!form.aadhaar.trim() || form.aadhaar.replace(/-/g, "").length !== 12) err.aadhaar = "Please enter a valid 12-digit Aadhaar number";
+    if (!form.pan.trim() || form.pan.length !== 10) err.pan = "Please enter a valid 10-character PAN number";
     setErrors(err);
     return Object.keys(err).length === 0;
   }
 
-  function handleNext() { if (validateStep1()) setStep(2); }
+  /* ── OTP ── */
+  function generateOtp() {
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(newOtp);
+    setOtpSent(true);
+    setOtp("");
+    setTimer(30);
+    alert("Demo OTP: " + newOtp);
+  }
+
+  /* ── Step navigation ── */
+  function handleNext1() { if (validateStep1()) setStep(2); }
+
+  function handleNext2() {
+    if (!validateStep2()) return;
+    setStep(3);
+    generateOtp();
+  }
 
   function handleSubmit() {
-    if (!validateStep2()) return;
+    if (!otpSent)            { setErrors({ otp: "Please send OTP first." }); return; }
+    if (timer === 0)         { setErrors({ otp: "OTP expired. Please resend." }); return; }
+    if (otp !== generatedOtp){ setErrors({ otp: "Invalid OTP. Please try again." }); return; }
+    setOtpVerified(true);
+    setErrors({});
     onSubmit({
       id: `KYC${String(Date.now()).slice(-4)}`,
       name: form.name, email: form.email, phone: form.phone, dob: form.dob,
@@ -92,36 +133,63 @@ function KYCForm({ onSubmit, onCancel }) {
       submitted: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
       status: "Pending",
       aadhaarDoc: `aadhaar_${form.name.split(" ")[0].toLowerCase()}.pdf`,
-      panDoc: `pan_${form.name.split(" ")[0].toLowerCase()}.pdf`,
+      panDoc:     `pan_${form.name.split(" ")[0].toLowerCase()}.pdf`,
     });
   }
 
-  const inputStyle = (field) => ({ width: "100%", padding: "10px 12px", border: `1.5px solid ${errors[field] ? C.red : C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: "#f8faff", fontFamily: "inherit", boxSizing: "border-box" });
-  const labelStyle = { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 };
+  /* ── Shared styles ── */
+  const inputStyle = (field) => ({
+    width: "100%", padding: "10px 12px 10px 32px",
+    border: `1.5px solid ${errors[field] ? C.red : C.border}`,
+    borderRadius: 10, fontSize: 13, color: C.text, outline: "none",
+    background: "#f8faff", fontFamily: "inherit", boxSizing: "border-box",
+  });
+  const labelStyle  = { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 };
+  const iconStyle   = { position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" };
+  const errText     = (field) => errors[field] && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors[field]}</p>;
+
+  const STEPS = ["Personal Info", "Documents", "OTP"];
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
       <div style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}`, maxHeight: "92vh", overflowY: "auto" }}>
 
+        {/* Header */}
         <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: C.card, zIndex: 10 }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text }}>📋 Submit New KYC</h3>
-            <p style={{ margin: "4px 0 0", fontSize: 12, color: C.muted }}>Step {step} of 2 — {step === 1 ? "Personal Information" : "Document Details"}</p>
+            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text, display: "flex", alignItems: "center", gap: 8 }}>
+              <FileText size={17} color={C.navy} /> Submit New KYC
+            </h3>
+            <p style={{ margin: "4px 0 0", fontSize: 12, color: C.muted }}>
+              Step {step} of 3 — {step === 1 ? "Personal Information" : step === 2 ? "Document Details" : "OTP Verification"}
+            </p>
           </div>
           <button onClick={onCancel} style={{ background: "#f1f5f9", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: C.muted }}>✕</button>
         </div>
 
+        {/* Stepper */}
         <div style={{ display: "flex", alignItems: "center", padding: "20px 24px 8px" }}>
-          {[1, 2].map((s, i) => (
-            <div key={s} style={{ display: "flex", alignItems: "center", flex: 1 }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, background: step >= s ? C.navy : "#f1f5f9", color: step >= s ? "#fff" : C.muted }}>{s}</div>
-              <span style={{ fontSize: 12, fontWeight: 600, marginLeft: 8, color: step >= s ? C.navy : C.muted }}>{s === 1 ? "Personal Info" : "Documents"}</span>
-              {i === 0 && <div style={{ flex: 1, height: 2, margin: "0 12px", borderRadius: 99, background: step >= 2 ? C.navy : "#e2e8f0" }} />}
-            </div>
-          ))}
+          {STEPS.map((label, i) => {
+            const s = i + 1;
+            const active = step === s;
+            const done   = step > s;
+            return (
+              <div key={s} style={{ display: "flex", alignItems: "center", flex: i < STEPS.length - 1 ? 1 : 0 }}>
+                <div style={{ width: 30, height: 30, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0, background: active || done ? C.navy : "#f1f5f9", color: active || done ? "#fff" : C.muted }}>
+                  {done ? "✓" : s}
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 600, marginLeft: 8, color: active ? C.navy : C.muted, whiteSpace: "nowrap" }}>{label}</span>
+                {i < STEPS.length - 1 && (
+                  <div style={{ flex: 1, height: 2, margin: "0 12px", borderRadius: 99, background: step > s ? C.navy : "#e2e8f0" }} />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div style={{ padding: "16px 24px 24px" }}>
+
+          {/* ── STEP 1: Personal Info ── */}
           {step === 1 && (
             <div>
               <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16, paddingBottom: 8, borderBottom: "2px solid #f1f5f9" }}>Personal Information</p>
@@ -129,88 +197,116 @@ function KYCForm({ onSubmit, onCancel }) {
               <div style={{ marginBottom: 16 }}>
                 <label style={labelStyle}>Full Name <span style={{ color: C.red }}>*</span></label>
                 <div style={{ position: "relative" }}>
-                  <User size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-                  <input value={form.name} onChange={f("name")} placeholder="e.g. Rahul Mehta" style={{ ...inputStyle("name"), paddingLeft: 32 }} />
+                  <User size={14} style={iconStyle} />
+                  <input value={form.name} onChange={f("name")} placeholder="e.g. Rahul Mehta" style={inputStyle("name")} />
                 </div>
-                {errors.name && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.name}</p>}
+                {errText("name")}
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
                 <div>
                   <label style={labelStyle}>Email <span style={{ color: C.red }}>*</span></label>
                   <div style={{ position: "relative" }}>
-                    <Mail size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-                    <input type="email" value={form.email} onChange={f("email")} placeholder="email@gmail.com" style={{ ...inputStyle("email"), paddingLeft: 32 }} />
+                    <Mail size={14} style={iconStyle} />
+                    <input type="email" value={form.email} onChange={f("email")} placeholder="email@gmail.com" style={inputStyle("email")} />
                   </div>
-                  {errors.email && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.email}</p>}
+                  {errText("email")}
                 </div>
                 <div>
                   <label style={labelStyle}>Phone <span style={{ color: C.red }}>*</span></label>
                   <div style={{ position: "relative" }}>
-                    <Phone size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-                    <input type="tel" value={form.phone} onChange={f("phone")} placeholder="9XXXXXXXXX" maxLength={10} style={{ ...inputStyle("phone"), paddingLeft: 32 }} />
+                    <Phone size={14} style={iconStyle} />
+                    <input type="tel" value={form.phone} onChange={f("phone")} placeholder="9XXXXXXXXX" maxLength={10} style={inputStyle("phone")} />
                   </div>
-                  {errors.phone && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.phone}</p>}
+                  {errText("phone")}
                 </div>
               </div>
 
               <div style={{ marginBottom: 16 }}>
                 <label style={labelStyle}>Date of Birth <span style={{ color: C.red }}>*</span></label>
                 <div style={{ position: "relative" }}>
-                  <Calendar size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
-                  <input type="date" value={form.dob} onChange={f("dob")} style={{ ...inputStyle("dob"), paddingLeft: 32 }} />
+                  <Calendar size={14} style={iconStyle} />
+                  <input type="date" value={form.dob} onChange={f("dob")} style={inputStyle("dob")} />
                 </div>
-                {errors.dob && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.dob}</p>}
+                {errText("dob")}
               </div>
 
               <div style={{ marginBottom: 24 }}>
                 <label style={labelStyle}>Address <span style={{ color: C.red }}>*</span></label>
                 <div style={{ position: "relative" }}>
-                  <MapPin size={14} style={{ position: "absolute", left: 11, top: 12, color: C.muted }} />
-                  <textarea value={form.address} onChange={f("address")} placeholder="Full address with city & pincode" rows={2} style={{ ...inputStyle("address"), paddingLeft: 32, resize: "none" }} />
+                  <MapPin size={14} style={{ ...iconStyle, top: 14, transform: "none" }} />
+                  <textarea value={form.address} onChange={f("address")} placeholder="Full address with city & pincode" rows={2} style={{ ...inputStyle("address"), resize: "none" }} />
                 </div>
-                {errors.address && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.address}</p>}
+                {errText("address")}
               </div>
 
               <div style={{ display: "flex", gap: 10 }}>
                 <button onClick={onCancel} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-                <button onClick={handleNext} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Next →</button>
+                <button onClick={handleNext1} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  Next →
+                </button>
               </div>
             </div>
           )}
 
+          {/* ── STEP 2: Documents ── */}
           {step === 2 && (
             <div>
               <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16, paddingBottom: 8, borderBottom: "2px solid #f1f5f9" }}>Document Details</p>
 
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 6 }}>
                 <label style={labelStyle}>Aadhaar Number <span style={{ color: C.red }}>*</span></label>
-                <input value={form.aadhaar} onChange={f("aadhaar")} placeholder="12-digit Aadhaar number" maxLength={12} style={{ ...inputStyle("aadhaar"), fontFamily: "monospace" }} />
-                {errors.aadhaar ? <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.aadhaar}</p> : <p style={{ fontSize: 12, color: C.muted, margin: "4px 0 0" }}>Only the last 4 digits will be stored for security.</p>}
+                <div style={{ position: "relative" }}>
+                  <ShieldCheck size={14} style={iconStyle} />
+                  <input value={form.aadhaar} onChange={f("aadhaar")} placeholder="12-digit Aadhaar number" maxLength={12} style={{ ...inputStyle("aadhaar"), fontFamily: "monospace" }} />
+                </div>
+                {errors.aadhaar
+                  ? <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.aadhaar}</p>
+                  : <p style={{ fontSize: 12, color: C.muted, margin: "4px 0 12px" }}>Only the last 4 digits will be stored for security.</p>
+                }
               </div>
 
               <div style={{ marginBottom: 16 }}>
                 <label style={labelStyle}>PAN Number <span style={{ color: C.red }}>*</span></label>
-                <input value={form.pan} onChange={(e) => setForm({ ...form, pan: e.target.value.toUpperCase() })} placeholder="e.g. ABCDE1234F" maxLength={10} style={{ ...inputStyle("pan"), fontFamily: "monospace", textTransform: "uppercase" }} />
-                {errors.pan && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors.pan}</p>}
+                <div style={{ position: "relative" }}>
+                  <CreditCard size={14} style={iconStyle} />
+                  <input value={form.pan} onChange={(e) => setForm({ ...form, pan: e.target.value.toUpperCase() })} placeholder="e.g. ABCDE1234F" maxLength={10} style={{ ...inputStyle("pan"), fontFamily: "monospace", textTransform: "uppercase" }} />
+                </div>
+                {errText("pan")}
               </div>
 
+              {/* Aadhaar Upload */}
               <div style={{ marginBottom: 16 }}>
                 <label style={labelStyle}>Aadhaar Document Upload</label>
-                <div style={{ border: `2px dashed ${form.aadhaarDoc ? C.green : C.border}`, borderRadius: 12, padding: 16, textAlign: "center", background: form.aadhaarDoc ? "#f0fdf4" : "#f8faff" }}>
+                <div style={{ border: `2px dashed ${form.aadhaarDoc ? C.green : C.border}`, borderRadius: 12, padding: 14, textAlign: "center", background: form.aadhaarDoc ? "#f0fdf4" : "#f8faff" }}>
                   <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={e => setForm({ ...form, aadhaarDoc: e.target.files[0] })} style={{ display: "none" }} id="aadhaar-upload" />
-                  <label htmlFor="aadhaar-upload" style={{ cursor: "pointer" }}>
-                    {form.aadhaarDoc ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.aadhaarDoc.name}</p> : <><p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>📄 Upload Aadhaar PDF or Image</p><p style={{ color: "#94a3b8", fontSize: 12, margin: "4px 0 0" }}>Accepted: PDF, JPG, PNG — Max 5MB</p></>}
+                  <label htmlFor="aadhaar-upload" style={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                    {form.aadhaarDoc
+                      ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.aadhaarDoc.name}</p>
+                      : <>
+                          <Upload size={18} color={C.muted} />
+                          <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload Aadhaar PDF or Image</p>
+                          <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
+                        </>
+                    }
                   </label>
                 </div>
               </div>
 
+              {/* PAN Upload */}
               <div style={{ marginBottom: 16 }}>
                 <label style={labelStyle}>PAN Document Upload</label>
-                <div style={{ border: `2px dashed ${form.panDoc ? C.green : C.border}`, borderRadius: 12, padding: 16, textAlign: "center", background: form.panDoc ? "#f0fdf4" : "#f8faff" }}>
+                <div style={{ border: `2px dashed ${form.panDoc ? C.green : C.border}`, borderRadius: 12, padding: 14, textAlign: "center", background: form.panDoc ? "#f0fdf4" : "#f8faff" }}>
                   <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={e => setForm({ ...form, panDoc: e.target.files[0] })} style={{ display: "none" }} id="pan-upload" />
-                  <label htmlFor="pan-upload" style={{ cursor: "pointer" }}>
-                    {form.panDoc ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.panDoc.name}</p> : <><p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>📄 Upload PAN PDF or Image</p><p style={{ color: "#94a3b8", fontSize: 12, margin: "4px 0 0" }}>Accepted: PDF, JPG, PNG — Max 5MB</p></>}
+                  <label htmlFor="pan-upload" style={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                    {form.panDoc
+                      ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.panDoc.name}</p>
+                      : <>
+                          <Upload size={18} color={C.muted} />
+                          <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload PAN PDF or Image</p>
+                          <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
+                        </>
+                    }
                   </label>
                 </div>
               </div>
@@ -221,18 +317,82 @@ function KYCForm({ onSubmit, onCancel }) {
 
               <div style={{ display: "flex", gap: 10 }}>
                 <button onClick={() => { setStep(1); setErrors({}); }} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>← Back</button>
-                <button onClick={handleSubmit} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                  <CheckCircle size={15} /> Submit KYC
+                <button onClick={handleNext2} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                  Next →
                 </button>
               </div>
             </div>
           )}
+
+          {/* ── STEP 3: OTP ── */}
+          {step === 3 && (
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16, paddingBottom: 8, borderBottom: "2px solid #f1f5f9" }}>OTP Verification</p>
+
+              {otpVerified ? (
+                <div style={{ textAlign: "center", padding: "32px 0" }}>
+                  <CheckCircle size={52} color={C.green} style={{ display: "block", margin: "0 auto 12px" }} />
+                  <p style={{ fontSize: 16, fontWeight: 800, color: C.green, margin: "0 0 6px" }}>KYC Successfully Verified!</p>
+                  <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>Your KYC has been submitted and is under review.</p>
+                </div>
+              ) : (
+                <>
+                  {/* Info banner */}
+                  <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#1d4ed8", fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+                    <Send size={14} color="#1d4ed8" style={{ flexShrink: 0 }} />
+                    OTP sent to <strong>{form.phone}</strong>. Enter it below to verify and submit your KYC.
+                  </div>
+
+                  {/* OTP input */}
+                  <div style={{ marginBottom: 6 }}>
+                    <label style={labelStyle}>Enter OTP <span style={{ color: C.red }}>*</span></label>
+                    <div style={{ position: "relative" }}>
+                      <KeyRound size={14} style={iconStyle} />
+                      <input
+                        value={otp}
+                        onChange={e => { setOtp(e.target.value); setErrors({}); }}
+                        placeholder="6-digit OTP"
+                        maxLength={6}
+                        style={{ ...inputStyle("otp"), fontFamily: "monospace", letterSpacing: 4, fontSize: 16 }}
+                      />
+                    </div>
+                    {errText("otp")}
+                  </div>
+
+                  {/* Timer */}
+                  {otpSent && (
+                    <p style={{ fontSize: 12, color: C.muted, margin: "6px 0 12px" }}>
+                      {timer > 0 ? `OTP expires in ${timer} seconds` : "OTP expired."}
+                    </p>
+                  )}
+
+                  {/* Resend */}
+                  {timer === 0 && (
+                    <button onClick={generateOtp} style={{ background: "none", border: "none", color: C.navy, fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 5, marginBottom: 20, padding: 0, textDecoration: "underline" }}>
+                      <RefreshCw size={12} /> Resend OTP
+                    </button>
+                  )}
+
+                  <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                    <button onClick={() => { setStep(2); setErrors({}); setOtpSent(false); setOtp(""); }} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>← Back</button>
+                    <button onClick={handleSubmit} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                      <CheckCircle size={15} /> Submit KYC
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
         </div>
       </div>
     </div>
   );
 }
 
+/* ─────────────────────────────────────────
+   ADMIN KYC  —  unchanged below this line
+───────────────────────────────────────── */
 export default function AdminKYC() {
   const [kycList, setKycList]           = useState(KYC_DATA);
   const [search, setSearch]             = useState("");
@@ -414,7 +574,6 @@ export default function AdminKYC() {
                   <StatusBadge status={selected.status} />
                 </div>
               </div>
-
               <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, paddingBottom: 8, borderBottom: "2px solid #f1f5f9" }}>Personal Information</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
                 {[["Phone", selected.phone], ["Date of Birth", selected.dob], ["Address", selected.address], ["Submitted On", selected.submitted]].map(([k, v]) => (
@@ -424,7 +583,6 @@ export default function AdminKYC() {
                   </div>
                 ))}
               </div>
-
               <p style={{ fontSize: 11, fontWeight: 700, color: C.navy, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12, paddingBottom: 8, borderBottom: "2px solid #f1f5f9" }}>Documents</p>
               <div style={{ marginBottom: 20 }}>
                 {[["Aadhaar Number", selected.aadhaar, true], ["PAN Number", selected.pan, true], ["Aadhaar Doc", selected.aadhaarDoc, false], ["PAN Doc", selected.panDoc, false]].map(([k, v, isMono]) => (
@@ -436,14 +594,12 @@ export default function AdminKYC() {
                   </div>
                 ))}
               </div>
-
               {selected.status === "Rejected" && selected.rejectReason && (
                 <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "12px 16px", marginBottom: 16 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: C.red, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 4px" }}>Rejection Reason</p>
                   <p style={{ fontSize: 13, fontWeight: 600, color: "#b91c1c", margin: 0 }}>{selected.rejectReason}</p>
                 </div>
               )}
-
               {selected.status === "Pending" ? (
                 <div style={{ display: "flex", gap: 10 }}>
                   <button onClick={() => setModal("approve")} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.green, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>

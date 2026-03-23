@@ -19,15 +19,15 @@ import SplashScreen   from "./components/SplashScreen/SplashScreen.jsx";
 import ForgotPassword from "./components/Forgot/Forgot.jsx";
 import DashboarPage   from "./components/AdminDashboad/admindashboard.jsx";
 import AdminLogin     from "./components/AdminLogin/adminlogin.jsx";
-import AdminLogout    from "./components/Adminlogout/adminlogout.jsx";  // ← नवीन
+import AdminLogout    from "./components/Adminlogout/adminlogout.jsx";  
 
 
 function AppContent() {
   const location = useLocation();
 
-  const noLayoutPages = ["/", "/login", "/registration", "/forgot", "/adminlogin", "/adminlogout"];
+  const noLayoutPages = ["/", "/login", "/registration", "/forgot", "/adminlogin", "/adminlogout"  ];
   const showLayout = !noLayoutPages.includes(location.pathname) &&
-                     !location.pathname.startsWith("/admindashbord");
+                    !location.pathname.startsWith("/admindashboard")  
 
   return (
     <>
@@ -55,11 +55,9 @@ function AppContent() {
             <Route path="/setting"        element={<Settings />} />
             <Route path="/logout"         element={<Logout />} />
 
-            {/* Admin Logout — ← नवीन */}
-            <Route path="/adminlogout"   element={<AdminLogout />} />
-
-            <Route path="/admindashbord"    element={<Navigate to="/admindashbord/dashboard" replace />} />
-            <Route path="/admindashbord/*"  element={<Navigate to="/admindashbord/dashboard" replace />} />
+            <Route path="/admindashboard" element={<Navigate to="/admindashboard/dashboard" replace />} />
+            <Route path="/admindashboard/*" element={<DashboarPage />} />
+            <Route path="/adminlogout" element={<AdminLogout />} />
 
           </Routes>
         </div>

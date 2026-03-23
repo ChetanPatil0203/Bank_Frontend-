@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ArrowRight, LogIn } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../utils/apiServices";
 
@@ -194,8 +194,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "", remember: false });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [alertActive, setAlertActive] = useState(false);
-  const [shakeCard, setShakeCard] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const [focusedField, setFocusedField] = useState(null);
 
@@ -205,40 +203,17 @@ export default function LoginPage() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-    if (alertActive) setAlertActive(false);
-  };
-
-  const playAlertSound = () => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioCtx();
-      if (ctx.state === "suspended") ctx.resume();
-      [{ delay: 0, freq: 960 }, { delay: 380, freq: 880 }, { delay: 760, freq: 960 }].forEach(({ delay, freq }) => {
-        setTimeout(() => {
-          const osc = ctx.createOscillator(), gain = ctx.createGain();
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.type = "sawtooth"; osc.frequency.setValueAtTime(freq, ctx.currentTime);
-          gain.gain.setValueAtTime(0, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.8, ctx.currentTime + 0.01);
-          gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.25);
-          osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25);
-        }, delay);
-      });
-    } catch (err) { console.warn("[PayZen] Audio error:", err); }
-  };
-
-  const triggerRedAlert = () => {
-    setAlertActive(true); setShakeCard(true); playAlertSound();
-    setTimeout(() => setAlertActive(false), 5000);
-    setTimeout(() => setShakeCard(false), 500);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    setLoading(true);
     const result = await loginUser(formData.email, formData.password);
     if (!result.ok) {
       const msg = result.data?.message || "Invalid Credentials!";
-      triggerRedAlert(); showToast(msg, "error"); setLoading(false); return;
+      showToast(msg, "error");
+      setLoading(false);
+      return;
     }
     showToast("Login Successful! 🎉", "success");
     localStorage.setItem("payzen_user", JSON.stringify(result.data.user));
@@ -249,8 +224,8 @@ export default function LoginPage() {
 
   const inputStyle = (name) => ({
     width: "100%", boxSizing: "border-box",
-    background: alertActive ? "rgba(239,68,68,0.06)" : focusedField === name ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
-    border: `1px solid ${alertActive ? "rgba(239,68,68,0.5)" : focusedField === name ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.2)"}`,
+    background: focusedField === name ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
+    border: `1px solid ${focusedField === name ? "rgba(99,102,241,0.6)" : "rgba(99,102,241,0.2)"}`,
     borderRadius: 12,
     paddingLeft: 38, paddingRight: name === "password" ? 40 : 16, paddingTop: 12, paddingBottom: 12,
     color: "#e2e8f0", fontSize: 13, fontFamily: "inherit",
@@ -272,8 +247,6 @@ export default function LoginPage() {
         @keyframes cardIn    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin      { to{transform:rotate(360deg)} }
         @keyframes scanPulse { 0%,100%{opacity:0} 50%{opacity:1} }
-        @keyframes shakeX    { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-7px)} 20%,40%,60%,80%{transform:translateX(7px)} }
-        @keyframes alertPulse { 0%,100%{opacity:0} 50%{opacity:1} }
         input::placeholder { color: rgba(148,163,184,0.3); }
         * { box-sizing: border-box; }
         @media (min-width: 1024px) {
@@ -289,14 +262,6 @@ export default function LoginPage() {
 
       {toast.show && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
 
-      {alertActive && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 40,
-          background: "linear-gradient(90deg, transparent, #ef4444, transparent)",
-          animation: "alertPulse 1s ease-in-out infinite",
-        }} />
-      )}
-
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", padding: "24px 16px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
 
         <GridBackground />
@@ -308,18 +273,16 @@ export default function LoginPage() {
 
           {/* ════ LOGIN CARD ════ */}
           <div style={{
-            animation: `${shakeCard ? "shakeX 0.5s ease-in-out" : "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s"}`,
+            animation: "cardIn .8s cubic-bezier(.16,1,.3,1) both .1s",
             width: "100%", maxWidth: 460,
             margin: "0 auto",
           }}>
             <div className="lg-card" style={{
               borderRadius: 24,
-              background: alertActive ? "rgba(60,8,8,0.7)" : "rgba(8,16,60,0.7)",
-              border: `1px solid ${alertActive ? "rgba(239,68,68,0.35)" : "rgba(99,102,241,0.2)"}`,
+              background: "rgba(8,16,60,0.7)",
+              border: "1px solid rgba(99,102,241,0.2)",
               backdropFilter: "blur(32px)",
-              boxShadow: alertActive
-                ? "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(239,68,68,0.2)"
-                : "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)",
+              boxShadow: "0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)",
               padding: "36px 36px 32px",
               transition: "all 0.4s ease",
             }}>
@@ -330,8 +293,7 @@ export default function LoginPage() {
               <div style={{ textAlign: "center", marginBottom: 28 }}>
                 <h2 className="lg-title" style={{
                   fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", margin: 0, marginBottom: 6,
-                  color: alertActive ? "#fca5a5" : "#f1f5f9",
-                  transition: "color 0.4s ease",
+                  color: "#f1f5f9",
                 }}>
                   User Login
                 </h2>
@@ -345,11 +307,11 @@ export default function LoginPage() {
 
                   {/* Email */}
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em"}}>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em" }}>
                       Email Address <span style={{ color: "#f87171" }}>*</span>
                     </label>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
+                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex" }}>
                         <Mail size={14} />
                       </span>
                       <input type="email" name="email" placeholder="you@email.com"
@@ -361,11 +323,11 @@ export default function LoginPage() {
 
                   {/* Password */}
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em"}}>
+                    <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "rgba(148,163,184,0.8)", marginBottom: 7, letterSpacing: "0.05em" }}>
                       Password <span style={{ color: "#f87171" }}>*</span>
                     </label>
                     <div style={{ position: "relative" }}>
-                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: alertActive ? "rgba(239,68,68,0.6)" : "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex", transition: "color 0.3s" }}>
+                      <span style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "rgba(99,102,241,0.6)", pointerEvents: "none", display: "flex" }}>
                         <Lock size={14} />
                       </span>
                       <input type={showPassword ? "text" : "password"} name="password" placeholder="Enter password"
@@ -377,7 +339,7 @@ export default function LoginPage() {
                         background: "none", border: "none", cursor: "pointer",
                         color: "rgba(99,102,241,0.5)", display: "flex", padding: 0,
                       }}>
-                        {showPassword ? <EyeOff size={14}/> : <Eye size={14}/>}
+                        {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
                     </div>
                   </div>
@@ -401,15 +363,17 @@ export default function LoginPage() {
                   <button type="submit" disabled={loading} style={{
                     width: "100%", marginTop: 4, padding: "14px 24px",
                     borderRadius: 14, border: "none",
-                    background: loading ? "rgba(79,70,229,0.5)" : alertActive ? "linear-gradient(135deg,#dc2626,#b91c1c)" : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
+                    background: loading
+                      ? "rgba(79,70,229,0.5)"
+                      : "linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#4f46e5 100%)",
                     backgroundSize: "200%",
                     color: "#fff", fontSize: 14, fontWeight: 700, letterSpacing: "0.02em",
                     cursor: loading ? "not-allowed" : "pointer",
-                    boxShadow: alertActive ? "0 4px 28px rgba(220,38,38,0.45)" : loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
+                    boxShadow: loading ? "none" : "0 4px 28px rgba(79,70,229,0.45), 0 0 50px rgba(124,58,237,0.2)",
                     transition: "all 0.3s ease",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                     fontFamily: "inherit",
-                    animation: !loading && !alertActive ? "shimmer 3s linear infinite" : "none",
+                    animation: !loading ? "shimmer 3s linear infinite" : "none",
                   }}>
                     {loading ? (
                       <>

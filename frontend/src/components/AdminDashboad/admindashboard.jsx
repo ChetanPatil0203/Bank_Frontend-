@@ -126,7 +126,7 @@ export default function AdminDashboard() {
   const location = useLocation();
   const [sidebarOpen, setSidebar] = useState(true);
 
-  const active = location.pathname.split("/")[2] || "dashboard";
+ const active = location.pathname.split("/")[2] || "dashboard";
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: C.bg }}>
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
             return (
               <button
                 key={n.id}
-                onClick={() => navigate(`/admindeshbord/${n.id}`)}
+                onClick={() => navigate(`/admindashboard/${n.id}`)}
                 style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 10, border: "none", background: isActive ? "rgba(59,130,246,0.18)" : "transparent", color: isActive ? "#60a5fa" : "rgba(255,255,255,0.55)", fontSize: 14, fontWeight: isActive ? 700 : 500, cursor: "pointer", marginBottom: 2, transition: "all 0.15s", textAlign: "left", whiteSpace: "nowrap", borderLeft: isActive ? "3px solid #3b82f6" : "3px solid transparent" }}
               >
                 <Icon size={17} />{n.label}
