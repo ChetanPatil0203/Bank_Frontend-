@@ -152,74 +152,81 @@ export default function Setting() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
               <div>
-                <h2 className="text-sm font-black text-slate-900">Edit Information</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Update all your profile details</p>
+                <h2 className="text-sm font-black text-slate-900">Profile Information</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Edit your profile details</p>
               </div>
             </div>
 
-            {/* Form Fields */}
-            <div className="px-5 py-4 space-y-3">
+            {/* Form Fields - Same Layout as View */}
+            <div className="divide-y divide-slate-100">
               {Object.entries(profile).map(([key, field]) => (
-                <div key={key} className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-lg ${field.bg} ${field.color} flex items-center justify-center shrink-0`}>
-                    <Ico path={field.icon} size={16} />
+                <div key={key} className="w-full flex items-start gap-3 px-5 py-3 text-left">
+                  <div className={`w-8 h-8 rounded-lg ${field.bg} ${field.color} flex items-center justify-center shrink-0 mt-1`}>
+                    <Ico path={field.icon} size={15} />
                   </div>
-                  <div className="flex-1">
-                    <label className="block text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                      {field.label}
-                    </label>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{field.label}</p>
                     <input
                       type={field.type}
                       value={editFormData[key] || ""}
                       onChange={(e) => setEditFormData(prev => ({ ...prev, [key]: e.target.value }))}
                       placeholder={field.label}
-                      className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs
-                        focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none
-                        focus:bg-white bg-slate-50 transition-all"
+                      className="w-full text-xs font-semibold text-slate-800 bg-transparent border-0 outline-none mt-0.5 p-0
+                        focus:text-slate-900 placeholder-slate-400"
                     />
                   </div>
                 </div>
               ))}
             </div>
+
             {/* Footer with Buttons */}
-            <div className="px-5 py-3 border-t border-slate-100 flex justify-end gap-2.5 bg-slate-50">
-
-              <button
-                onClick={cancelEditProfile}
-                className="px-4 py-2
-                  bg-red-600
-                  text-white
-                  font-semibold
-                  rounded-lg
-                  flex items-center
-                  justify-center
-                  gap-2
-                  transition-all
-                  active:scale-[0.98]
-                  shadow-md text-xs"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={saveEditProfile}
-                className={`px-4 py-2
-                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
-                  text-white
-                  font-semibold
-                  rounded-lg
-                  flex items-center
-                  justify-center
-                  gap-2
-                  transition-all
-                  active:scale-[0.98]
-                  shadow-md text-xs`}
-              >
-                {fieldSaved 
-                  ? <><Ico path={P.check} size={13} /> Saved</> 
-                  : "Save Changes"}
-              </button>
-
+            <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50">
+              <p className="text-xs text-slate-400 flex items-center gap-1">
+                <Ico path={P.shield} size={11} cls="text-slate-400" />
+                Your data is encrypted and secure.
+              </p>
+              <div className="flex gap-2.5">
+                <button
+                  onClick={cancelEditProfile}
+                  className="px-4 py-2
+                    bg-red-600
+                    text-white
+                    font-semibold
+                    rounded-lg
+                    flex items-center
+                    justify-center
+                    gap-2
+                    transition-all
+                    transform
+                    active:scale-[0.98]
+                    shadow-md text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveEditProfile}
+                  className={`px-4 py-2
+                    bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
+                    hover:bg-[#2d5a9e]
+                    text-white
+                    font-semibold
+                    rounded-lg
+                    flex items-center
+                    justify-center
+                    gap-2
+                    transition-all
+                    transform
+                    active:scale-[0.98]
+                    shadow-md text-xs ${
+                    fieldSaved 
+                     
+                  }`}
+                >
+                  {fieldSaved 
+                    ? <><Ico path={P.check} size={13} /> Saved</> 
+                    : "Save Changes"}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -503,7 +510,7 @@ export default function Setting() {
                   notifSaved ? "bg-green-500 text-white" : "bg-violet-600 hover:bg-violet-700 text-white"
                 }`}
               >
-                {notifSaved ? <><Ico path={P.check} size={12} /> Saved</> : "Save Preferences"}
+                {notifSaved ? <><Ico path={P.check} size={12} /> Saved!</> : "Save Preferences"}
               </button>
             </div>
           </div>
