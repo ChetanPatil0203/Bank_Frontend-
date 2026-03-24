@@ -20,6 +20,7 @@ import ForgotPassword from "./components/Forgot/Forgot.jsx";
 import DashboarPage from "./components/AdminDashboad/admindashboard.jsx";
 import AdminLogin from "./components/AdminLogin/adminlogin.jsx";
 import AdminLogout from "./components/Adminlogout/adminlogout.jsx";
+import AIChat from "./components/AIChat/AIChat.jsx";
 
 
 function AppContent() {
@@ -32,6 +33,7 @@ function AppContent() {
   return (
     <>
       {showLayout && <HeaderSection />}
+      <AIChat />
       <div className="flex">
         {showLayout && <Sidebar />}
         <div className={showLayout ? "md:ml-64 w-full p-0 md:p-6" : "w-full"}>
