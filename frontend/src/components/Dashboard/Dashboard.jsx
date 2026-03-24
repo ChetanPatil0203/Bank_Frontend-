@@ -116,7 +116,8 @@ function PayZenLogo() {
 /* ═══════════════════════════════════════════════════════════
    SIDEBAR INNER — shared between desktop & mobile drawer
 ═══════════════════════════════════════════════════════════ */
-function SidebarInner({ isOpen, onToggle, menuItems }) {
+function SidebarInner({ isOpen, onToggle, menuItems, isMobile }) {
+
   const location = useLocation();
 
   return (
@@ -159,7 +160,8 @@ function SidebarInner({ isOpen, onToggle, menuItems }) {
             <Link
               key={index}
               to={item.path}
-              onClick={() => onToggle()}
+              onClick={() => isMobile && onToggle()}
+
               className={`flex items-center gap-3 px-3 py-[10px] rounded-lg
 
                           no-underline whitespace-nowrap text-[13.5px]
@@ -252,7 +254,9 @@ function Sidebar() {
               isOpen={true}
               onToggle={() => setMobileOpen(false)}
               menuItems={menuItems}
+              isMobile={true}
             />
+
           </div>
         )}
       </div>
@@ -268,7 +272,9 @@ function Sidebar() {
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
           menuItems={menuItems}
+          isMobile={false}
         />
+
       </aside>
     </>
   );
