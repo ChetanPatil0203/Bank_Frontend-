@@ -14,8 +14,6 @@ import AccountsView from "../AdminAccount/AccountManagement.jsx";
 import AdminTransactionManager from "../AdminTransation/admintransation.jsx";
 import AdminKYC from "../AdminKYC/kyc.jsx";
 import AdminSettings from "../AdminSetting/setting.jsx";
-// Removed unused hook or assuming it's not needed for basic window.innerWidth check
-
 
 const TRANSACTIONS = [
   { id: "TXN001", user: "Chetan Patil", type: "Credit", amount: "₹25,000", date: "13 Mar 2026", status: "Success" },
@@ -25,15 +23,72 @@ const TRANSACTIONS = [
   { id: "TXN005", user: "Sneha Kulkarni", type: "Credit", amount: "₹50,000", date: "11 Mar 2026", status: "Success" },
 ];
 
-const STAT_CARDS = [
-  { label: "Total Users", value: "12,480", icon: Users, color: "text-blue-600", border: "hover:border-blue-500" },
-  { label: "Total Accounts", value: "9,341", icon: CreditCard, color: "text-emerald-600", border: "hover:border-emerald-500" },
-  { label: "Total Balance", value: "₹84.2L", icon: Wallet, color: "text-amber-600", border: "hover:border-amber-500" },
-  { label: "Total Transactions", value: "3,892", icon: Repeat, color: "text-violet-600", border: "hover:border-violet-500" },
-  { label: "Pending KYC", value: "1,638", icon: FileClock, color: "text-red-600", border: "hover:border-red-500" },
-  { label: "Account Requests", value: "247", icon: Building2, color: "text-cyan-600", border: "hover:border-cyan-500" },
-];
+// ═══════════════════════════════════════════════════════════════
+// STAT CARDS CONFIGURATION WITH TRENDS
+// ═══════════════════════════════════════════════════════════════
 
+const STAT_CARDS = [
+  {
+    label: "Total Users",
+    value: "12,480",
+    icon: Users,
+    color: "text-blue-600",
+    border: "hover:border-blue-500",
+    bgColor: "bg-blue-500/10",
+    borderColor: "border-blue-200",
+    trend: { value: 12.5, direction: "up" }
+  },
+  {
+    label: "Total Accounts",
+    value: "9,341",
+    icon: CreditCard,
+    color: "text-emerald-600",
+    border: "hover:border-emerald-500",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-200",
+    trend: { value: 8.2, direction: "up" }
+  },
+  {
+    label: "Total Balance",
+    value: "₹84.2L",
+    icon: Wallet,
+    color: "text-amber-600",
+    border: "hover:border-amber-500",
+    bgColor: "bg-amber-500/10",
+    borderColor: "border-amber-200",
+    trend: { value: 5.8, direction: "up" }
+  },
+  {
+    label: "Total Transactions",
+    value: "3,892",
+    icon: Repeat,
+    color: "text-violet-600",
+    border: "hover:border-violet-500",
+    bgColor: "bg-violet-500/10",
+    borderColor: "border-violet-200",
+    trend: { value: 3.2, direction: "down" }
+  },
+  {
+    label: "Pending KYC",
+    value: "1,638",
+    icon: FileClock,
+    color: "text-red-600",
+    border: "hover:border-red-500",
+    bgColor: "bg-red-500/10",
+    borderColor: "border-red-200",
+    trend: { value: 2.1, direction: "down" }
+  },
+  {
+    label: "Account Requests",
+    value: "247",
+    icon: Building2,
+    color: "text-cyan-600",
+    border: "hover:border-cyan-500",
+    bgColor: "bg-cyan-500/10",
+    borderColor: "border-cyan-200",
+    trend: { value: 15.4, direction: "up" }
+  },
+];
 
 const NAV = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -57,42 +112,55 @@ function Badge({ status }) {
   );
 }
 
+function TrendIndicator({ trend }) {
+  if (!trend) return null;
+
+  const isPositive = trend.direction === "up";
+  const TrendIcon = isPositive ? TrendingUp : TrendingDown;
+  const color = isPositive ? "text-emerald-600" : "text-red-500";
+
+  return (
+    <div className={`flex items-center gap-1 text-[11px] font-semibold ${color}`}>
+      <TrendIcon size={14} />
+      <span>{Math.abs(trend.value)}%</span>
+    </div>
+  );
+}
+
 function DashboardView() {
   return (
     <div>
       {/* Page title */}
       <div className="mb-3">
-
         <h2 className="text-xl font-extrabold text-slate-800 m-0">Dashboard Overview</h2>
       </div>
 
       {/* Stat cards */}
       <div className="flex flex-row flex-wrap gap-2.5 mb-5 pb-1">
-
         {STAT_CARDS.map((s, i) => {
           const Icon = s.icon;
 
           return (
             <div
               key={i}
-              className="
-          group relative overflow-hidden
-          bg-white border border-slate-100 rounded-[20px]
-          px-4 py-4
-          shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]
-          
-          /* Layout */
-          flex flex-col gap-3
-
-          flex-[1_1_calc(50%-6px)] md:flex-[1_1_140px] lg:flex-1 min-w-[120px] max-w-[calc(50%-6px)] md:max-w-none
-          box-border
-          
-          /* Interactions */
-          transition-all duration-300 ease-out
-          ${s.border}
-          hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.12)]
-          hover:-translate-y-1.5
-        "
+              className={`
+                group relative overflow-hidden
+                ${s.bgColor} border ${s.borderColor} rounded-[20px]
+                px-4 py-4
+                shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]
+                
+                flex flex-col gap-3
+                flex-[1_1_calc(50%-6px)] md:flex-[1_1_140px] lg:flex-1 
+                min-w-[120px] max-w-[calc(50%-6px)] md:max-w-none
+                box-border
+                
+                transition-all duration-300 ease-out
+                ${s.border}
+                hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.12)]
+                hover:-translate-y-1.5
+                animate-in fade-in slide-in-from-bottom-4 duration-500
+              `}
+              style={{ animationDelay: `${i * 50}ms` }}
             >
               {/* Top Row: Label and Icon */}
               <div className="flex justify-between items-start">
@@ -100,17 +168,15 @@ function DashboardView() {
                   {s.label}
                 </p>
 
-
                 <div
                   className={`
-              w-10 h-10 rounded-xl flex items-center justify-center
-              ${s.color} 
-              bg-opacity-20 backdrop-blur-sm
-              transition-transform duration-500
-              group-hover:rotate-[10deg]
-            `}
+                    w-10 h-10 rounded-xl flex items-center justify-center
+                    ${s.color} 
+                    bg-opacity-20 backdrop-blur-sm
+                    transition-transform duration-500
+                    group-hover:rotate-[10deg]
+                  `}
                 >
-                  {/* Ensure s.color only contains text color, or adjust the icon color here */}
                   <Icon size={20} className="opacity-90" />
                 </div>
               </div>
@@ -120,10 +186,15 @@ function DashboardView() {
                 <h3 className="text-[22px] font-[900] text-slate-800 m-0 tracking-tight">
                   {s.value}
                 </h3>
-                {/* Optional: Add a small trend indicator here if your data has it */}
               </div>
 
-              {/* Decorative Gradient Glow (Hidden until hover) */}
+              {/* Trend Indicator */}
+              {s.trend && (
+                <div className="flex justify-between items-center">
+                </div>
+              )}
+
+              {/* Decorative Gradient Glow */}
               <div className="absolute -inset-px bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </div>
           );
@@ -132,13 +203,12 @@ function DashboardView() {
 
       {/* Transactions heading */}
       <div className="mb-3">
-
         <h2 className="text-xl font-extrabold text-slate-800 m-0">Recent Transactions</h2>
         <p className="text-[13px] text-slate-500 mt-1 mb-0">Last 5 transactions across all accounts</p>
       </div>
 
       {/* Transactions table */}
-      <div className="bg-white rounded-2xl shadow-[0_2px_12px_rgba(15,31,75,0.07)] border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-[0_2px_12px_rgba(15,31,75,0.07)] border border-slate-200 overflow-hidden animate-in fade-in duration-500">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
@@ -154,20 +224,24 @@ function DashboardView() {
               </tr>
             </thead>
             <tbody>
-              {TRANSACTIONS.map((t) => (
-                <tr key={t.id} className="border-b border-[#f1f5f9] hover:bg-[#f8faff] transition-colors">
+              {TRANSACTIONS.map((t, idx) => (
+                <tr
+                  key={t.id}
+                  className="border-b border-[#f1f5f9] hover:bg-[#f8faff] transition-colors"
+                  style={{ animationDelay: `${idx * 50}ms` }}
+                >
                   <td className="px-4 py-[13px] text-[13px] text-slate-800 whitespace-nowrap">
-                    <span className="text-slate-800">{t.id}</span>
+                    <span className="font-semibold">{t.id}</span>
                   </td>
                   <td className="px-4 py-[13px] text-[13px] text-slate-800 whitespace-nowrap">{t.user}</td>
                   <td className="px-4 py-[13px] text-[13px] whitespace-nowrap">
                     <span className={`flex items-center gap-1 text-xs font-bold ${t.type === "Credit" ? "text-emerald-600" : "text-red-500"}`}>
-                      {t.type === "Credit"}
+                      {t.type === "Credit" ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                       {t.type}
                     </span>
                   </td>
                   <td className="px-4 py-[13px] text-[13px] whitespace-nowrap">
-                    <span className="text-slate-800">{t.amount}</span>
+                    <span className="text-slate-800 font-semibold">{t.amount}</span>
                   </td>
                   <td className="px-4 py-[13px] text-[13px] whitespace-nowrap">
                     <span className="text-slate-500">{t.date}</span>
@@ -195,11 +269,16 @@ export default function AdminDashboard() {
   return (
     <div className="flex min-h-screen bg-[#f0f4ff]" style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
 
-      {/* Global styles — only kept for things Tailwind can't do */}
+      {/* Global styles */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; }
-        @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+        
+        @keyframes shimmer { 
+          0%{background-position:0% center} 
+          100%{background-position:200% center} 
+        }
+        
         .zen-text {
           background: linear-gradient(135deg,#38bdf8,#818cf8);
           background-size: 200%;
@@ -208,10 +287,34 @@ export default function AdminDashboard() {
           background-clip: text;
           animation: shimmer 3s linear infinite;
         }
+
+        @keyframes slideInFromBottom {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-in {
+          animation: slideInFromBottom 0.5s ease-out forwards;
+        }
+
+        .fade-in {
+          opacity: 0;
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
       `}</style>
 
       {/* ── SIDEBAR ── */}
-      {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-[150] lg:hidden backdrop-blur-sm"
@@ -222,13 +325,14 @@ export default function AdminDashboard() {
         className={`bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)] flex flex-col fixed lg:sticky top-0 h-screen flex-shrink-0 overflow-hidden transition-all duration-300 z-[200] ${sidebarOpen ? "w-[240px] translate-x-0" : "w-0 -translate-x-full lg:translate-x-0"
           }`}
       >
-        {/* Toggle Sidebar Button (inside sidebar) */}
+        {/* Toggle Sidebar Button */}
         <div className="flex justify-end px-3 pt-[14px] pb-2">
           <button
             onClick={() => setSidebar(false)}
             className="flex items-center justify-center rounded-[6px] px-2 py-[6px]
               bg-white/[.08] border-none cursor-pointer text-white/70
               hover:bg-white/[.14] transition-colors duration-200"
+            aria-label="Close sidebar"
           >
             <X size={17} />
           </button>
@@ -269,12 +373,12 @@ export default function AdminDashboard() {
                   navigate(`/admindashboard/${n.id}`);
                   if (window.innerWidth < 1024) setSidebar(false);
                 }}
-
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-[10px] border-none text-sm cursor-pointer mb-0.5 transition-all duration-150 text-left whitespace-nowrap border-l-[3px]
                   ${isActive
                     ? "bg-white/[.09] text-white font-bold border-l-blue-500"
                     : "bg-transparent text-white font-medium border-l-transparent hover:bg-white/[.08]"
                   }`}
+                aria-current={isActive ? "page" : undefined}
               >
                 <Icon size={23} />{n.label}
               </button>
@@ -298,7 +402,7 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)] border-b border-white/[0.08] px-4 md:px-6 h-16 flex items-center justify-between sticky top-0 z-[100]">
 
-          {/* Toggle sidebar (visible only when closed) */}
+          {/* Toggle sidebar */}
           <div className="w-10 flex items-center">
             {!sidebarOpen && (
               <button
@@ -306,13 +410,14 @@ export default function AdminDashboard() {
                 className="flex items-center justify-center rounded-[6px] px-2 py-[6px]
                   bg-white/[.08] border-none cursor-pointer text-white/70
                   hover:bg-white/[.14] transition-colors duration-200"
+                aria-label="Open sidebar"
               >
                 <Menu size={20} />
               </button>
             )}
           </div>
 
-          {/* Center brand - Hide on small mobile if needed, or make smaller */}
+          {/* Center brand */}
           <div className="flex flex-col items-center">
             <div className="flex items-baseline gap-0.5">
               <span className="font-serif text-[18px] md:text-[22px] font-black text-white" style={{ letterSpacing: -1 }}>Pay</span>
@@ -323,7 +428,10 @@ export default function AdminDashboard() {
 
           {/* Right: bell + avatar */}
           <div className="flex items-center gap-2 md:gap-3">
-            <button className="bg-white/[0.06] border border-white/[0.12] rounded-[10px] p-2 cursor-pointer relative flex hover:bg-white/10 transition-colors">
+            <button
+              className="bg-white/[0.06] border border-white/[0.12] rounded-[10px] p-2 cursor-pointer relative flex hover:bg-white/10 transition-colors"
+              aria-label="Notifications"
+            >
               <Bell size={16} color="rgba(255,255,255,0.6)" />
               <span className="absolute top-[5px] right-[5px] w-[6px] h-[6px] rounded-full bg-red-500 border-[1.5px] border-[#0f1f4b]" />
             </button>
