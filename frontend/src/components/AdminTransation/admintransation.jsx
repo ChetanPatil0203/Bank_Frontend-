@@ -12,13 +12,50 @@ const C = {
   gold: "#f59e0b", purple: "#8b5cf6",
 };
 
+const RESPONSIVE_STYLES = `
+  @media (max-width: 768px) {
+    .header-row { flex-direction: column !important; align-items: stretch !important; }
+    .search-row { flex-direction: column !important; align-items: stretch !important; }
+    .txn-results-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+
+    .txn-item { 
+      flex: none !important; 
+      width: 100% !important; 
+      max-width: none !important;
+      background: #fff !important;
+      border: 1px solid #f1f5f9 !important;
+      border-radius: 20px !important;
+      box-sizing: border-box !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 4px 20px -4px rgba(0,0,0,0.05) !important;
+    }
+    .txn-item:hover {
+      transform: translateY(-5px) !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
+    }
+    .txn-item-right { text-align: left !important; width: 100% !important; border-top: 1px solid #f8fafc !important; padding-top: 10px !important; margin-top: 10px !important; }
+
+
+
+
+    .modal-container { padding: 10px !important; }
+
+    .modal-content { max-width: 95% !important; border-radius: 16px !important; }
+    .options-btn-row { flex-direction: column !important; }
+  }
+`;
+
+
 const ALL_ACCOUNTS = [
-  { id: "ACC001", holder: "Chetan Patil",   account: "482910372846", type: "Savings", balance: 124500, ifsc: "PYZN0001", branch: "Nashik Main",  status: "Active"   },
-  { id: "ACC002", holder: "Rohit Sharma",   account: "193847562031", type: "Current", balance: 380200, ifsc: "PYZN0001", branch: "Nashik Main",  status: "Active"   },
-  { id: "ACC003", holder: "Priya Desai",    account: "847291038475", type: "Savings", balance: 45000,  ifsc: "PYZN0002", branch: "Pune Central", status: "Inactive" },
-  { id: "ACC004", holder: "Amit Joshi",     account: "302948172635", type: "Savings", balance: 92750,  ifsc: "PYZN0001", branch: "Nashik Main",  status: "Active"   },
-  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: 215300, ifsc: "PYZN0003", branch: "Mumbai West",  status: "Active"   },
-  { id: "ACC006", holder: "Vikas Nair",     account: "583920174628", type: "Savings", balance: 12400,  ifsc: "PYZN0002", branch: "Pune Central", status: "Closed"   },
+  { id: "ACC001", holder: "Chetan Patil", account: "482910372846", type: "Savings", balance: 124500, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
+  { id: "ACC002", holder: "Rohit Sharma", account: "193847562031", type: "Current", balance: 380200, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
+  { id: "ACC003", holder: "Priya Desai", account: "847291038475", type: "Savings", balance: 45000, ifsc: "PYZN0002", branch: "Pune Central", status: "Inactive" },
+  { id: "ACC004", holder: "Amit Joshi", account: "302948172635", type: "Savings", balance: 92750, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
+  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: 215300, ifsc: "PYZN0003", branch: "Mumbai West", status: "Active" },
+  { id: "ACC006", holder: "Vikas Nair", account: "583920174628", type: "Savings", balance: 12400, ifsc: "PYZN0002", branch: "Pune Central", status: "Closed" },
 ];
 
 function formatINR(n) {
@@ -27,9 +64,9 @@ function formatINR(n) {
 
 function Badge({ status }) {
   const map = {
-    Active:   { bg: "#dcfce7", color: "#15803d" },
+    Active: { bg: "#dcfce7", color: "#15803d" },
     Inactive: { bg: "#fef9c3", color: "#854d0e" },
-    Closed:   { bg: "#fee2e2", color: "#b91c1c" },
+    Closed: { bg: "#fee2e2", color: "#b91c1c" },
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
   return (
@@ -42,8 +79,9 @@ function Badge({ status }) {
 // ── Modal Wrapper ──
 function Modal({ title, onClose, children }) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 420, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
+    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 420, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
+
         <div style={{ padding: "18px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text }}>{title}</h3>
           <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16, color: C.muted }}>✕</button>
@@ -55,17 +93,17 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function AdminTransactionManager() {
-  const [query, setQuery]         = useState("");
-  const [searched, setSearched]   = useState(false);
-  const [results, setResults]     = useState([]);
-  const [selected, setSelected]   = useState(null);
-  const [modal, setModal]         = useState(null); // "options" | "deposit" | "withdraw" | "success"
-  const [amount, setAmount]       = useState("");
-  const [note, setNote]           = useState("");
-  const [txnType, setTxnType]     = useState("");
-  const [error, setError]         = useState("");
-  const [accounts, setAccounts]   = useState(ALL_ACCOUNTS);
-  const [lastTxn, setLastTxn]     = useState(null);
+  const [query, setQuery] = useState("");
+  const [searched, setSearched] = useState(false);
+  const [results, setResults] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [modal, setModal] = useState(null); // "options" | "deposit" | "withdraw" | "success"
+  const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
+  const [txnType, setTxnType] = useState("");
+  const [error, setError] = useState("");
+  const [accounts, setAccounts] = useState(ALL_ACCOUNTS);
+  const [lastTxn, setLastTxn] = useState(null);
 
   // ── Search ──
   function handleSearch() {
@@ -143,18 +181,22 @@ export default function AdminTransactionManager() {
 
   return (
     <div>
+      <style>{RESPONSIVE_STYLES}</style>
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
+      <div className="mb-3">
         <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Transaction Manager</h2>
-        <p style={{ fontSize: 13, color: C.muted, margin: "4px 0 0" }}>Account search करा आणि Deposit / Withdraw करा</p>
+        <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0" }}>Account search करा आणि Deposit / Withdraw करा</p>
       </div>
 
+
+
       {/* ── Search Box ── */}
-      <div style={{ background: C.card, borderRadius: 16, padding: 24, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, marginBottom: 24 }}>
-        <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
+      <div style={{ background: C.card, borderRadius: 16, padding: "16px 20px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, marginBottom: 20 }}>
+
+        <p style={{ fontSize: 11, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>
           Account Search
         </p>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div className="search-row" style={{ display: "flex", gap: 10 }}>
           <div style={{ position: "relative", flex: 1 }}>
             <Search size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
             <input
@@ -167,11 +209,13 @@ export default function AdminTransactionManager() {
           </div>
           <button
             onClick={handleSearch}
-            style={{ padding: "11px 24px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}
+            className="search-btn"
+            style={{ padding: "11px 24px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, whiteSpace: "nowrap" }}
           >
             <Search size={14} /> Search
           </button>
         </div>
+
       </div>
 
       {/* ── Search Results ── */}
@@ -185,31 +229,36 @@ export default function AdminTransactionManager() {
             </div>
           ) : (
             <div>
-              <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
                 {results.length} Result{results.length > 1 ? "s" : ""} Found — Account वर Click करा
               </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div className="txn-results-grid" style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+
+
                 {results.map(acc => (
                   <div
                     key={acc.id}
                     onClick={() => acc.status !== "Closed" && handleSelectAccount(acc)}
+                    className="txn-item"
                     style={{
                       background: C.card,
-                      borderRadius: 14,
-                      padding: "18px 20px",
-                      border: `1.5px solid ${C.border}`,
-                      boxShadow: "0 2px 8px rgba(15,31,75,0.06)",
+                      borderRadius: 16,
+                      padding: "14px 16px",
+                      border: `1.5px solid #f1f5f9`,
+                      boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
+
                       cursor: acc.status === "Closed" ? "not-allowed" : "pointer",
                       opacity: acc.status === "Closed" ? 0.6 : 1,
-                      transition: "all 0.15s",
+                      transition: "all 0.3s ease",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       flexWrap: "wrap",
                       gap: 12,
                     }}
-                    onMouseEnter={e => { if (acc.status !== "Closed") e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.boxShadow = "0 4px 16px rgba(59,130,246,0.15)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "0 2px 8px rgba(15,31,75,0.06)"; }}
+                    onMouseEnter={e => { if (acc.status !== "Closed") { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 12px 40px -12px rgba(0,0,0,0.12)"; } }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 20px -4px rgba(0,0,0,0.05)"; }}
+
                   >
                     {/* Left — Avatar + Info */}
                     <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
@@ -224,11 +273,12 @@ export default function AdminTransactionManager() {
                     </div>
 
                     {/* Right — Balance + Status */}
-                    <div style={{ textAlign: "right" }}>
+                    <div className="txn-item-right" style={{ textAlign: "right" }}>
                       <p style={{ fontSize: 20, fontWeight: 800, color: C.green, margin: 0 }}>{formatINR(acc.balance)}</p>
                       <p style={{ fontSize: 11, color: C.muted, margin: "2px 0 6px" }}>Current Balance</p>
                       <Badge status={acc.status} />
                     </div>
+
                   </div>
                 ))}
               </div>
@@ -268,7 +318,8 @@ export default function AdminTransactionManager() {
           <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
             Transaction Type निवडा
           </p>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div className="options-btn-row" style={{ display: "flex", gap: 12 }}>
+
             {/* Deposit Button */}
             <button
               onClick={() => openForm("deposit")}
@@ -430,10 +481,10 @@ export default function AdminTransactionManager() {
           <div style={{ background: "#f8faff", borderRadius: 12, padding: 16, marginBottom: 20, border: `1px solid ${C.border}` }}>
             {[
               ["Account Holder", lastTxn.holder],
-              ["Account No.",    lastTxn.account],
-              ["Transaction",    (lastTxn.type === "deposit" ? "+" : "-") + formatINR(lastTxn.amount)],
-              ["Previous Bal.",  formatINR(lastTxn.prevBalance)],
-              ["New Balance",    formatINR(lastTxn.newBalance)],
+              ["Account No.", lastTxn.account],
+              ["Transaction", (lastTxn.type === "deposit" ? "+" : "-") + formatINR(lastTxn.amount)],
+              ["Previous Bal.", formatINR(lastTxn.prevBalance)],
+              ["New Balance", formatINR(lastTxn.newBalance)],
               ...(lastTxn.note ? [["Note", lastTxn.note]] : []),
             ].map(([k, v]) => (
               <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: `1px solid ${C.border}` }}>
@@ -441,7 +492,7 @@ export default function AdminTransactionManager() {
                 <span style={{
                   fontSize: 13, fontWeight: 700,
                   color: k === "Transaction" ? (lastTxn.type === "deposit" ? C.green : C.red)
-                       : k === "New Balance" ? C.green : C.text,
+                    : k === "New Balance" ? C.green : C.text,
                   fontFamily: k === "Account No." ? "monospace" : "inherit",
                 }}>{v}</span>
               </div>

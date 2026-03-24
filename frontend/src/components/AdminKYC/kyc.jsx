@@ -8,14 +8,14 @@ import {
 } from "lucide-react";
 
 const KYC_DATA = [
-  { id: "KYC001", name: "Chetan Patil",   email: "chetan@gmail.com", phone: "9823456781", dob: "15 Jan 1995", aadhaar: "XXXX-XXXX-2846", pan: "ABCDE1234F", address: "123, Nashik Road, Nashik - 422001",    submitted: "12 Jan 2025", status: "Verified", aadhaarDoc: "aadhaar_chetan.pdf", panDoc: "pan_chetan.pdf" },
-  { id: "KYC002", name: "Rohit Sharma",   email: "rohit@gmail.com",  phone: "9712345678", dob: "22 Mar 1992", aadhaar: "XXXX-XXXX-2031", pan: "FGHIJ5678K", address: "456, Pune Road, Pune - 411001",         submitted: "03 Feb 2025", status: "Verified", aadhaarDoc: "aadhaar_rohit.pdf",  panDoc: "pan_rohit.pdf"  },
-  { id: "KYC003", name: "Priya Desai",    email: "priya@gmail.com",  phone: "9654321987", dob: "08 Jul 1998", aadhaar: "XXXX-XXXX-8475", pan: "KLMNO9012P", address: "789, MG Road, Pune - 411002",           submitted: "27 Feb 2025", status: "Pending",  aadhaarDoc: "aadhaar_priya.pdf",  panDoc: "pan_priya.pdf"  },
-  { id: "KYC004", name: "Amit Joshi",     email: "amit@gmail.com",   phone: "9876543210", dob: "30 Nov 1990", aadhaar: "XXXX-XXXX-2635", pan: "PQRST3456U", address: "321, Station Road, Nashik - 422002",   submitted: "15 Mar 2025", status: "Pending",  aadhaarDoc: "aadhaar_amit.pdf",   panDoc: "pan_amit.pdf"   },
-  { id: "KYC005", name: "Sneha Kulkarni", email: "sneha@gmail.com",  phone: "9988776655", dob: "14 Apr 1996", aadhaar: "XXXX-XXXX-7561", pan: "UVWXY7890Z", address: "654, FC Road, Pune - 411004",           submitted: "01 Apr 2025", status: "Verified", aadhaarDoc: "aadhaar_sneha.pdf",  panDoc: "pan_sneha.pdf"  },
-  { id: "KYC006", name: "Vikas Nair",     email: "vikas@gmail.com",  phone: "9111222333", dob: "19 Sep 1988", aadhaar: "XXXX-XXXX-4628", pan: "ZABCD2345E", address: "987, Link Road, Mumbai - 400001",       submitted: "18 Apr 2025", status: "Rejected", aadhaarDoc: "aadhaar_vikas.pdf",  panDoc: "pan_vikas.pdf"  },
-  { id: "KYC007", name: "Arjun Bhosale",  email: "arjun@gmail.com",  phone: "9823111222", dob: "05 Dec 1993", aadhaar: "XXXX-XXXX-9012", pan: "BCDEF6789G", address: "147, Nagar Road, Ahmednagar - 414001", submitted: "20 Apr 2025", status: "Pending",  aadhaarDoc: "aadhaar_arjun.pdf",  panDoc: "pan_arjun.pdf"  },
-  { id: "KYC008", name: "Divya Shinde",   email: "divya@gmail.com",  phone: "9765432109", dob: "25 Feb 1997", aadhaar: "XXXX-XXXX-3456", pan: "HIJKL0123M", address: "258, Karve Road, Pune - 411052",        submitted: "22 Apr 2025", status: "Pending",  aadhaarDoc: "aadhaar_divya.pdf",  panDoc: "pan_divya.pdf"  },
+  { id: "KYC001", name: "Chetan Patil", email: "chetan@gmail.com", phone: "9823456781", dob: "15 Jan 1995", aadhaar: "XXXX-XXXX-2846", pan: "ABCDE1234F", address: "123, Nashik Road, Nashik - 422001", submitted: "12 Jan 2025", status: "Verified", aadhaarDoc: "aadhaar_chetan.pdf", panDoc: "pan_chetan.pdf" },
+  { id: "KYC002", name: "Rohit Sharma", email: "rohit@gmail.com", phone: "9712345678", dob: "22 Mar 1992", aadhaar: "XXXX-XXXX-2031", pan: "FGHIJ5678K", address: "456, Pune Road, Pune - 411001", submitted: "03 Feb 2025", status: "Verified", aadhaarDoc: "aadhaar_rohit.pdf", panDoc: "pan_rohit.pdf" },
+  { id: "KYC003", name: "Priya Desai", email: "priya@gmail.com", phone: "9654321987", dob: "08 Jul 1998", aadhaar: "XXXX-XXXX-8475", pan: "KLMNO9012P", address: "789, MG Road, Pune - 411002", submitted: "27 Feb 2025", status: "Pending", aadhaarDoc: "aadhaar_priya.pdf", panDoc: "pan_priya.pdf" },
+  { id: "KYC004", name: "Amit Joshi", email: "amit@gmail.com", phone: "9876543210", dob: "30 Nov 1990", aadhaar: "XXXX-XXXX-2635", pan: "PQRST3456U", address: "321, Station Road, Nashik - 422002", submitted: "15 Mar 2025", status: "Pending", aadhaarDoc: "aadhaar_amit.pdf", panDoc: "pan_amit.pdf" },
+  { id: "KYC005", name: "Sneha Kulkarni", email: "sneha@gmail.com", phone: "9988776655", dob: "14 Apr 1996", aadhaar: "XXXX-XXXX-7561", pan: "UVWXY7890Z", address: "654, FC Road, Pune - 411004", submitted: "01 Apr 2025", status: "Verified", aadhaarDoc: "aadhaar_sneha.pdf", panDoc: "pan_sneha.pdf" },
+  { id: "KYC006", name: "Vikas Nair", email: "vikas@gmail.com", phone: "9111222333", dob: "19 Sep 1988", aadhaar: "XXXX-XXXX-4628", pan: "ZABCD2345E", address: "987, Link Road, Mumbai - 400001", submitted: "18 Apr 2025", status: "Rejected", aadhaarDoc: "aadhaar_vikas.pdf", panDoc: "pan_vikas.pdf" },
+  { id: "KYC007", name: "Arjun Bhosale", email: "arjun@gmail.com", phone: "9823111222", dob: "05 Dec 1993", aadhaar: "XXXX-XXXX-9012", pan: "BCDEF6789G", address: "147, Nagar Road, Ahmednagar - 414001", submitted: "20 Apr 2025", status: "Pending", aadhaarDoc: "aadhaar_arjun.pdf", panDoc: "pan_arjun.pdf" },
+  { id: "KYC008", name: "Divya Shinde", email: "divya@gmail.com", phone: "9765432109", dob: "25 Feb 1997", aadhaar: "XXXX-XXXX-3456", pan: "HIJKL0123M", address: "258, Karve Road, Pune - 411052", submitted: "22 Apr 2025", status: "Pending", aadhaarDoc: "aadhaar_divya.pdf", panDoc: "pan_divya.pdf" },
 ];
 
 const C = {
@@ -25,10 +25,86 @@ const C = {
   gold: "#f59e0b", purple: "#8b5cf6",
 };
 
+const RESPONSIVE_STYLES = `
+  @media (max-width: 768px) {
+    .stats-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .stat-card-wrap { 
+      background: #fff !important;
+      border: 1px solid #f1f5f9 !important;
+      border-radius: 18px !important;
+      padding: 14px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 4px 20px -4px rgba(0,0,0,0.05) !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+  }
+  @media (min-width: 769px) {
+    .stat-card-wrap {
+      flex: 1 1 calc(25% - 9px) !important;
+      max-width: calc(25% - 9px) !important;
+      min-width: 140px !important;
+    }
+  }
+
+
+
+    .stat-card-wrap:hover {
+      transform: translateY(-5px) !important;
+      box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
+    }
+    .stat-card-wrap.blue:hover { border-color: #3b82f6 !important; }
+    .stat-card-wrap.green:hover { border-color: #10b981 !important; }
+    .stat-card-wrap.gold:hover { border-color: #f59e0b !important; }
+    .stat-card-wrap.red:hover { border-color: #ef4444 !important; }
+
+
+
+    .header-row { flex-direction: column !important; align-items: stretch !important; }
+    .tab-search-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+    .search-box-wrap { max-width: none !important; }
+    .tabs-wrap { overflow-x: auto !important; padding-bottom: 4px !important; display: flex !important; flex-wrap: nowrap !important; width: 100% !important; -webkit-overflow-scrolling: touch; }
+    .tabs-wrap button { flex-shrink: 0 !important; white-space: nowrap !important; }
+
+    .table-to-hide { display: none !important; }
+    .cards-to-show { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .mobile-card { 
+      background: #fff !important; 
+      border: 1px solid #e2e8f0 !important; 
+      border-radius: 12px !important; 
+      padding: 10px !important; 
+      flex: none !important;
+      width: 100% !important;
+      max-width: none !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    }
+
+
+    .modal-container { padding: 10px !important; }
+    .modal-content { max-width: 95% !important; border-radius: 16px !important; max-height: 90vh !important; }
+    .form-grid { grid-template-columns: 1fr !important; }
+    .stepper-wrap { flex-wrap: wrap !important; gap: 8px !important; }
+    .stepper-item { flex: none !important; }
+    .stepper-line { display: none !important; }
+  }
+  @media (min-width: 769px) {
+    .cards-to-show { display: none !important; }
+  }
+  @media (max-width: 480px) {
+    .stat-card-wrap { flex: 1 1 100% !important; }
+  }
+
+`;
+
+
 function StatusBadge({ status }) {
   const map = {
     Verified: { bg: "#dcfce7", color: "#15803d" },
-    Pending:  { bg: "#fef9c3", color: "#854d0e" },
+    Pending: { bg: "#fef9c3", color: "#854d0e" },
     Rejected: { bg: "#fee2e2", color: "#b91c1c" },
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
@@ -40,16 +116,33 @@ function StatusBadge({ status }) {
   );
 }
 
-function StatCard({ label, value, icon: Icon, iconBg, iconColor }) {
+function StatCard({ label, value, icon: Icon, iconBg, iconColor, cls }) {
   return (
-    <div style={{ background: C.card, borderRadius: 14, padding: "16px 14px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8, flex: "1 1 160px", minWidth: 160, maxWidth: "calc(25% - 9px)" }}>
+    <div className={`stat-card-wrap ${cls}`} style={{
+      background: C.card,
+      borderRadius: 18,
+      padding: "14px 16px",
+      boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
+      border: `1px solid #f1f5f9`,
+      display: "flex",
+      flexDirection: "column",
+      gap: 8,
+      transition: "all 0.3s ease",
+      boxSizing: "border-box",
+    }}>
+
+
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <p style={{ fontSize: 14, color: C.muted, margin: 0, fontWeight: 600 }}>{label}</p>
-        <div style={{ width: 40, height: 40, borderRadius: 11, background: iconBg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon size={20} color={iconColor} />
+        <p style={{ fontSize: 11, color: C.muted, margin: 0, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.02em" }}>{label}</p>
+
+        <div style={{ width: 38, height: 38, borderRadius: 10, background: iconBg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon size={18} color={iconColor} />
         </div>
       </div>
-      <p style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: 0 }}>{value}</p>
+      <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0, letterSpacing: "-0.02em" }}>{value}</h3>
+
+
     </div>
   );
 }
@@ -62,15 +155,15 @@ function KYCForm({ onSubmit, onCancel }) {
     name: "", email: "", phone: "", dob: "", address: "",
     aadhaar: "", pan: "", aadhaarDoc: null, panDoc: null,
   });
-  const [errors, setErrors]           = useState({});
-  const [step, setStep]               = useState(1);
+  const [errors, setErrors] = useState({});
+  const [step, setStep] = useState(1);
 
   // OTP state
-  const [otp, setOtp]                 = useState("");
+  const [otp, setOtp] = useState("");
   const [generatedOtp, setGeneratedOtp] = useState("");
-  const [otpSent, setOtpSent]         = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-  const [timer, setTimer]             = useState(0);
+  const [timer, setTimer] = useState(0);
 
   useEffect(() => {
     let interval;
@@ -83,11 +176,11 @@ function KYCForm({ onSubmit, onCancel }) {
   /* ── Validations ── */
   function validateStep1() {
     const err = {};
-    if (!form.name.trim())        err.name    = "Full name is required";
-    if (!form.email.trim())       err.email   = "Email is required";
+    if (!form.name.trim()) err.name = "Full name is required";
+    if (!form.email.trim()) err.email = "Email is required";
     if (!form.phone.trim() || form.phone.length !== 10) err.phone = "Please enter a valid 10-digit phone number";
-    if (!form.dob.trim())         err.dob     = "Date of birth is required";
-    if (!form.address.trim())     err.address = "Address is required";
+    if (!form.dob.trim()) err.dob = "Date of birth is required";
+    if (!form.address.trim()) err.address = "Address is required";
     setErrors(err);
     return Object.keys(err).length === 0;
   }
@@ -120,9 +213,9 @@ function KYCForm({ onSubmit, onCancel }) {
   }
 
   function handleSubmit() {
-    if (!otpSent)            { setErrors({ otp: "Please send OTP first." }); return; }
-    if (timer === 0)         { setErrors({ otp: "OTP expired. Please resend." }); return; }
-    if (otp !== generatedOtp){ setErrors({ otp: "Invalid OTP. Please try again." }); return; }
+    if (!otpSent) { setErrors({ otp: "Please send OTP first." }); return; }
+    if (timer === 0) { setErrors({ otp: "OTP expired. Please resend." }); return; }
+    if (otp !== generatedOtp) { setErrors({ otp: "Invalid OTP. Please try again." }); return; }
     setOtpVerified(true);
     setErrors({});
     onSubmit({
@@ -133,7 +226,7 @@ function KYCForm({ onSubmit, onCancel }) {
       submitted: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
       status: "Pending",
       aadhaarDoc: `aadhaar_${form.name.split(" ")[0].toLowerCase()}.pdf`,
-      panDoc:     `pan_${form.name.split(" ")[0].toLowerCase()}.pdf`,
+      panDoc: `pan_${form.name.split(" ")[0].toLowerCase()}.pdf`,
     });
   }
 
@@ -144,15 +237,16 @@ function KYCForm({ onSubmit, onCancel }) {
     borderRadius: 10, fontSize: 13, color: C.text, outline: "none",
     background: "#f8faff", fontFamily: "inherit", boxSizing: "border-box",
   });
-  const labelStyle  = { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 };
-  const iconStyle   = { position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" };
-  const errText     = (field) => errors[field] && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors[field]}</p>;
+  const labelStyle = { fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 };
+  const iconStyle = { position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" };
+  const errText = (field) => errors[field] && <p style={{ fontSize: 12, color: C.red, margin: "4px 0 0", fontWeight: 600 }}>⚠️ {errors[field]}</p>;
 
   const STEPS = ["Personal Info", "Documents", "OTP"];
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}`, maxHeight: "92vh", overflowY: "auto" }}>
+    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+      <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}`, maxHeight: "92vh", overflowY: "auto" }}>
+
 
         {/* Header */}
         <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, background: C.card, zIndex: 10 }}>
@@ -168,24 +262,25 @@ function KYCForm({ onSubmit, onCancel }) {
         </div>
 
         {/* Stepper */}
-        <div style={{ display: "flex", alignItems: "center", padding: "20px 24px 8px" }}>
+        <div className="stepper-wrap" style={{ display: "flex", alignItems: "center", padding: "20px 24px 8px" }}>
           {STEPS.map((label, i) => {
             const s = i + 1;
             const active = step === s;
-            const done   = step > s;
+            const done = step > s;
             return (
-              <div key={s} style={{ display: "flex", alignItems: "center", flex: i < STEPS.length - 1 ? 1 : 0 }}>
+              <div key={s} className="stepper-item" style={{ display: "flex", alignItems: "center", flex: i < STEPS.length - 1 ? 1 : 0 }}>
                 <div style={{ width: 30, height: 30, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0, background: active || done ? C.navy : "#f1f5f9", color: active || done ? "#fff" : C.muted }}>
                   {done ? "✓" : s}
                 </div>
                 <span style={{ fontSize: 12, fontWeight: 600, marginLeft: 8, color: active ? C.navy : C.muted, whiteSpace: "nowrap" }}>{label}</span>
                 {i < STEPS.length - 1 && (
-                  <div style={{ flex: 1, height: 2, margin: "0 12px", borderRadius: 99, background: step > s ? C.navy : "#e2e8f0" }} />
+                  <div className="stepper-line" style={{ flex: 1, height: 2, margin: "0 12px", borderRadius: 99, background: step > s ? C.navy : "#e2e8f0" }} />
                 )}
               </div>
             );
           })}
         </div>
+
 
         <div style={{ padding: "16px 24px 24px" }}>
 
@@ -203,7 +298,8 @@ function KYCForm({ onSubmit, onCancel }) {
                 {errText("name")}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+              <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+
                 <div>
                   <label style={labelStyle}>Email <span style={{ color: C.red }}>*</span></label>
                   <div style={{ position: "relative" }}>
@@ -284,10 +380,10 @@ function KYCForm({ onSubmit, onCancel }) {
                     {form.aadhaarDoc
                       ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.aadhaarDoc.name}</p>
                       : <>
-                          <Upload size={18} color={C.muted} />
-                          <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload Aadhaar PDF or Image</p>
-                          <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
-                        </>
+                        <Upload size={18} color={C.muted} />
+                        <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload Aadhaar PDF or Image</p>
+                        <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
+                      </>
                     }
                   </label>
                 </div>
@@ -302,10 +398,10 @@ function KYCForm({ onSubmit, onCancel }) {
                     {form.panDoc
                       ? <p style={{ color: C.green, fontWeight: 700, fontSize: 13, margin: 0 }}>✅ {form.panDoc.name}</p>
                       : <>
-                          <Upload size={18} color={C.muted} />
-                          <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload PAN PDF or Image</p>
-                          <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
-                        </>
+                        <Upload size={18} color={C.muted} />
+                        <p style={{ color: C.muted, fontWeight: 600, fontSize: 13, margin: 0 }}>Upload PAN PDF or Image</p>
+                        <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>Accepted: PDF, JPG, PNG — Max 5MB</p>
+                      </>
                     }
                   </label>
                 </div>
@@ -394,21 +490,21 @@ function KYCForm({ onSubmit, onCancel }) {
    ADMIN KYC  —  unchanged below this line
 ───────────────────────────────────────── */
 export default function AdminKYC() {
-  const [kycList, setKycList]           = useState(KYC_DATA);
-  const [search, setSearch]             = useState("");
-  const [filter, setFilter]             = useState("All");
-  const [selected, setSelected]         = useState(null);
-  const [modal, setModal]               = useState(null);
+  const [kycList, setKycList] = useState(KYC_DATA);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
+  const [selected, setSelected] = useState(null);
+  const [modal, setModal] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
-  const [rejectError, setRejectError]   = useState("");
-  const [showForm, setShowForm]         = useState(false);
+  const [rejectError, setRejectError] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   const filtered = kycList.filter(k =>
     (filter === "All" || k.status === filter) &&
     (k.name.toLowerCase().includes(search.toLowerCase()) ||
-     k.email.toLowerCase().includes(search.toLowerCase()) ||
-     k.pan.toLowerCase().includes(search.toLowerCase()) ||
-     k.aadhaar.includes(search))
+      k.email.toLowerCase().includes(search.toLowerCase()) ||
+      k.pan.toLowerCase().includes(search.toLowerCase()) ||
+      k.aadhaar.includes(search))
   );
 
   function handleApprove(kyc) {
@@ -428,9 +524,9 @@ export default function AdminKYC() {
   }
 
   const counts = {
-    All:      kycList.length,
+    All: kycList.length,
     Verified: kycList.filter(k => k.status === "Verified").length,
-    Pending:  kycList.filter(k => k.status === "Pending").length,
+    Pending: kycList.filter(k => k.status === "Pending").length,
     Rejected: kycList.filter(k => k.status === "Rejected").length,
   };
 
@@ -445,27 +541,32 @@ export default function AdminKYC() {
 
   return (
     <div style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
-
+      <style>{RESPONSIVE_STYLES}</style>
       {showForm && <KYCForm onSubmit={handleFormSubmit} onCancel={() => setShowForm(false)} />}
 
+
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>KYC Management</h2>
-          <p style={{ fontSize: 13, color: C.muted, margin: "4px 0 0" }}>Manage Aadhaar & PAN verification for all users</p>
-        </div>
-        <button onClick={() => setShowForm(true)} style={{ display: "flex", alignItems: "center", gap: 8, background: C.navy, color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+      <div className="mb-3">
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>KYC Management</h2>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <button onClick={() => setShowForm(true)} style={{ display: "flex", alignItems: "center", gap: 8, background: C.navy, color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(15,31,75,0.15)" }}>
           <Plus size={15} /> Submit New KYC
         </button>
       </div>
 
+
       {/* Stat Cards */}
-      <div style={{ display: "flex", flexDirection: "row", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
-        <StatCard label="Total KYC"  value={counts.All}      icon={FileText}    iconBg="#eff6ff" iconColor={C.accent} />
-        <StatCard label="Verified"   value={counts.Verified} icon={CheckCircle2} iconBg="#f0fdf4" iconColor={C.green}  />
-        <StatCard label="Pending"    value={counts.Pending}  icon={Clock}       iconBg="#fffbeb" iconColor={C.gold}   />
-        <StatCard label="Rejected"   value={counts.Rejected} icon={XCircle}     iconBg="#fef2f2" iconColor={C.red}    />
+      <div className="stats-grid" style={{ display: "flex", flexDirection: "row", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
+
+        <StatCard cls="blue" label="Total KYC" value={counts.All} icon={FileText} iconColor={C.accent} />
+        <StatCard cls="green" label="Verified" value={counts.Verified} icon={CheckCircle2} iconColor={C.green} />
+        <StatCard cls="gold" label="Pending" value={counts.Pending} icon={Clock} iconColor={C.gold} />
+        <StatCard cls="red" label="Rejected" value={counts.Rejected} icon={XCircle} iconColor={C.red} />
       </div>
+
+
 
       {/* Pending Alert */}
       {counts.Pending > 0 && (
@@ -476,18 +577,20 @@ export default function AdminKYC() {
       )}
 
       {/* Search + Filter */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+      <div className="tab-search-row" style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         {/* Tabs on the Left */}
-        <div style={{ display: "flex", gap: 4, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4 }}>
+        <div className="tabs-wrap" style={{ display: "flex", gap: 4, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4 }}>
           {FILTERS.map(f => (
-            <button key={f} onClick={() => setFilter(f)} style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: filter === f ? C.navy : "transparent", color: filter === f ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s" }}>
+            <button key={f} onClick={() => setFilter(f)} style={{ padding: "6px 14px", borderRadius: 8, border: "none", background: filter === f ? C.navy : "transparent", color: filter === f ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+
               {f} <span style={{ background: filter === f ? "rgba(255,255,255,0.2)" : C.border, color: filter === f ? "#fff" : C.muted, fontSize: 10, fontWeight: 800, padding: "1px 7px", borderRadius: 99, marginLeft: 4 }}>{counts[f]}</span>
             </button>
           ))}
         </div>
 
         {/* Search on the Right */}
-        <div style={{ position: "relative", flex: 1, minWidth: 200, maxWidth: 320 }}>
+        <div className="search-box-wrap" style={{ position: "relative", flex: 1, minWidth: 200, maxWidth: 320 }}>
+
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, email or PAN..."
             style={{ width: "100%", boxSizing: "border-box", paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: C.card, fontFamily: "inherit" }} />
@@ -495,15 +598,17 @@ export default function AdminKYC() {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+      <div className="table-to-hide" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr>
-                <TH>#</TH><TH>Name</TH><TH>Email</TH><TH>Aadhaar</TH>
-                <TH>PAN</TH><TH>Submitted</TH><TH>Status</TH><TH center>Actions</TH>
+              <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                {["#", "Name", "Email", "Aadhaar", "PAN", "Submitted", "Status", "Actions"].map(h => (
+                  <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
+                ))}
               </tr>
             </thead>
+
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
@@ -557,6 +662,23 @@ export default function AdminKYC() {
           </table>
         </div>
       </div>
+
+      <div className="cards-to-show">
+        {filtered.map(k => (
+          <div key={k.id} className="mobile-card">
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+              <span style={{ fontSize: 11, fontWeight: 800, color: C.accent }}>{k.id}</span>
+              <StatusBadge status={k.status} />
+            </div>
+            <h4 style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 800 }}>{k.name}</h4>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 8, marginTop: 4 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: C.text }}>{k.pan}</span>
+              <button onClick={() => { setSelected(k); setModal("view"); }} style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "4px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700 }}>View</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
 
       {/* View Modal */}
       {modal === "view" && selected && (

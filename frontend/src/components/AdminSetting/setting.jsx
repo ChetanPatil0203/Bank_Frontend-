@@ -173,7 +173,8 @@ function SecurityTab() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+
             {[
               { k: "current", l: "Current Password" },
               { k: "newPass", l: "New Password" },
@@ -350,6 +351,8 @@ function PreferencesTab() {
           </div>
         </div>
         <div className="p-5 grid grid-cols-2 gap-4">
+
+
           {[
             { label: "Language", value: language, onChange: setLanguage, options: ["English", "Hindi", "Marathi"] },
             { label: "Currency", value: currency, onChange: setCurrency, options: ["INR — Indian Rupee", "USD — US Dollar", "EUR — Euro"] },
@@ -444,6 +447,8 @@ function SystemTab() {
 
       {/* System Info Grid */}
       <div className="grid grid-cols-2 gap-4">
+
+
         <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
           <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Backup Frequency</label>
           <select value={backupFreq} onChange={e => setBackupFreq(e.target.value)}
@@ -505,7 +510,8 @@ export default function AdminSettings() {
         </div>
 
         {/* Tab Bar (Horizontal) */}
-        <div className="flex flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-sm mb-4 w-fit">
+        <div className="flex flex-nowrap overflow-x-auto lg:flex-wrap gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-sm mb-4 w-full md:w-fit no-scrollbar">
+
           {TABS.map(t => {
             const Icon = t.icon;
             const isActive = activeTab === t.id;

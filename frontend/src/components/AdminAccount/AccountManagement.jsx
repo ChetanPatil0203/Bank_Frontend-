@@ -20,6 +20,78 @@ const ACCOUNTS = [
   { id: "ACC006", holder: "Vikas Nair", account: "583920174628", type: "Savings", balance: "₹12,400", ifsc: "PYZN0002", branch: "Pune Central", opened: "18 Apr 2025", status: "Closed" },
 ];
 
+const RESPONSIVE_STYLES = `
+  @media (max-width: 768px) {
+    .stats-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .stat-card-wrap { 
+      background: #fff !important;
+      border: 1px solid #f1f5f9 !important;
+      border-radius: 18px !important;
+      padding: 14px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 4px 20px -4px rgba(0,0,0,0.05) !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+  }
+  @media (min-width: 769px) {
+    .stat-card-wrap {
+      flex: 1 1 calc(33.33% - 8px) !important;
+      max-width: calc(33.33% - 8px) !important;
+      min-width: 140px !important;
+    }
+  }
+
+
+
+    .stat-card-wrap:hover {
+      transform: translateY(-5px) !important;
+      box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
+    }
+    .stat-card-wrap.blue:hover { border-color: #3b82f6 !important; }
+    .stat-card-wrap.green:hover { border-color: #10b981 !important; }
+    .stat-card-wrap.gold:hover { border-color: #f59e0b !important; }
+    .stat-card-wrap.red:hover { border-color: #ef4444 !important; }
+
+
+
+    .header-row { flex-direction: column !important; align-items: stretch !important; }
+    .tab-search-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+    .search-box-wrap { max-width: none !important; }
+    .tabs-wrap { overflow-x: auto !important; padding-bottom: 4px !important; display: flex !important; flex-wrap: nowrap !important; width: 100% !important; -webkit-overflow-scrolling: touch; }
+    .tabs-wrap button { flex-shrink: 0 !important; white-space: nowrap !important; }
+
+    .modal-container { padding: 10px !important; }
+    .modal-content { max-width: 95% !important; border-radius: 16px !important; }
+    .table-to-hide { display: none !important; }
+    .cards-to-show { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .mobile-card { 
+      background: #fff !important; 
+      border: 1px solid #e2e8f0 !important; 
+      border-radius: 12px !important; 
+      padding: 10px !important; 
+      flex: none !important;
+      width: 100% !important;
+      max-width: none !important;
+      box-sizing: border-box !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    }
+
+
+  }
+  @media (min-width: 769px) {
+    .cards-to-show { display: none !important; }
+  }
+
+  @media (max-width: 480px) {
+    .stat-card-wrap { flex: 1 1 100% !important; }
+  }
+`;
+
+
 const PENDING_REQUESTS = [
   { id: "REQ001", name: "Rahul Mehta", email: "rahul@gmail.com", type: "Savings", applied: "10 Mar 2026", kyc: "Verified" },
   { id: "REQ002", name: "Pooja Singh", email: "pooja@gmail.com", type: "Current", applied: "11 Mar 2026", kyc: "Verified" },
@@ -61,8 +133,8 @@ const TD = ({ children, center }) => (
 
 function Modal({ title, onClose, children }) {
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
+    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
         <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text }}>{title}</h3>
           <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: C.muted }}>✕</button>
@@ -182,17 +254,22 @@ export default function AccountsView() {
 
   return (
     <div>
+      <style>{RESPONSIVE_STYLES}</style>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Accounts Management</h2>
-        </div>
-        <button onClick={() => setModal("create")} style={{ display: "flex", alignItems: "center", gap: 8, background: C.navy, color: "#fff", border: "none", borderRadius: 10, padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+      <div className="mb-3">
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Accounts Management</h2>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <button onClick={() => setModal("create")} style={{ display: "flex", alignItems: "center", gap: 8, background: C.navy, color: "#fff", border: "none", borderRadius: 10, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(15,31,75,0.15)" }}>
           <Plus size={15} /> Create New Account
         </button>
       </div>
 
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
+
+      <div className="stats-grid" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
+
+
         {[
           { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard },
           { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2 },
@@ -203,22 +280,40 @@ export default function AccountsView() {
         ].map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} style={{ background: C.card, borderRadius: 14, padding: "16px 14px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8, flex: "1 1 160px", minWidth: 160, maxWidth: "calc(33% - 8px)" }}>
+            <div key={i} className={`stat-card-wrap`} style={{
+              background: C.card,
+              borderRadius: 18,
+              padding: "14px 16px",
+              boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
+              border: `1px solid #f1f5f9`,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              transition: "all 0.3s ease",
+              boxSizing: "border-box",
+            }}>
+
+
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <p style={{ fontSize: 14, color: C.muted, margin: 0, fontWeight: 600 }}>{s.label}</p>
-                <div style={{ width: 40, height: 40, borderRadius: 11, background: s.color + "18", display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>
-                  <Icon size={20} />
+                <p style={{ fontSize: 11, color: C.muted, margin: 0, fontWeight: 800, letterSpacing: "0.02em" }}>{s.label}</p>
+
+                <div style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>
+                  <Icon size={18} />
                 </div>
               </div>
-              <p style={{ fontSize: 22, fontWeight: 800, color: C.text, margin: 0 }}>{s.value}</p>
+              <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0, trackingTight: "-0.02em" }}>{s.value}</h3>
+
+
             </div>
           );
         })}
       </div>
 
       {/* Tabs and Search Row */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-        <div style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, width: "fit-content" }}>
+      <div className="tab-search-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+        <div className="tabs-wrap" style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, width: "fit-content" }}>
+
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: tab === t.id ? C.navy : "transparent", color: tab === t.id ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
               {t.label}
@@ -228,7 +323,8 @@ export default function AccountsView() {
         </div>
 
         {/* Unified Search Bar on the Right */}
-        <div style={{ position: "relative", width: "100%", maxWidth: 320 }}>
+        <div className="search-box-wrap" style={{ position: "relative", width: "100%", maxWidth: 320 }}>
+
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input
             value={tab === "all" ? search : narSearch}
@@ -243,16 +339,18 @@ export default function AccountsView() {
       {tab === "all" && (
         <>
           {/* Search box removed from here and moved to top row */}
-          <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+          <div className="table-to-hide" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
-                  <tr>
-                    <TH>#</TH><TH>Account Holder</TH><TH>Account No.</TH><TH>Type</TH>
-                    <TH>Balance</TH><TH>Branch</TH><TH>Opened</TH><TH>Status</TH>
-                    <TH center>Actions</TH>
+                  <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                    {["#", "Account Holder", "Account No.", "Type", "Balance", "Branch", "Opened", "Status", "Actions"].map(h => (
+                      <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
+
                 <tbody>
                   {filtered.map((a, i) => (
                     <tr key={a.id}
@@ -293,6 +391,23 @@ export default function AccountsView() {
               </table>
             </div>
           </div>
+          <div className="cards-to-show">
+            {filtered.map(a => (
+              <div key={a.id} className="mobile-card">
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: C.accent }}>{a.id}</span>
+                  <Badge status={a.status} />
+                </div>
+                <h4 style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 800 }}>{a.holder}</h4>
+                <p style={{ margin: "0 0 10px", fontSize: 11, color: C.muted, fontFamily: "monospace" }}>{a.account}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 8 }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: C.green }}>{a.balance}</span>
+                  <button onClick={() => { setSelected(a); setModal("details"); }} style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "4px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700 }}>View</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </>
       )}
 
@@ -316,12 +431,13 @@ export default function AccountsView() {
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
-                    <tr>
-                      <TH>#</TH><TH>Name</TH><TH>Email</TH><TH>Phone</TH>
-                      <TH>Account Type</TH><TH>Reason</TH><TH>Applied On</TH>
-                      <TH>KYC Status</TH><TH center>Actions</TH>
+                    <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                      {["#", "Name", "Email", "Phone", "Account Type", "Reason", "Applied On", "KYC Status", "Actions"].map(h => (
+                        <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
+                      ))}
                     </tr>
                   </thead>
+
                   <tbody>
                     {filteredNar.map((r, i) => (
                       <tr key={r.id}
