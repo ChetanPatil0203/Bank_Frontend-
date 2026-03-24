@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Eye, CheckCircle, XCircle, Trash2, Clock, Plus, Search, UserPlus,
   CreditCard, CheckCircle2, PauseCircle, Ban
@@ -11,23 +11,13 @@ const C = {
   gold: "#f59e0b", purple: "#8b5cf6",
 };
 
-const ACCOUNTS = [
-  { id: "ACC001", holder: "Chetan Patil", account: "482910372846", type: "Savings", balance: "₹1,24,500", ifsc: "PYZN0001", branch: "Nashik Main", opened: "12 Jan 2025", status: "Active" },
-  { id: "ACC002", holder: "Rohit Sharma", account: "193847562031", type: "Current", balance: "₹3,80,200", ifsc: "PYZN0001", branch: "Nashik Main", opened: "03 Feb 2025", status: "Active" },
-  { id: "ACC003", holder: "Priya Desai", account: "847291038475", type: "Savings", balance: "₹45,000", ifsc: "PYZN0002", branch: "Pune Central", opened: "27 Feb 2025", status: "Inactive" },
-  { id: "ACC004", holder: "Amit Joshi", account: "302948172635", type: "Savings", balance: "₹92,750", ifsc: "PYZN0001", branch: "Nashik Main", opened: "15 Mar 2025", status: "Active" },
-  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: "₹2,15,300", ifsc: "PYZN0003", branch: "Mumbai West", opened: "01 Apr 2025", status: "Active" },
-  { id: "ACC006", holder: "Vikas Nair", account: "583920174628", type: "Savings", balance: "₹12,400", ifsc: "PYZN0002", branch: "Pune Central", opened: "18 Apr 2025", status: "Closed" },
-];
+const BASE_URL = "http://localhost:5000/api/v1/admin";
 
 const RESPONSIVE_STYLES = `
   @media (max-width: 768px) {
-
-
     .stats-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
     .stat-card-wrap { 
       border: 1px solid #f1f5f9 !important;
-
       border-radius: 18px !important;
       padding: 14px !important;
       display: flex !important;
@@ -53,75 +43,45 @@ const RESPONSIVE_STYLES = `
       min-width: 140px !important;
     }
   }
-
-
-
-
-    .stat-card-wrap:hover {
-      transform: translateY(-5px) !important;
-      box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
-    }
-    .stat-card-wrap.blue:hover { border-color: #3b82f6 !important; }
-    .stat-card-wrap.green:hover { border-color: #10b981 !important; }
-    .stat-card-wrap.gold:hover { border-color: #f59e0b !important; }
-    .stat-card-wrap.red:hover { border-color: #ef4444 !important; }
-
-
-
-    .header-row { flex-direction: column !important; align-items: stretch !important; }
-    .tab-search-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
-    .search-box-wrap { max-width: none !important; }
-    .tabs-wrap { overflow-x: auto !important; padding-bottom: 4px !important; display: flex !important; flex-wrap: nowrap !important; width: 100% !important; -webkit-overflow-scrolling: touch; }
-    .tabs-wrap button { flex-shrink: 0 !important; white-space: nowrap !important; }
-
-    .modal-container { padding: 10px !important; }
-    .modal-content { max-width: 95% !important; border-radius: 16px !important; }
-    .table-to-hide { display: none !important; }
-    .cards-to-show {
-      display: grid !important;
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 10px !important;
-    }
-
-
-    .mobile-card { 
-      background: #fff !important; 
-      border: 1px solid #e2e8f0 !important; 
-      border-radius: 12px !important; 
-      padding: 10px !important; 
-      flex: none !important;
-      width: 100% !important;
-      max-width: none !important;
-      box-sizing: border-box !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-    }
-
-
+  .stat-card-wrap:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
+  }
+  .stat-card-wrap.blue:hover { border-color: #3b82f6 !important; }
+  .stat-card-wrap.green:hover { border-color: #10b981 !important; }
+  .stat-card-wrap.gold:hover { border-color: #f59e0b !important; }
+  .stat-card-wrap.red:hover { border-color: #ef4444 !important; }
+  .header-row { flex-direction: column !important; align-items: stretch !important; }
+  .tab-search-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+  .search-box-wrap { max-width: none !important; }
+  .tabs-wrap { overflow-x: auto !important; padding-bottom: 4px !important; display: flex !important; flex-wrap: nowrap !important; width: 100% !important; -webkit-overflow-scrolling: touch; }
+  .tabs-wrap button { flex-shrink: 0 !important; white-space: nowrap !important; }
+  .modal-container { padding: 10px !important; }
+  .modal-content { max-width: 95% !important; border-radius: 16px !important; }
+  .table-to-hide { display: none !important; }
+  .cards-to-show {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .mobile-card { 
+    background: #fff !important; 
+    border: 1px solid #e2e8f0 !important; 
+    border-radius: 12px !important; 
+    padding: 10px !important; 
+    flex: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
   }
   @media (min-width: 769px) {
     .cards-to-show { display: none !important; }
   }
-
   @media (max-width: 480px) {
     .stat-card-wrap { flex: 1 1 100% !important; }
   }
 `;
-
-
-const PENDING_REQUESTS = [
-  { id: "REQ001", name: "Rahul Mehta", email: "rahul@gmail.com", type: "Savings", applied: "10 Mar 2026", kyc: "Verified" },
-  { id: "REQ002", name: "Pooja Singh", email: "pooja@gmail.com", type: "Current", applied: "11 Mar 2026", kyc: "Verified" },
-  { id: "REQ003", name: "Karan Deshmukh", email: "karan@gmail.com", type: "Savings", applied: "12 Mar 2026", kyc: "Pending" },
-  { id: "REQ004", name: "Neha Patil", email: "neha@gmail.com", type: "Savings", applied: "13 Mar 2026", kyc: "Verified" },
-];
-
-const NEW_ACCOUNT_REQUESTS = [
-  { id: "NAR001", name: "Arjun Bhosale", email: "arjun@gmail.com", phone: "9823456781", type: "Savings", reason: "Personal savings", applied: "14 Mar 2026", kyc: "Verified" },
-  { id: "NAR002", name: "Divya Shinde", email: "divya@gmail.com", phone: "9712345678", type: "Current", reason: "Business transactions", applied: "14 Mar 2026", kyc: "Pending" },
-  { id: "NAR003", name: "Mahesh Gaikwad", email: "mahesh@gmail.com", phone: "9654321987", type: "Savings", reason: "Salary account", applied: "15 Mar 2026", kyc: "Verified" },
-  { id: "NAR004", name: "Anjali Patil", email: "anjali@gmail.com", phone: "9876543210", type: "Savings", reason: "Student account", applied: "15 Mar 2026", kyc: "Verified" },
-  { id: "NAR005", name: "Rohan Kulkarni", email: "rohan@gmail.com", phone: "9988776655", type: "Current", reason: "Freelance payments", applied: "15 Mar 2026", kyc: "Pending" },
-];
 
 function Badge({ status }) {
   const map = {
@@ -129,31 +89,24 @@ function Badge({ status }) {
     Inactive: { bg: "#fef9c3", color: "#854d0e" },
     Closed: { bg: "#fee2e2", color: "#b91c1c" },
     Verified: { bg: "#dcfce7", color: "#15803d" },
+    Approved: { bg: "#dcfce7", color: "#15803d" },
     Pending: { bg: "#fef9c3", color: "#854d0e" },
     Rejected: { bg: "#fee2e2", color: "#b91c1c" },
+    Uploaded: { bg: "#dcfce7", color: "#15803d" },
+    Missing: { bg: "#fee2e2", color: "#b91c1c" },
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
   return (
     <span style={{
-      background: s.bg,
-      color: s.color,
-      fontSize: 10,
-      fontWeight: 800,
-      padding: "2px 8px",
-      borderRadius: 99,
-      letterSpacing: "0.04em",
-      display: "inline-flex",
-      alignItems: "center",
-      gap: 4,
-      height: 20,
-      boxSizing: "border-box"
+      background: s.bg, color: s.color, fontSize: 10, fontWeight: 800,
+      padding: "2px 8px", borderRadius: 99, letterSpacing: "0.04em",
+      display: "inline-flex", alignItems: "center", gap: 4, height: 20, boxSizing: "border-box"
     }}>
       <span style={{ width: 5, height: 5, borderRadius: "50%", background: s.color, display: "inline-block" }} />
       {status}
     </span>
   );
 }
-
 
 const TH = ({ children, center }) => (
   <th style={{ padding: "12px 16px", textAlign: center ? "center" : "left", fontSize: 11, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", background: "#f8faff", whiteSpace: "nowrap", borderBottom: `1px solid ${C.border}` }}>{children}</th>
@@ -162,16 +115,36 @@ const TD = ({ children, center }) => (
   <td style={{ padding: "13px 16px", fontSize: 13, color: C.text, borderBottom: "1px solid #f1f5f9", whiteSpace: "nowrap", textAlign: center ? "center" : "left" }}>{children}</td>
 );
 
-function Modal({ title, onClose, children }) {
+function Modal({ title, onClose, children, wide }) {
   return (
-    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
-        <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, overflowY: "auto" }}>
+      <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: wide ? 680 : 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}`, maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "20px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text }}>{title}</h3>
           <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: C.muted }}>✕</button>
         </div>
-        <div style={{ padding: 24 }}>{children}</div>
+        <div style={{ padding: 24, overflowY: "auto" }}>{children}</div>
       </div>
+    </div>
+  );
+}
+
+function SectionLabel({ children }) {
+  return (
+    <div style={{ fontSize: 11, fontWeight: 800, color: C.accent, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, marginTop: 18, paddingBottom: 6, borderBottom: `2px solid ${C.accent}`, display: "inline-block" }}>
+      {children}
+    </div>
+  );
+}
+
+function DetailRow({ label, value, mono, badge }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: `1px solid ${C.border}` }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", flexShrink: 0, marginRight: 12 }}>{label}</span>
+      {badge
+        ? <Badge status={value} />
+        : <span style={{ fontSize: 13, fontWeight: 700, color: C.text, fontFamily: mono ? "monospace" : "inherit", textAlign: "right" }}>{value || "—"}</span>
+      }
     </div>
   );
 }
@@ -196,10 +169,49 @@ export default function AccountsView() {
   const [modal, setModal] = useState(null);
   const [selected, setSelected] = useState(null);
   const [selectedNar, setSelectedNar] = useState(null);
-  const [accounts, setAccounts] = useState(ACCOUNTS);
-  const [requests, setRequests] = useState(PENDING_REQUESTS);
-  const [newReqs, setNewReqs] = useState(NEW_ACCOUNT_REQUESTS);
+  
+  const [accounts, setAccounts] = useState([]);
+  const [requests, setRequests] = useState([]); // Currently merging all requests here
+  const [newReqs, setNewReqs] = useState([]);
+  
   const [form, setForm] = useState({ name: "", email: "", phone: "", type: "Savings", branch: "Nashik Main" });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [accRes, reqRes] = await Promise.all([
+        fetch(`${BASE_URL}/accounts`),
+        fetch(`${BASE_URL}/requests`)
+      ]);
+      const accData = await accRes.json();
+      const reqData = await reqRes.json();
+      
+      if (accData.success) {
+        setAccounts(accData.data.map(a => ({
+          ...a,
+          holder: a.bank_holder_name,
+          account: a.account_number,
+          balance: "₹" + a.balance.toLocaleString(),
+          opened: new Date(a.opened_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+        })));
+      }
+      
+      if (reqData.success) {
+        const mapped = reqData.data.map(r => ({
+          ...r,
+          name: r.bank_holder_name,
+          phone: r.mobile,
+          applied: new Date(r.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+          kyc: r.status === 'Pending' ? 'Pending' : 'Verified'
+        }));
+        setNewReqs(mapped.filter(r => r.status === 'Pending'));
+        setRequests(mapped.filter(r => r.status === 'Pending')); // Merging pending into both for user UI
+      }
+    } catch (err) { console.error(err); }
+  };
 
   const filtered = accounts.filter(a =>
     a.holder.toLowerCase().includes(search.toLowerCase()) ||
@@ -211,69 +223,49 @@ export default function AccountsView() {
     r.email.toLowerCase().includes(narSearch.toLowerCase())
   );
 
-  function handleToggle(acc) {
+  async function handleToggle(acc) {
     if (acc.status === "Closed") return;
-    setAccounts(prev => prev.map(a =>
-      a.id === acc.id ? { ...a, status: a.status === "Active" ? "Inactive" : "Active" } : a
-    ));
+    try {
+      const res = await fetch(`${BASE_URL}/accounts/${acc.id}/toggle`, { method: 'POST' });
+      if (res.ok) fetchData();
+    } catch (err) { }
     setModal(null);
   }
 
-  function handleClose(acc) {
-    setAccounts(prev => prev.map(a =>
-      a.id === acc.id ? { ...a, status: "Closed" } : a
-    ));
+  async function handleClose(acc) {
+    try {
+      const res = await fetch(`${BASE_URL}/accounts/${acc.id}/close`, { method: 'POST' });
+      if (res.ok) fetchData();
+    } catch (err) { }
     setModal(null);
   }
 
-  function handleApprove(req) {
-    const newAcc = {
-      id: `ACC00${accounts.length + 1}`,
-      holder: req.name,
-      account: Math.floor(Math.random() * 9e11 + 1e11).toString(),
-      type: req.type, balance: "₹0", ifsc: "PYZN0001", branch: "Nashik Main",
-      opened: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      status: "Active",
-    };
-    setAccounts(prev => [...prev, newAcc]);
-    setRequests(prev => prev.filter(r => r.id !== req.id));
+  async function handleApprove(req) {
+    try {
+      const res = await fetch(`${BASE_URL}/requests/${req.id}/approve`, { method: 'POST' });
+      if (res.ok) fetchData();
+    } catch (err) { }
   }
 
-  function handleReject(req) {
-    setRequests(prev => prev.filter(r => r.id !== req.id));
+  async function handleReject(req) {
+    try {
+      const res = await fetch(`${BASE_URL}/requests/${req.id}/reject`, { method: 'POST' });
+      if (res.ok) fetchData();
+    } catch (err) { }
   }
 
-  function handleNarApprove(req) {
-    const newAcc = {
-      id: `ACC00${accounts.length + 1}`,
-      holder: req.name,
-      account: Math.floor(Math.random() * 9e11 + 1e11).toString(),
-      type: req.type, balance: "₹0", ifsc: "PYZN0001", branch: "Nashik Main",
-      opened: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      status: "Active",
-    };
-    setAccounts(prev => [...prev, newAcc]);
-    setNewReqs(prev => prev.filter(r => r.id !== req.id));
+  async function handleNarApprove(req) {
+    await handleApprove(req);
     setModal(null);
   }
 
-  function handleNarReject(req) {
-    setNewReqs(prev => prev.filter(r => r.id !== req.id));
+  async function handleNarReject(req) {
+    await handleReject(req);
     setModal(null);
   }
 
   function handleCreate() {
-    if (!form.name || !form.email) return;
-    const newAcc = {
-      id: `ACC00${accounts.length + 1}`,
-      holder: form.name,
-      account: Math.floor(Math.random() * 9e11 + 1e11).toString(),
-      type: form.type, balance: "₹0", ifsc: "PYZN0001", branch: form.branch,
-      opened: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
-      status: "Active",
-    };
-    setAccounts(prev => [...prev, newAcc]);
-    setForm({ name: "", email: "", phone: "", type: "Savings", branch: "Nashik Main" });
+    // Basic manual creation logic can be added later if backend supports it
     setModal(null);
   }
 
@@ -285,9 +277,8 @@ export default function AccountsView() {
 
   return (
     <div>
-
-
       <style>{RESPONSIVE_STYLES}</style>
+
       {/* Header */}
       <div className="mb-3">
         <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Accounts Management</h2>
@@ -299,58 +290,34 @@ export default function AccountsView() {
         </button>
       </div>
 
-
+      {/* Stats */}
       <div className="stats-grid" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
-
-
         {[
-          { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard, border: "hover:border-blue-500", bgColor: "bg-blue-500/10", borderColor: "border-blue-200", },
-          { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2, border: "hover:border-emerald-500", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-200", },
-          { label: "Inactive", value: accounts.filter(a => a.status === "Inactive").length, color: C.gold, icon: PauseCircle, border: "hover:border-amber-500", bgColor: "bg-amber-500/10", borderColor: "border-amber-200", },
-          { label: "Closed", value: accounts.filter(a => a.status === "Closed").length, color: C.red, icon: Ban, border: "hover:border-red-500", bgColor: "bg-red-500/10", borderColor: "border-red-200", },
-          { label: "New Requests", value: newReqs.length, color: C.accent, icon: UserPlus, border: "hover:border-blue-500", bgColor: "bg-blue-500/10", borderColor: "border-blue-200", },
-          { label: "Pending", value: requests.length, color: C.purple, icon: Clock, border: "hover:border-violet-500", bgColor: "bg-violet-500/10", borderColor: "border-violet-200", },
+          { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard, bgColor: "bg-blue-500/10", borderColor: "border-blue-200" },
+          { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2, bgColor: "bg-emerald-500/10", borderColor: "border-emerald-200" },
+          { label: "Inactive", value: accounts.filter(a => a.status === "Inactive").length, color: C.gold, icon: PauseCircle, bgColor: "bg-amber-500/10", borderColor: "border-amber-200" },
+          { label: "Closed", value: accounts.filter(a => a.status === "Closed").length, color: C.red, icon: Ban, bgColor: "bg-red-500/10", borderColor: "border-red-200" },
+          { label: "New Requests", value: newReqs.length, color: C.accent, icon: UserPlus, bgColor: "bg-blue-500/10", borderColor: "border-blue-200" },
+          { label: "Pending", value: requests.length, color: C.purple, icon: Clock, bgColor: "bg-violet-500/10", borderColor: "border-violet-200" },
         ].map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} className={`stat-card-wrap ${s.bgColor} border ${s.borderColor} ${s.border}`} style={{
-              borderRadius: 18,
-              padding: "14px 16px",
-              boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              transition: "all 0.3s ease",
-              boxSizing: "border-box",
-            }}>
-
-
-
-
+            <div key={i} className={`stat-card-wrap ${s.bgColor} border ${s.borderColor}`} style={{ borderRadius: 18, padding: "14px 16px", boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)", display: "flex", flexDirection: "column", gap: 8, transition: "all 0.3s ease", boxSizing: "border-box" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <p style={{ fontSize: 11, color: C.muted, margin: 0, fontWeight: 800, letterSpacing: "0.02em" }}>{s.label}</p>
-
                 <div style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>
                   <Icon size={22} />
-
                 </div>
               </div>
-              <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0, trackingTight: "-0.02em" }}>{s.value}</h3>
-
-
+              <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0 }}>{s.value}</h3>
             </div>
           );
         })}
       </div>
 
-      {/* Tabs and Search Row */}
+      {/* Tabs and Search */}
       <div className="tab-search-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-
-
-
-
         <div className="tabs-wrap" style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, width: "fit-content" }}>
-
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: tab === t.id ? C.navy : "transparent", color: tab === t.id ? "#fff" : C.muted, fontSize: 12, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", display: "flex", alignItems: "center", gap: 6 }}>
               {t.label}
@@ -358,12 +325,7 @@ export default function AccountsView() {
             </button>
           ))}
         </div>
-
-        {/* Unified Search Bar on the Right */}
         <div className="search-box-wrap" style={{ position: "relative", width: "100%", maxWidth: "320px", flexShrink: 0 }}>
-
-
-
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input
             value={tab === "all" ? search : narSearch}
@@ -377,9 +339,7 @@ export default function AccountsView() {
       {/* TAB 1 — ALL ACCOUNTS */}
       {tab === "all" && (
         <>
-          {/* Search box removed from here and moved to top row */}
           <div className="table-to-hide" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
-
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
@@ -388,16 +348,10 @@ export default function AccountsView() {
                       <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                     ))}
                   </tr>
-
-
                 </thead>
-
                 <tbody>
                   {filtered.map((a, i) => (
-                    <tr key={a.id}
-                      onMouseEnter={e => e.currentTarget.style.background = "#f8faff"}
-                      onMouseLeave={e => e.currentTarget.style.background = ""}
-                    >
+                    <tr key={a.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
                       <TD><span style={{ color: C.muted, fontWeight: 600 }}>{i + 1}</span></TD>
                       <TD><span style={{ fontWeight: 700 }}>{a.holder}</span></TD>
                       <TD><span style={{ fontFamily: "monospace", fontSize: 12, color: C.accent, fontWeight: 600 }}>{a.account}</span></TD>
@@ -408,19 +362,16 @@ export default function AccountsView() {
                       <TD><Badge status={a.status} /></TD>
                       <TD center>
                         <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                          <button onClick={() => { setSelected(a); setModal("details"); }}
-                            style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                          <button onClick={() => { setSelected(a); setModal("details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
                             <Eye size={12} /> View
                           </button>
                           {a.status !== "Closed" && (
-                            <button onClick={() => { setSelected(a); setModal("toggle"); }}
-                              style={{ background: a.status === "Active" ? "#fef9c3" : "#dcfce7", color: a.status === "Active" ? "#854d0e" : "#15803d", border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                            <button onClick={() => { setSelected(a); setModal("toggle"); }} style={{ background: a.status === "Active" ? "#fef9c3" : "#dcfce7", color: a.status === "Active" ? "#854d0e" : "#15803d", border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
                               {a.status === "Active" ? <><XCircle size={12} /> Deactivate</> : <><CheckCircle size={12} /> Activate</>}
                             </button>
                           )}
                           {a.status !== "Closed" && (
-                            <button onClick={() => { setSelected(a); setModal("close"); }}
-                              style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                            <button onClick={() => { setSelected(a); setModal("close"); }} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
                               <Trash2 size={12} /> Close
                             </button>
                           )}
@@ -432,46 +383,12 @@ export default function AccountsView() {
               </table>
             </div>
           </div>
-          <div className="cards-to-show">
-            {filtered.map(a => (
-              <div key={a.id} className="mobile-card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: 20 }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: C.accent, letterSpacing: "0.05em", background: "rgba(59,130,246,0.1)", padding: "2px 8px", borderRadius: 5, height: 20, display: "flex", alignItems: "center", boxSizing: "border-box" }}>{a.id}</span>
-                  <Badge status={a.status} />
-                </div>
-
-                <div style={{ padding: "4px 0" }}>
-                  <h4 style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 800, color: C.text }}>{a.holder}</h4>
-                  <p style={{ margin: 0, fontSize: 11, color: C.muted, fontWeight: 600 }}>
-                    A/C: <span style={{ fontFamily: "monospace", color: C.text }}>{a.account}</span>
-                  </p>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 10, marginTop: "auto" }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: C.green }}>{a.balance}</span>
-                  <button onClick={() => { setSelected(a); setModal("details"); }}
-                    style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "5px 10px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
-                    View
-                  </button>
-
-                </div>
-              </div>
-            ))}
-          </div>
-
-
         </>
       )}
 
       {/* TAB 2 — NEW ACCOUNT REQUESTS */}
       {tab === "new" && (
         <>
-          {newReqs.length > 0 && (
-            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 12, padding: "12px 18px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10, fontSize: 13, color: "#92400e" }}>
-              <UserPlus size={16} color={C.gold} />
-              <span><strong>{newReqs.length} new account request{newReqs.length > 1 ? "s" : ""}</strong> waiting for your approval.</span>
-            </div>
-          )}
-          {/* Search box removed from here and moved to top row */}
           <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
             {filteredNar.length === 0 ? (
               <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
@@ -487,42 +404,23 @@ export default function AccountsView() {
                         <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                       ))}
                     </tr>
-
-
                   </thead>
-
                   <tbody>
                     {filteredNar.map((r, i) => (
-                      <tr key={r.id}
-                        onMouseEnter={e => e.currentTarget.style.background = "#f8faff"}
-                        onMouseLeave={e => e.currentTarget.style.background = ""}
-                      >
-                        <TD><span style={{ color: C.muted, fontWeight: 600 }}>{i + 1}</span></TD>
+                      <tr key={r.id}>
+                        <TD>{i + 1}</TD>
                         <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
-                        <TD><span style={{ color: C.muted }}>{r.email}</span></TD>
-                        <TD><span style={{ fontFamily: "monospace", fontSize: 12 }}>{r.phone}</span></TD>
-                        <TD>
-                          <span style={{ background: r.type === "Savings" ? "#eff6ff" : "#faf5ff", color: r.type === "Savings" ? C.accent : C.purple, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99 }}>
-                            {r.type}
-                          </span>
-                        </TD>
-                        <TD><span style={{ color: C.muted, maxWidth: 160, display: "inline-block", overflow: "hidden", textOverflow: "ellipsis" }}>{r.reason}</span></TD>
-                        <TD><span style={{ color: C.muted }}>{r.applied}</span></TD>
+                        <TD>{r.email}</TD>
+                        <TD>{r.phone}</TD>
+                        <TD>{r.account_type}</TD>
+                        <TD>{r.reason || "—"}</TD>
+                        <TD>{r.applied}</TD>
                         <TD><Badge status={r.kyc} /></TD>
                         <TD center>
                           <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                            <button onClick={() => { setSelectedNar(r); setModal("nar-details"); }}
-                              style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                              <Eye size={12} /> View
-                            </button>
-                            <button onClick={() => { setSelectedNar(r); setModal("nar-approve"); }}
-                              style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                              <CheckCircle size={12} /> Approve
-                            </button>
-                            <button onClick={() => { setSelectedNar(r); setModal("nar-reject"); }}
-                              style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                              <XCircle size={12} /> Reject
-                            </button>
+                            <button onClick={() => { setSelectedNar(r); setModal("nar-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>View</button>
+                            <button onClick={() => handleNarApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                            <button onClick={() => handleNarReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
                           </div>
                         </TD>
                       </tr>
@@ -532,32 +430,6 @@ export default function AccountsView() {
               </div>
             )}
           </div>
-
-          <div className="cards-to-show">
-            {filteredNar.map(a => (
-              <div key={a.id} className="mobile-card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: C.accent, letterSpacing: "0.05em", background: "rgba(59,130,246,0.1)", padding: "2px 6px", borderRadius: 4 }}>{a.id}</span>
-                  <Badge status={a.kyc} />
-                </div>
-                <div style={{ padding: "4px 0" }}>
-                  <h4 style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 800, color: C.text }}>{a.name}</h4>
-                  <p style={{ margin: 0, fontSize: 11, color: C.muted, fontWeight: 600 }}>{a.type} • {a.applied}</p>
-                </div>
-                <div style={{ display: "flex", gap: 6, borderTop: `1px solid ${C.border}`, paddingTop: 10, marginTop: "auto" }}>
-                  <button onClick={() => { setSelectedNar(a); setModal("nar-details"); }}
-                    style={{ flex: 1, border: "none", background: "#eff6ff", color: C.accent, padding: "6px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-                    Review
-                  </button>
-                  <button onClick={() => handleNarApprove(a)}
-                    style={{ flex: 1, border: "none", background: "#dcfce7", color: "#15803d", padding: "6px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-                    Approve
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
         </>
       )}
 
@@ -573,33 +445,20 @@ export default function AccountsView() {
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
-                  <tr>
-                    <TH>#</TH><TH>Name</TH><TH>Email</TH><TH>Account Type</TH>
-                    <TH>Applied On</TH><TH>KYC Status</TH><TH center>Actions</TH>
-                  </tr>
+                  <tr><TH>#</TH><TH>Name</TH><TH>Email</TH><TH>Account Type</TH><TH>Applied On</TH><TH center>Actions</TH></tr>
                 </thead>
                 <tbody>
                   {requests.map((r, i) => (
-                    <tr key={r.id}
-                      onMouseEnter={e => e.currentTarget.style.background = "#f8faff"}
-                      onMouseLeave={e => e.currentTarget.style.background = ""}
-                    >
-                      <TD><span style={{ color: C.muted, fontWeight: 600 }}>{i + 1}</span></TD>
+                    <tr key={r.id}>
+                      <TD>{i + 1}</TD>
                       <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
-                      <TD><span style={{ color: C.muted }}>{r.email}</span></TD>
-                      <TD>{r.type}</TD>
-                      <TD><span style={{ color: C.muted }}>{r.applied}</span></TD>
-                      <TD><Badge status={r.kyc} /></TD>
+                      <TD>{r.email}</TD>
+                      <TD>{r.account_type}</TD>
+                      <TD>{r.applied}</TD>
                       <TD center>
                         <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                          <button onClick={() => handleApprove(r)}
-                            style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            <CheckCircle size={12} /> Approve
-                          </button>
-                          <button onClick={() => handleReject(r)}
-                            style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            <XCircle size={12} /> Reject
-                          </button>
+                          <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                          <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
                         </div>
                       </TD>
                     </tr>
@@ -611,128 +470,53 @@ export default function AccountsView() {
         </div>
       )}
 
-      {/* MODALS */}
-
-      {/* Create Account */}
-      {modal === "create" && (
-        <Modal title="➕ Create New Account" onClose={() => setModal(null)}>
-          <Field label="Full Name" placeholder="e.g. Rahul Mehta" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-          <Field label="Email" placeholder="email@example.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} type="email" />
-          <Field label="Phone" placeholder="+91 XXXXX XXXXX" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
-          <Field label="Account Type" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} options={["Savings", "Current"]} />
-          <Field label="Branch" value={form.branch} onChange={e => setForm({ ...form, branch: e.target.value })} options={["Nashik Main", "Pune Central", "Mumbai West"]} />
-          <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-            <button onClick={handleCreate} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Create Account</button>
-          </div>
-        </Modal>
-      )}
-
-      {/* View Details */}
+      {/* ─────────── MODALS ─────────── */}
       {modal === "details" && selected && (
         <Modal title="🏦 Account Details" onClose={() => setModal(null)}>
-          {[
-            ["Account Holder", selected.holder],
-            ["Account Number", selected.account],
-            ["Account Type", selected.type],
-            ["Balance", selected.balance],
-            ["IFSC Code", selected.ifsc],
-            ["Branch", selected.branch],
-            ["Opened On", selected.opened],
-            ["Status", selected.status],
-          ].map(([k, v]) => (
-            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{k}</span>
-              {k === "Status" ? <Badge status={v} /> : <span style={{ fontSize: 13, fontWeight: 700, color: C.text, fontFamily: k === "Account Number" || k === "IFSC Code" ? "monospace" : "inherit" }}>{v}</span>}
-            </div>
-          ))}
+          <DetailRow label="Account Holder" value={selected.holder} />
+          <DetailRow label="Account Number" value={selected.account} mono />
+          <DetailRow label="Account Type" value={selected.type} />
+          <DetailRow label="Balance" value={selected.balance} />
+          <DetailRow label="IFSC Code" value={selected.ifsc} mono />
+          <DetailRow label="Status" value={selected.status} badge />
           <button onClick={() => setModal(null)} style={{ width: "100%", marginTop: 16, padding: "10px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Close</button>
         </Modal>
       )}
 
-      {/* Toggle Active/Inactive */}
       {modal === "toggle" && selected && (
         <Modal title={selected.status === "Active" ? "⚠️ Deactivate Account" : "✅ Activate Account"} onClose={() => setModal(null)}>
-          <p style={{ fontSize: 14, color: C.text, margin: "0 0 8px" }}>Are you sure you want to <strong>{selected.status === "Active" ? "deactivate" : "activate"}</strong> this account?</p>
-          <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px" }}>Account Holder: <strong>{selected.holder}</strong><br />Account No: <span style={{ fontFamily: "monospace" }}>{selected.account}</span></p>
+          <p>Confirm status change for <strong>{selected.holder}</strong>?</p>
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => handleToggle(selected)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: selected.status === "Active" ? C.gold : C.green, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              {selected.status === "Active" ? "Yes, Deactivate" : "Yes, Activate"}
-            </button>
+            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", background: "#fff", borderRadius: 10, border: "1px solid #ccc" }}>Cancel</button>
+            <button onClick={() => handleToggle(selected)} style={{ flex: 1, padding: "10px", background: C.navy, color: "#fff", borderRadius: 10, border: "none" }}>Confirm</button>
           </div>
         </Modal>
       )}
 
-      {/* Close Account */}
       {modal === "close" && selected && (
         <Modal title="🚫 Close Account" onClose={() => setModal(null)}>
-          <p style={{ fontSize: 14, color: C.text, margin: "0 0 8px" }}>Are you sure you want to <strong style={{ color: C.red }}>permanently close</strong> this account?</p>
-          <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px" }}>Account Holder: <strong>{selected.holder}</strong><br />Account No: <span style={{ fontFamily: "monospace" }}>{selected.account}</span><br />Balance: <strong style={{ color: C.green }}>{selected.balance}</strong></p>
-          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 20, fontSize: 12, color: C.red, fontWeight: 600 }}>
-            ⚠️ This action cannot be undone. The account will be permanently closed.
-          </div>
+          <p>Permanently close account for <strong>{selected.holder}</strong>?</p>
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => handleClose(selected)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.red, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Yes, Close Account</button>
+            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", background: "#fff", borderRadius: 10, border: "1px solid #ccc" }}>Cancel</button>
+            <button onClick={() => handleClose(selected)} style={{ flex: 1, padding: "10px", background: C.red, color: "#fff", borderRadius: 10, border: "none" }}>Yes, Close</button>
           </div>
         </Modal>
       )}
 
-      {/* NAR View Details */}
       {modal === "nar-details" && selectedNar && (
-        <Modal title="👤 New Account Request Details" onClose={() => setModal(null)}>
-          {[
-            ["Full Name", selectedNar.name],
-            ["Email", selectedNar.email],
-            ["Phone", selectedNar.phone],
-            ["Account Type", selectedNar.type],
-            ["Reason", selectedNar.reason],
-            ["Applied On", selectedNar.applied],
-            ["KYC Status", selectedNar.kyc],
-          ].map(([k, v]) => (
-            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{k}</span>
-              {k === "KYC Status" ? <Badge status={v} /> : <span style={{ fontSize: 13, fontWeight: 700, color: C.text, fontFamily: k === "Phone" ? "monospace" : "inherit" }}>{v}</span>}
-            </div>
-          ))}
-          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-            <button onClick={() => handleNarApprove(selectedNar)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.green, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <CheckCircle size={14} /> Approve
-            </button>
-            <button onClick={() => handleNarReject(selectedNar)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.red, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <XCircle size={14} /> Reject
-            </button>
+        <Modal title="👤 Request Details" onClose={() => setModal(null)} wide>
+           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 24px" }}>
+            <DetailRow label="Full Name" value={selectedNar.name} />
+            <DetailRow label="Father's Name" value={selectedNar.father_name} />
+            <DetailRow label="Phone" value={selectedNar.phone} />
+            <DetailRow label="Email" value={selectedNar.email} />
+            <DetailRow label="Aadhaar" value={selectedNar.aadhaar} mono />
+            <DetailRow label="PAN" value={selectedNar.pan} mono />
+            <DetailRow label="Type" value={selectedNar.account_type} />
           </div>
-        </Modal>
-      )}
-
-      {/* NAR Approve */}
-      {modal === "nar-approve" && selectedNar && (
-        <Modal title="✅ Approve Account Request" onClose={() => setModal(null)}>
-          <p style={{ fontSize: 14, color: C.text, margin: "0 0 8px" }}>Approve account request for <strong>{selectedNar.name}</strong>?</p>
-          <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px" }}>Account Type: <strong>{selectedNar.type}</strong><br />Email: <strong>{selectedNar.email}</strong><br />KYC Status: <strong>{selectedNar.kyc}</strong></p>
-          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#15803d", fontWeight: 600 }}>
-            ✅ A new {selectedNar.type} account will be created and activated immediately.
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => handleNarApprove(selectedNar)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.green, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Yes, Approve</button>
-          </div>
-        </Modal>
-      )}
-
-      {/* NAR Reject */}
-      {modal === "nar-reject" && selectedNar && (
-        <Modal title="❌ Reject Account Request" onClose={() => setModal(null)}>
-          <p style={{ fontSize: 14, color: C.text, margin: "0 0 8px" }}>Are you sure you want to <strong style={{ color: C.red }}>reject</strong> this request?</p>
-          <p style={{ fontSize: 13, color: C.muted, margin: "0 0 20px" }}>Name: <strong>{selectedNar.name}</strong><br />Account Type: <strong>{selectedNar.type}</strong><br />Email: <strong>{selectedNar.email}</strong></p>
-          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 20, fontSize: 12, color: C.red, fontWeight: 600 }}>
-            ⚠️ The request will be permanently removed.
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => setModal(null)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => handleNarReject(selectedNar)} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "none", background: C.red, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Yes, Reject</button>
+          <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+            <button onClick={() => handleNarApprove(selectedNar)} style={{ flex: 1, padding: "10px", background: C.green, color: "#fff", borderRadius: 10, border: "none" }}>Approve</button>
+            <button onClick={() => handleNarReject(selectedNar)} style={{ flex: 1, padding: "10px", background: C.red, color: "#fff", borderRadius: 10, border: "none" }}>Reject</button>
           </div>
         </Modal>
       )}

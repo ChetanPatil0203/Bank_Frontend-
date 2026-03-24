@@ -56,6 +56,6 @@ export const adminGetBankAccounts = () =>
 export const adminToggleAccountStatus = (accountId, status) =>
   request(`/admin/bank-accounts/${accountId}/status`, "PATCH", { status }, false);
 
-// apiServices.js मध्ये
+
 export const OpenAccountPage = (body) =>
   request("/account/open", "POST", body, true);

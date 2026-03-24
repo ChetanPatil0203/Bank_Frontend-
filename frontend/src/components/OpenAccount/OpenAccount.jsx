@@ -7,7 +7,7 @@ import {
   Landmark, GitBranch,
   UserPlus, Heart,
   ImagePlus, X,
-  FileText, PenLine, Clock, RefreshCw
+  FileText, PenLine, Clock, RefreshCw, Upload, Eye
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { openAccount } from "../../utils/apiServices";
@@ -89,10 +89,7 @@ function PendingPopup({ name, onClose }) {
         }}>
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
           <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
-
-          <div style={{
-            display:"flex", justifyContent:"center", marginBottom: 16, position:"relative", zIndex:1
-          }}>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom: 16, position:"relative", zIndex:1 }}>
             <div style={{
               width: 72, height: 72, borderRadius: "50%",
               background: "rgba(255,255,255,0.12)",
@@ -104,7 +101,6 @@ function PendingPopup({ name, onClose }) {
                 style={{ filter: "drop-shadow(0 0 8px rgba(251,191,36,0.5))" }}/>
             </div>
           </div>
-
           <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6, position:"relative", zIndex:1 }}>
             Request Submitted
           </p>
@@ -115,7 +111,6 @@ function PendingPopup({ name, onClose }) {
             Your account opening request has been sent to the admin for review.
           </p>
         </div>
-
         <div style={{ padding: "24px 28px 28px", background: "#f8faff" }}>
           <div style={{
             background: "#fff", border: "1.5px solid #dbeafe", borderRadius: 16,
@@ -143,7 +138,6 @@ function PendingPopup({ name, onClose }) {
               PENDING
             </div>
           </div>
-
           <div style={{ marginBottom: 20 }}>
             {[
               { label: "Application Submitted", done: true },
@@ -174,11 +168,9 @@ function PendingPopup({ name, onClose }) {
               </div>
             ))}
           </div>
-
           <p style={{ fontSize: 12, color: "#64748b", textAlign: "center", marginBottom: 18, lineHeight: 1.6 }}>
             The admin will review your application shortly. You will be notified once your account is activated.
           </p>
-
           <button onClick={onClose} style={{
             width: "100%", padding: "12px 0",
             background: "linear-gradient(135deg, #1e3a5f, #2563eb)",
@@ -194,7 +186,6 @@ function PendingPopup({ name, onClose }) {
           </button>
         </div>
       </div>
-
       <style>{`
         @keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
         @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.25)} 50%{box-shadow:0 0 0 8px rgba(37,99,235,0)} }
@@ -276,13 +267,10 @@ function SignatureModal({ isOpen, onClose, onSave }) {
             </button>
           </div>
         </div>
-
         <div style={{ padding: "24px 28px" }}>
           <p style={{ fontSize: 12, color: "#64748b", marginBottom: 16, marginTop: 0 }}>
             Type your full name to create your signature
           </p>
-
-          {/* Name input */}
           <div style={{ position: "relative", marginBottom: 12 }}>
             <User size={14} style={{ position: "absolute", left: 10, top: 10, color: "#94a3b8", pointerEvents: "none" }}/>
             <input
@@ -299,8 +287,6 @@ function SignatureModal({ isOpen, onClose, onSave }) {
               onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
             />
           </div>
-
-          {/* Canvas preview */}
           <div style={{
             position: "relative", backgroundColor: "#fff", border: "1.5px solid #e2e8f0",
             borderRadius: 12, overflow: "hidden", marginBottom: 16, height: 80,
@@ -319,8 +305,6 @@ function SignatureModal({ isOpen, onClose, onSave }) {
               borderBottom: "1.5px dashed #e2e8f0", pointerEvents: "none"
             }}/>
           </div>
-
-          {/* Buttons */}
           <div style={{ display: "flex", gap: 10 }}>
             <button type="button" onClick={() => renderTyped(signatureName)}
               disabled={!signatureName.trim()}
@@ -329,8 +313,6 @@ function SignatureModal({ isOpen, onClose, onSave }) {
                 border: "1.5px solid #3b82f6", background: "#eff6ff", color: "#1e40af", cursor: "pointer",
                 transition: "all 0.2s", opacity: signatureName.trim() ? 1 : 0.4,
               }}
-              onMouseEnter={(e) => signatureName.trim() && (e.target.style.background = "#dbeafe")}
-              onMouseLeave={(e) => signatureName.trim() && (e.target.style.background = "#eff6ff")}
             >
               Preview
             </button>
@@ -341,8 +323,6 @@ function SignatureModal({ isOpen, onClose, onSave }) {
                 border: "none", background: "#1e3a7b", color: "#fff", cursor: "pointer",
                 transition: "all 0.2s", opacity: applied ? 1 : 0.4,
               }}
-              onMouseEnter={(e) => applied && (e.target.style.background = "#2d5a9e")}
-              onMouseLeave={(e) => applied && (e.target.style.background = "#1e3a7b")}
             >
               ✓ Save Signature
             </button>
@@ -350,6 +330,130 @@ function SignatureModal({ isOpen, onClose, onSave }) {
         </div>
       </div>
       <style>{`@keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }`}</style>
+    </div>
+  );
+}
+
+/* ── DOCUMENT UPLOAD CARD ── */
+function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, preview, onUpload, onRemove, inputId }) {
+  const isImage = file && file.type?.startsWith("image/");
+
+  return (
+    <div style={{
+      background: "#fff",
+      border: `1.5px solid ${file ? accentColor + "55" : "#e2e8f0"}`,
+      borderRadius: 14,
+      overflow: "hidden",
+      transition: "all 0.25s ease",
+      boxShadow: file ? `0 4px 16px ${accentColor}18` : "none",
+    }}>
+      {/* Card Header */}
+      <div style={{
+        padding: "10px 14px",
+        background: file ? `linear-gradient(135deg, ${accentColor}12, ${accentColor}06)` : "#f8faff",
+        borderBottom: `1px solid ${file ? accentColor + "30" : "#f0f0f0"}`,
+        display: "flex", alignItems: "center", gap: 8,
+      }}>
+        <div style={{
+          width: 30, height: 30, borderRadius: 8,
+          background: file ? accentColor : "#e2e8f0",
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+          transition: "background 0.25s",
+        }}>
+          <Icon size={15} color={file ? "#fff" : "#94a3b8"}/>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: file ? "#1e293b" : "#64748b", margin: 0 }}>{label}</p>
+          <p style={{ fontSize: 10, color: "#94a3b8", margin: 0 }}>{sublabel}</p>
+        </div>
+        {file && (
+          <div style={{
+            background: "#dcfce7", border: "1px solid #86efac",
+            borderRadius: 20, padding: "2px 8px",
+            fontSize: 9, fontWeight: 700, color: "#15803d", letterSpacing: "0.05em",
+          }}>
+            ✓ UPLOADED
+          </div>
+        )}
+      </div>
+
+      {/* Upload area */}
+      <div style={{ padding: "10px 14px" }}>
+        {!file ? (
+          <label htmlFor={inputId} style={{
+            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+            border: "2px dashed #e2e8f0", borderRadius: 10,
+            padding: "20px 12px", cursor: "pointer",
+            transition: "all 0.2s",
+            gap: 6,
+          }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = accentColor;
+              e.currentTarget.style.background = accentColor + "08";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = "#e2e8f0";
+              e.currentTarget.style.background = "transparent";
+            }}
+          >
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: accentColor + "15",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <Upload size={16} color={accentColor}/>
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>Click to upload</span>
+            <span style={{ fontSize: 10, color: "#94a3b8" }}>JPG, PNG, PDF — Max 5MB</span>
+            <input id={inputId} type="file" accept="image/*,application/pdf" onChange={onUpload} style={{ display: "none" }} required/>
+          </label>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Preview */}
+            {isImage && preview ? (
+              <div style={{
+                width: 52, height: 52, borderRadius: 8, flexShrink: 0,
+                overflow: "hidden", border: `2px solid ${accentColor}40`,
+              }}>
+                <img src={preview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+              </div>
+            ) : (
+              <div style={{
+                width: 52, height: 52, borderRadius: 8, flexShrink: 0,
+                background: accentColor + "15",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                border: `2px solid ${accentColor}30`,
+              }}>
+                <FileText size={20} color={accentColor}/>
+              </div>
+            )}
+
+            {/* File info */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, color: "#1e293b", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {file.name}
+              </p>
+              <p style={{ fontSize: 10, color: "#94a3b8", margin: "2px 0 0" }}>
+                {(file.size / 1024).toFixed(1)} KB
+              </p>
+            </div>
+
+            {/* Remove */}
+            <button type="button" onClick={onRemove} style={{
+              width: 28, height: 28, borderRadius: 8,
+              background: "#fef2f2", border: "1px solid #fecaca",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0,
+              transition: "all 0.2s",
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"}
+              onMouseLeave={e => e.currentTarget.style.background = "#fef2f2"}
+            >
+              <X size={12} color="#ef4444"/>
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -367,8 +471,15 @@ export default function OpenAccountPage() {
 
   const [successData, setSuccessData]     = useState(null);
   const [showPending, setShowPending]     = useState(false);
-  const [photo, setPhoto]                 = useState(null);
-  const [photoPreview, setPhotoPreview]   = useState(null);
+
+  // ── Document uploads ──
+  const [photo, setPhoto]                     = useState(null);
+  const [photoPreview, setPhotoPreview]       = useState(null);
+  const [aadhaarDoc, setAadhaarDoc]           = useState(null);
+  const [aadhaarPreview, setAadhaarPreview]   = useState(null);
+  const [panDoc, setPanDoc]                   = useState(null);
+  const [panPreview, setPanPreview]           = useState(null);
+
   const [signature, setSignature]         = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [loading, setLoading]             = useState(false);
@@ -403,20 +514,26 @@ export default function OpenAccountPage() {
     setFormData({ ...formData, pan: value });
   };
 
-  const handlePhoto = (e) => {
+  // Generic file handler factory
+  const makeFileHandler = (setFile, setPreview) => (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setPhoto(file);
+    setFile(file);
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
-      reader.onload = (ev) => setPhotoPreview(ev.target.result);
+      reader.onload = (ev) => setPreview(ev.target.result);
       reader.readAsDataURL(file);
     } else {
-      setPhotoPreview(null);
+      setPreview(null);
     }
+    // Reset input value so same file can be re-uploaded
+    e.target.value = "";
   };
 
-  const removePhoto = () => { setPhoto(null); setPhotoPreview(null); };
+  const makeRemover = (setFile, setPreview) => () => {
+    setFile(null);
+    setPreview(null);
+  };
 
   const showAlertMsg = (type, msg) => {
     setAlert({ show: true, type, msg });
@@ -434,7 +551,9 @@ export default function OpenAccountPage() {
     if (!formData.agree)                { showAlertMsg("error", "Please accept the Terms & Conditions"); return; }
     if (formData.aadhaar.length !== 12) { showAlertMsg("error", "Aadhaar number must be exactly 12 digits"); return; }
     if (formData.pan.length !== 10)     { showAlertMsg("error", "PAN number must be exactly 10 characters"); return; }
-    if (!photo)                         { showAlertMsg("error", "Please upload your photo / document"); return; }
+    if (!photo)                         { showAlertMsg("error", "Please upload your passport-size photo"); return; }
+    if (!aadhaarDoc)                    { showAlertMsg("error", "Please upload your Aadhaar Card document"); return; }
+    if (!panDoc)                        { showAlertMsg("error", "Please upload your PAN Card document"); return; }
     if (!signature)                     { showAlertMsg("error", "Please save your signature before submitting"); return; }
 
     setLoading(true);
@@ -456,7 +575,7 @@ export default function OpenAccountPage() {
       nominee_relation: formData.nominee_relation,
       signature_name:   signature.name,
     });
-
+     
     setLoading(false);
 
     if (res.ok && res.data.success) {
@@ -478,8 +597,8 @@ export default function OpenAccountPage() {
         />
       )}
 
-      <SignatureModal 
-        isOpen={showSignatureModal} 
+      <SignatureModal
+        isOpen={showSignatureModal}
         onClose={() => setShowSignatureModal(false)}
         onSave={handleSignatureSave}
       />
@@ -612,39 +731,89 @@ export default function OpenAccountPage() {
               </Field>
             </Section>
 
-            {/* ── Photo Upload ── */}
+            {/* ── Document Upload Section ── */}
             <div className="rounded-lg p-3 bg-gray-50">
-              <h3 className="text-xs font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                <ImagePlus size={14} className="text-blue-700"/>
-                Upload Photo <span className="text-red-500">*</span>
+              <h3 className="text-xs font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                <FileText size={14} className="text-blue-700"/>
+                Document Upload
+                <span className="text-red-500 font-normal ml-0.5">*</span>
               </h3>
 
-              {!photo ? (
-                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-lg py-8 cursor-pointer hover:border-blue-400 transition-colors bg-white gap-2 mb-3">
-                  <ImagePlus size={24} className="text-gray-300"/>
-                  <span className="text-xs text-gray-500">Click to upload photo or document</span>
-                  <span className="text-[10px] text-gray-400">JPG, PNG, PDF — Max 5MB</span>
-                  <input type="file" accept="image/*,application/pdf" onChange={handlePhoto} className="hidden" required/>
-                </label>
-              ) : (
-                <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2.5 mb-3">
-                  {photoPreview ? (
-                    <img src={photoPreview} alt="preview" className="w-12 h-12 rounded-lg object-cover border flex-shrink-0"/>
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center border flex-shrink-0">
-                      <FileText size={18} className="text-blue-400"/>
+              {/* Progress indicator */}
+              <div className="flex items-center gap-2 mb-3 bg-white rounded-lg px-3 py-2 border border-gray-100">
+                <div className="flex items-center gap-1.5 flex-1">
+                  {[
+                    { label: "Photo", done: !!photo },
+                    { label: "Aadhaar", done: !!aadhaarDoc },
+                    { label: "PAN", done: !!panDoc },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-1">
+                      <div style={{
+                        width: 18, height: 18, borderRadius: "50%",
+                        background: item.done ? "#22c55e" : "#e2e8f0",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        transition: "background 0.3s",
+                      }}>
+                        {item.done
+                          ? <CheckCircle size={11} color="#fff" strokeWidth={2.5}/>
+                          : <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#94a3b8", display: "block" }}/>
+                        }
+                      </div>
+                      <span style={{ fontSize: 10, fontWeight: item.done ? 600 : 400, color: item.done ? "#15803d" : "#94a3b8" }}>
+                        {item.label}
+                      </span>
+                      {i < 2 && <span style={{ color: "#e2e8f0", fontSize: 10, marginLeft: 2 }}>—</span>}
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-700 truncate">{photo.name}</p>
-                    <p className="text-[10px] text-gray-400">{(photo.size / 1024).toFixed(1)} KB</p>
-                  </div>
-                  <button type="button" onClick={removePhoto}
-                    className="text-red-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors flex-shrink-0">
-                    <X size={13}/>
-                  </button>
+                  ))}
                 </div>
-              )}
+                <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b" }}>
+                  {[photo, aadhaarDoc, panDoc].filter(Boolean).length}/3 uploaded
+                </span>
+              </div>
+
+              {/* Three upload cards */}
+              <div className="grid md:grid-cols-3 gap-3">
+
+                {/* Passport Photo */}
+                <DocumentUploadCard
+                  label="Passport Photo"
+                  sublabel="Clear face photo"
+                  icon={ImagePlus}
+                  accentColor="#6366f1"
+                  file={photo}
+                  preview={photoPreview}
+                  onUpload={makeFileHandler(setPhoto, setPhotoPreview)}
+                  onRemove={makeRemover(setPhoto, setPhotoPreview)}
+                  inputId="upload-photo"
+                />
+
+                {/* Aadhaar Card */}
+                <DocumentUploadCard
+                  label="Aadhaar Card"
+                  sublabel="Front side of Aadhaar"
+                  icon={ShieldCheck}
+                  accentColor="#0ea5e9"
+                  file={aadhaarDoc}
+                  preview={aadhaarPreview}
+                  onUpload={makeFileHandler(setAadhaarDoc, setAadhaarPreview)}
+                  onRemove={makeRemover(setAadhaarDoc, setAadhaarPreview)}
+                  inputId="upload-aadhaar"
+                />
+
+                {/* PAN Card */}
+                <DocumentUploadCard
+                  label="PAN Card"
+                  sublabel="Clear PAN card image"
+                  icon={CreditCard}
+                  accentColor="#f59e0b"
+                  file={panDoc}
+                  preview={panPreview}
+                  onUpload={makeFileHandler(setPanDoc, setPanPreview)}
+                  onRemove={makeRemover(setPanDoc, setPanPreview)}
+                  inputId="upload-pan"
+                />
+
+              </div>
             </div>
 
             {/* Terms */}
@@ -656,34 +825,24 @@ export default function OpenAccountPage() {
               </p>
             </div>
 
-            {/* Submit + Professional Signature Field */}
+            {/* Submit + Signature */}
             <div className="flex flex-col sm:flex-row gap-3 items-end">
 
-              {/* Submit Button */}
               <button type="submit" disabled={loading}
                 className="w-full md:w-40
                   bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
                   hover:bg-[#5b4ec2]
-                  text-white
-                  font-semibold
-                  rounded-xl
-                  py-3.5
-                  flex items-center
-                  justify-center
-                  gap-2
-                  transition-all
-                  transform
-                  active:scale-[0.98]
-                  shadow-lg">
+                  text-white font-semibold rounded-xl py-3.5
+                  flex items-center justify-center gap-2
+                  transition-all transform active:scale-[0.98] shadow-lg">
                 {loading
                   ? <><Loader size={16} className="animate-spin"/> Opening...</>
                   : "Open Account"}
               </button>
 
-              {/* Professional Signature Field - Right Side */}
+              {/* Signature Field */}
               <div onClick={() => setShowSignatureModal(true)} className="w-full sm:w-72 cursor-pointer">
-        
-             <div className={`h-12 rounded-lg border-2 px-4 flex items-center transition-all shadow-sm
+                <div className={`h-12 rounded-lg border-2 px-4 flex items-center transition-all shadow-sm
                   ${signature
                     ? "border-green-400 bg-gradient-to-r from-green-50 to-emerald-50"
                     : "border-blue-300 bg-blue-50 hover:border-blue-500 hover:shadow-md"}
