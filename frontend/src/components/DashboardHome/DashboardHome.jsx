@@ -98,30 +98,31 @@ export default function DashboardHome() {
     return () => document.head.removeChild(el);
   }, []);
 
+  // QUICK ACTIONS WITH COLORS
   const quickActions = [
-    { name:"Deposit Money",    icon:ArrowDownToLine, path:"/deposit",      iconColor:"text-emerald-600", bg:"bg-emerald-500/10" },
-    { name:"Withdraw",         icon:ArrowUpFromLine, path:"/withdraw",     iconColor:"text-red-600",     bg:"bg-red-500/10"     },
-    { name:"My Profile",       icon:UserCircle,      path:"/profile",      iconColor:"text-violet-600",  bg:"bg-violet-500/10"  },
-    { name:"View Account",     icon:BookUser,        path:"/balance",      iconColor:"text-sky-700",     bg:"bg-sky-500/10"     },
-    { name:"KYC Verification", icon:CheckCircle,     path:"/kyc",          iconColor:"text-green-600",   bg:"bg-green-500/10"   },
-    { name:"Transactions",     icon:Receipt,         path:"/transactions", iconColor:"text-amber-600",   bg:"bg-amber-500/10"   },
-    { name:"Help & Support",   icon:Headset,         path:"/helpsupport",  iconColor:"text-cyan-600",    bg:"bg-cyan-500/10"    },
-    { name:"My Wallet",        icon:Wallet,          path:"/wallet",       iconColor:"text-purple-600",  bg:"bg-purple-500/10"  },
+    { name: "Deposit Money", icon: ArrowDownToLine, path: "/deposit", iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
+    { name: "Withdraw", icon: ArrowUpFromLine, path: "/withdraw", iconColor: "#ef4444", bgColor: "#fef2f2", borderColor: "#fecaca" },
+    { name: "My Profile", icon: UserCircle, path: "/profile", iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
+    { name: "View Account", icon: BookUser, path: "/balance", iconColor: "#3b82f6", bgColor: "#eff6ff", borderColor: "#bfdbfe" },
+    { name: "KYC Verification", icon: CheckCircle, path: "/kyc", iconColor: "#8b5cf6", bgColor: "#faf5ff", borderColor: "#e9d5ff" },
+    { name: "Transactions", icon: Receipt, path: "/transactions", iconColor: "#06b6d4", bgColor: "#ecf9ff", borderColor: "#a5f3fc" },
+    { name: "Help & Support", icon: Headset, path: "/helpsupport", iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
+    { name: "My Wallet", icon: Wallet, path: "/wallet", iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
   ];
 
   const recentTxns = [
-    { name:"Amazon Purchase", amount:"−₹2,450",  date:"Today, 2:34 PM", type:"debit",  icon:ShoppingBag    },
-    { name:"Salary Credit",   amount:"+₹85,000", date:"Yesterday",      type:"credit", icon:ArrowDownToLine},
-    { name:"Hotel Booking",   amount:"−₹6,200",  date:"Feb 20",         type:"debit",  icon:Hotel          },
-    { name:"Flight Ticket",   amount:"−₹12,800", date:"Feb 18",         type:"debit",  icon:Plane          },
+    { name: "Amazon Purchase", amount: "−₹2,450", date: "Today, 2:34 PM", type: "debit", icon: ShoppingBag },
+    { name: "Salary Credit", amount: "+₹85,000", date: "Yesterday", type: "credit", icon: ArrowDownToLine },
+    { name: "Hotel Booking", amount: "−₹6,200", date: "Feb 20", type: "debit", icon: Hotel },
+    { name: "Flight Ticket", amount: "−₹12,800", date: "Feb 18", type: "debit", icon: Plane },
   ];
 
   const tileBase = () =>
     `action-tile flex flex-col items-center text-center py-5 px-3 sm:py-6 sm:px-4 rounded-[18px] cursor-pointer
-     border border-white/80 backdrop-blur-[18px]`;
+     border backdrop-blur-[18px]`;
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ fontFamily:"'Sora','DM Sans','Segoe UI',sans-serif", color:"#1e293b" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ fontFamily: "'Sora','DM Sans','Segoe UI',sans-serif", color: "#1e293b" }}>
 
       {/* ── Ambient blobs ── */}
       <div className="fixed -top-32 left-[8%]  w-[520px] h-[520px] rounded-full bg-indigo-400/10  blur-3xl pointer-events-none -z-10" />
@@ -168,10 +169,10 @@ export default function DashboardHome() {
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="opacity-60 sm:w-[26px] sm:h-[26px]">
-                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7"  stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5"  stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".6"/>
-                    <path d="M7 12.5C7 10.57 8.57 9 10.5 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".85"/>
-                    <circle cx="10.5" cy="12.5" r="1.5" fill="white"/>
+                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".6" />
+                    <path d="M7 12.5C7 10.57 8.57 9 10.5 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".85" />
+                    <circle cx="10.5" cy="12.5" r="1.5" fill="white" />
                   </svg>
                   <span className="text-[7px] sm:text-[9px] text-white/35 tracking-[.20em] uppercase font-semibold">Savings</span>
                 </div>
@@ -181,7 +182,7 @@ export default function DashboardHome() {
               <div className="flex items-center gap-3 sm:gap-5 mb-5 sm:mb-6">
                 <div className="chip-body anim-chip relative w-[40px] sm:w-[46px] h-[30px] sm:h-[36px] rounded-lg overflow-hidden flex-shrink-0">
                   <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1">
-                    {[...Array(9)].map((_,i) => (
+                    {[...Array(9)].map((_, i) => (
                       <div key={i} className="chip-cell rounded-[1px]" />
                     ))}
                   </div>
@@ -189,9 +190,11 @@ export default function DashboardHome() {
                                   w-[18px] sm:w-[22px] h-[13px] sm:h-[16px] rounded-[3px] border-[1.5px]" />
                 </div>
                 <span className="text-[12px] sm:text-[15px] font-semibold tracking-[.22em]"
-                      style={{ fontFamily:"'JetBrains Mono',monospace",
-                               color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
-                               textShadow:"0 1px 8px rgba(0,0,0,.4)" }}>
+                  style={{
+                    fontFamily: "'JetBrains Mono',monospace",
+                    color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
+                    textShadow: "0 1px 8px rgba(0,0,0,.4)"
+                  }}>
                   {showDetails ? "1234  5678  9012  0123" : "••••  ••••  ••••  0123"}
                 </span>
               </div>
@@ -202,16 +205,17 @@ export default function DashboardHome() {
                   <div>
                     <p className="m-0 text-[7px] sm:text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Holder</p>
                     <p className="m-0 text-[12px] sm:text-[15px] font-extrabold text-white tracking-widest uppercase"
-                       style={{ textShadow:"0 1px 12px rgba(255,255,255,.25)" }}>
+                      style={{ textShadow: "0 1px 12px rgba(255,255,255,.25)" }}>
                       {userName}
                     </p>
                   </div>
                   <div className="hidden sm:block">
                     <p className="m-0 text-[7px] sm:text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <p className="balance-text m-0 text-[20px] sm:text-[30px] font-extrabold text-white tracking-tight transition-all duration-300">
+                      <p className="balance-text m-0 text-[19px] sm:text-[30px] font-extrabold text-white tracking-tight transition-all duration-300 whitespace-nowrap">
                         {showDetails ? "₹ 50,000" : "₹ •••••"}
                       </p>
+
                       {showDetails && (
                         <div className="trend-badge flex items-center gap-1 px-2 py-1 rounded-md border">
                           <TrendingUp size={9} className="text-green-300" />
@@ -236,7 +240,7 @@ export default function DashboardHome() {
                                border border-white/[.22] backdrop-blur-md
                                transition-all duration-200"
                   >
-                    {showDetails ? <EyeOff size={11} className="sm:w-[13px] sm:h-[13px]"/> : <Eye size={11} className="sm:w-[13px] sm:h-[13px]"/>}
+                    {showDetails ? <EyeOff size={11} className="sm:w-[13px] sm:h-[13px]" /> : <Eye size={11} className="sm:w-[13px] sm:h-[13px]" />}
                     <span className="hidden sm:inline">{showDetails ? "Hide Details" : "Show Details"}</span>
                     <span className="sm:hidden">{showDetails ? "Hide" : "Show"}</span>
                   </button>
@@ -252,52 +256,56 @@ export default function DashboardHome() {
           <div className="flex justify-between items-center mb-3 sm:mb-4 px-0 sm:px-1">
             <h3 className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-wide">Quick Actions</h3>
             <button className="text-[11px] sm:text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
-              View all <ChevronRight size={14}/>
+              View all <ChevronRight size={14} />
             </button>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-3 sm:mb-4">
-            {quickActions.slice(0,4).map((item,i) => {
+            {quickActions.slice(0, 4).map((item, i) => {
               const Icon = item.icon;
               return (
                 <div key={`q-${i}`} className={tileBase()}
-                  onClick={()=>navigate(item.path)}>
-                  <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-[18px] flex items-center justify-center mb-2 sm:mb-3 transition-all duration-200 ${item.bg}`}>
-                    <Icon size={22} className={`${item.iconColor} sm:w-[26px] sm:h-[26px]`} strokeWidth={2.1}/>
+                  style={{ background: item.bgColor, border: `1.5px solid ${item.borderColor}` }}
+                  onClick={() => navigate(item.path)}>
+                  <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-[18px] flex items-center justify-center mb-2 sm:mb-3 transition-all duration-200 shadow-sm`}
+                    style={{ background: item.bgColor }}>
+                    <Icon size={22} style={{ color: item.iconColor }} strokeWidth={2.4} />
                   </div>
-                  <p className="text-[11px] sm:text-[13px] font-bold text-blue-950 leading-snug">{item.name}</p>
+                  <p className="text-[11px] sm:text-[13px] font-extrabold text-slate-900 leading-snug uppercase tracking-tight">{item.name}</p>
                 </div>
               );
             })}
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
-            {quickActions.slice(4,8).map((item,i) => {
+            {quickActions.slice(4, 8).map((item, i) => {
               const Icon = item.icon;
               return (
-                <div key={`q-${i+4}`} className={tileBase()}
-                  onClick={()=>navigate(item.path)}>
-                  <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-[18px] flex items-center justify-center mb-2 sm:mb-3 transition-all duration-200 ${item.bg}`}>
-                    <Icon size={22} className={`${item.iconColor} sm:w-[26px] sm:h-[26px]`} strokeWidth={2.1}/>
+                <div key={`q-${i + 4}`} className={tileBase()}
+                  style={{ background: item.bgColor, border: `1.5px solid ${item.borderColor}` }}
+                  onClick={() => navigate(item.path)}>
+                  <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-[18px] flex items-center justify-center mb-2 sm:mb-3 transition-all duration-200 shadow-sm`}
+                    style={{ background: item.bgColor }}>
+                    <Icon size={22} style={{ color: item.iconColor }} strokeWidth={2.4} />
                   </div>
-                  <p className="text-[11px] sm:text-[13px] font-bold text-blue-950 leading-snug">{item.name}</p>
+                  <p className="text-[11px] sm:text-[13px] font-extrabold text-slate-900 leading-snug uppercase tracking-tight">{item.name}</p>
                 </div>
               );
             })}
           </div>
         </div>
-        
+
         {/* ── RECENT TRANSACTIONS ── */}
         <div className="anim-fade-up-3 pb-6 sm:pb-8">
           <div className="txns-wrap backdrop-blur-[18px] rounded-[18px] sm:rounded-[22px] border border-white/80 overflow-hidden">
 
             <div className="flex justify-between items-center px-4 sm:px-8 py-4 sm:py-5 border-b border-slate-100/80">
               <h3 className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-wide">Recent Transactions</h3>
-              <button onClick={()=>navigate("/transactions")}
+              <button onClick={() => navigate("/transactions")}
                 className="text-[11px] sm:text-[13px] font-semibold text-blue-500 flex items-center gap-1 hover:text-blue-600 transition-colors">
                 <span className="hidden sm:inline">View All</span>
                 <span className="sm:hidden">All</span>
-                <ChevronRight size={14}/>
+                <ChevronRight size={14} />
               </button>
             </div>
 
@@ -326,7 +334,7 @@ export default function DashboardHome() {
                           <div className="flex items-center justify-center gap-2 sm:gap-3">
                             <div className={`w-7 sm:w-9 h-7 sm:h-9 rounded-lg flex items-center justify-center flex-shrink-0
                               ${isC ? "bg-emerald-100" : "bg-red-100"}`}>
-                              <Icon size={14} className={`${isC ? "text-emerald-600" : "text-red-600"} sm:w-4 sm:h-4`} strokeWidth={2}/>
+                              <Icon size={14} className={`${isC ? "text-emerald-600" : "text-red-600"} sm:w-4 sm:h-4`} strokeWidth={2} />
                             </div>
                             <span className="text-[10px] sm:text-[14px] font-semibold text-slate-800 whitespace-nowrap">{txn.name}</span>
                           </div>
@@ -352,7 +360,7 @@ export default function DashboardHome() {
             </div>
 
             <div className="flex justify-between items-center px-4 sm:px-8 py-2 sm:py-3 border-t border-slate-100/80 text-[10px] sm:text-[12px]"
-                 style={{ background:"rgba(241,245,255,0.70)" }}>
+              style={{ background: "rgba(241,245,255,0.70)" }}>
               <span className="text-slate-400 font-medium">Showing {recentTxns.length} of {recentTxns.length}</span>
               <span className="text-slate-400 font-medium hidden sm:inline">Last updated: Today</span>
             </div>

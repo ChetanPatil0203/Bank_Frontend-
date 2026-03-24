@@ -159,7 +159,9 @@ function SidebarInner({ isOpen, onToggle, menuItems }) {
             <Link
               key={index}
               to={item.path}
+              onClick={() => onToggle()}
               className={`flex items-center gap-3 px-3 py-[10px] rounded-lg
+
                           no-underline whitespace-nowrap text-[13.5px]
                           transition-all duration-[180ms]
                           ${isLogout
