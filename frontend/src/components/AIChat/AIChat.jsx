@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, ArrowRight, Minus, Clock, Paperclip, MoreVertical, Trash2, Bot } from 'lucide-react';
+import { MessageSquare, ArrowRight, Minus, Clock, Paperclip, MoreVertical, Trash2, Sparkles, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const AIChat = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,11 +42,32 @@ const AIChat = () => {
             const botResponse = {
                 id: Date.now() + 1,
                 text: "I am a demo AI assistant for Payzen Bank. I can help you with account inquiries, technical support, and product information. This is a simulated response designed to demonstrate the chat interface.",
-                sender: 'bot'
+                sender: 'bot',
+                showFeedback: true
             };
             setMessages(prev => [...prev, botResponse]);
             setIsTyping(false);
         }, 1500);
+    };
+
+    const handleFeedbackClick = (messageId) => {
+        // Remove feedback buttons from the message that was clicked
+        setMessages(prev => prev.map(msg =>
+            msg.id === messageId ? { ...msg, showFeedback: false } : msg
+        ));
+
+        // Simulate typing for the "Thank you" response
+        setIsTyping(true);
+        setTimeout(() => {
+            const thankYouResponse = {
+                id: Date.now(),
+                text: "Thank you for your feedback.",
+                sender: 'bot',
+                showFeedback: false
+            };
+            setMessages(prev => [...prev, thankYouResponse]);
+            setIsTyping(false);
+        }, 800);
     };
 
     const handleKeyDown = (e) => {
@@ -98,30 +119,9 @@ const AIChat = () => {
                 {/* Header Section */}
                 <div className={`${brandGradient} p-5 md:p-6 text-white shrink-0`}>
                     <div className="flex justify-between items-center mb-5 relative">
-                        {/* 3-Dot Menu Dropdown */}
-                        <div className="relative menu-container">
-                            <button
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-1.5 hover:bg-white/10 rounded-md transition-colors focus:outline-none"
-                            >
-                                <MoreVertical size={20} strokeWidth={2.5} />
-                            </button>
 
-                            {isMenuOpen && (
-                                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50">
-                                    <button
-                                        onClick={handleClearConversation}
-                                        className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={messages.length === 0}
-                                    >
-                                        <Trash2 size={16} strokeWidth={2.5} /> Clear conversation
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Title & Badge (Centered absolute for perfect alignment) */}
-                        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5">
+                        {/* Title & Badge (Left aligned) */}
+                        <div className="flex items-center gap-2.5">
                             <h2 className="text-[18px] md:text-[20px] font-bold tracking-tight">Ask Payzen</h2>
                             <div className="inline-flex items-center gap-1.5 bg-white px-2 py-[2px] rounded shadow-sm">
                                 <Clock size={11} strokeWidth={3} className="text-gray-800" />
@@ -129,10 +129,35 @@ const AIChat = () => {
                             </div>
                         </div>
 
-                        {/* Minus Button */}
-                        <button onClick={handleToggle} className="text-white p-1 hover:bg-white/10 rounded-md transition-colors focus:outline-none">
-                            <Minus size={22} strokeWidth={3} />
-                        </button>
+                        {/* Right Side Icons */}
+                        <div className="flex items-center gap-0.5">
+                            {/* 3-Dot Menu Dropdown */}
+                            <div className="relative menu-container">
+                                <button
+                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                    className="p-1.5 text-white/90 hover:text-white hover:bg-white/10 rounded-md transition-colors focus:outline-none"
+                                >
+                                    <MoreVertical size={20} strokeWidth={2.5} />
+                                </button>
+
+                                {isMenuOpen && (
+                                    <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50 origin-top-right">
+                                        <button
+                                            onClick={handleClearConversation}
+                                            className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={messages.length === 0}
+                                        >
+                                            <Trash2 size={16} strokeWidth={2.5} /> Clear conversation
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Minus Button */}
+                            <button onClick={handleToggle} className="p-1.5 text-white/90 hover:text-white hover:bg-white/10 rounded-md transition-colors focus:outline-none">
+                                <Minus size={22} strokeWidth={3} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Conditional Subtitle based on chat state */}
@@ -199,30 +224,50 @@ const AIChat = () => {
                         </div>
                     ) : (
                         // Chat History View
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-6">
                             {messages.map((msg) => (
-                                <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
-                                    {msg.sender === 'bot' && (
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mr-3 mt-1 shrink-0 shadow-sm text-white">
-                                            <Bot size={18} />
+                                <div key={msg.id} className="animate-in slide-in-from-bottom-2 duration-300">
+                                    <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        {msg.sender === 'bot' && (
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center mr-3 mt-1 shrink-0 shadow-sm text-white">
+                                                <Sparkles size={16} strokeWidth={2.5} />
+                                            </div>
+                                        )}
+                                        <div className={`
+                      max-w-[85%] rounded-2xl p-4 text-[14.5px] font-medium leading-relaxed
+                      ${msg.sender === 'user'
+                                                ? 'bg-gray-100 text-gray-800 rounded-tr-sm'
+                                                : 'bg-white border border-gray-100 shadow-sm text-gray-700 rounded-tl-sm'}
+                    `}>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+
+                                    {/* Feedback Buttons for Bot Messages */}
+                                    {msg.sender === 'bot' && msg.showFeedback && (
+                                        <div className="flex gap-4 mt-2 ml-14">
+                                            <button
+                                                onClick={() => handleFeedbackClick(msg.id)}
+                                                className="text-black hover:text-gray-700 transition-colors focus:outline-none"
+                                            >
+                                                <ThumbsUp size={16} strokeWidth={2.5} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleFeedbackClick(msg.id)}
+                                                className="text-gray-300 hover:text-gray-500 transition-colors focus:outline-none"
+                                            >
+                                                <ThumbsDown size={16} strokeWidth={2.5} />
+                                            </button>
                                         </div>
                                     )}
-                                    <div className={`
-                    max-w-[85%] rounded-2xl p-4 text-[14.5px] font-medium leading-relaxed
-                    ${msg.sender === 'user'
-                                            ? 'bg-gray-100 text-gray-800 rounded-tr-sm'
-                                            : 'bg-white border border-gray-100 shadow-sm text-gray-700 rounded-tl-sm'}
-                  `}>
-                                        {msg.text}
-                                    </div>
                                 </div>
                             ))}
 
                             {/* Typing Indicator */}
                             {isTyping && (
                                 <div className="flex justify-start animate-in fade-in">
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mr-3 mt-1 shrink-0 shadow-sm text-white">
-                                        <Bot size={18} />
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center mr-3 mt-1 shrink-0 shadow-sm text-white">
+                                        <Sparkles size={16} strokeWidth={2.5} />
                                     </div>
                                     <div className="bg-white border border-gray-100 shadow-sm rounded-2xl rounded-tl-sm p-4 px-5 flex items-center gap-1.5 h-[52px]">
                                         <div className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
