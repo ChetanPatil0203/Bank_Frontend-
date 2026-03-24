@@ -27,10 +27,12 @@ const C = {
 
 const RESPONSIVE_STYLES = `
   @media (max-width: 768px) {
+
+
     .stats-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
     .stat-card-wrap { 
-      background: #fff !important;
       border: 1px solid #f1f5f9 !important;
+
       border-radius: 18px !important;
       padding: 14px !important;
       display: flex !important;
@@ -42,13 +44,21 @@ const RESPONSIVE_STYLES = `
       max-width: none !important;
     }
   }
-  @media (min-width: 769px) {
+  @media (min-width: 1024px) {
+    .stat-card-wrap {
+      flex: 1 1 calc(16.66% - 9px) !important;
+      max-width: calc(16.66% - 9px) !important;
+      min-width: 120px !important;
+    }
+  }
+  @media (min-width: 769px) and (max-width: 1023px) {
     .stat-card-wrap {
       flex: 1 1 calc(25% - 9px) !important;
       max-width: calc(25% - 9px) !important;
       min-width: 140px !important;
     }
   }
+
 
 
 
@@ -70,7 +80,13 @@ const RESPONSIVE_STYLES = `
     .tabs-wrap button { flex-shrink: 0 !important; white-space: nowrap !important; }
 
     .table-to-hide { display: none !important; }
-    .cards-to-show { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .cards-to-show {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px !important;
+    }
+
+
     .mobile-card { 
       background: #fff !important; 
       border: 1px solid #e2e8f0 !important; 
@@ -109,21 +125,33 @@ function StatusBadge({ status }) {
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
   return (
-    <span style={{ background: s.bg, color: s.color, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99, letterSpacing: "0.04em", display: "inline-flex", alignItems: "center", gap: 5 }}>
-      <span style={{ width: 6, height: 6, borderRadius: "50%", background: s.color, display: "inline-block" }} />
+    <span style={{
+      background: s.bg,
+      color: s.color,
+      fontSize: 10,
+      fontWeight: 800,
+      padding: "2px 8px",
+      borderRadius: 99,
+      letterSpacing: "0.04em",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4,
+      height: 20,
+      boxSizing: "border-box"
+    }}>
+      <span style={{ width: 5, height: 5, borderRadius: "50%", background: s.color, display: "inline-block" }} />
       {status}
     </span>
+
   );
 }
 
-function StatCard({ label, value, icon: Icon, iconBg, iconColor, cls }) {
+function StatCard({ label, value, icon: Icon, iconColor, bgColor, borderColor, border }) {
   return (
-    <div className={`stat-card-wrap ${cls}`} style={{
-      background: C.card,
+    <div className={`stat-card-wrap ${bgColor} border ${borderColor} ${border}`} style={{
       borderRadius: 18,
       padding: "14px 16px",
       boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
-      border: `1px solid #f1f5f9`,
       display: "flex",
       flexDirection: "column",
       gap: 8,
@@ -133,11 +161,13 @@ function StatCard({ label, value, icon: Icon, iconBg, iconColor, cls }) {
 
 
 
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <p style={{ fontSize: 11, color: C.muted, margin: 0, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.02em" }}>{label}</p>
 
-        <div style={{ width: 38, height: 38, borderRadius: 10, background: iconBg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon size={18} color={iconColor} />
+        <div style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon size={22} color={iconColor} />
+
         </div>
       </div>
       <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0, letterSpacing: "-0.02em" }}>{value}</h3>
@@ -244,7 +274,7 @@ function KYCForm({ onSubmit, onCancel }) {
   const STEPS = ["Personal Info", "Documents", "OTP"];
 
   return (
-    <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
       <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 520, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}`, maxHeight: "92vh", overflowY: "auto" }}>
 
 
@@ -539,6 +569,7 @@ export default function AdminKYC() {
     <td style={{ padding: "13px 16px", fontSize: 13, color: C.text, borderBottom: "1px solid #f1f5f9", whiteSpace: "nowrap", textAlign: center ? "center" : "left" }}>{children}</td>
   );
 
+
   return (
     <div style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
       <style>{RESPONSIVE_STYLES}</style>
@@ -560,10 +591,11 @@ export default function AdminKYC() {
       {/* Stat Cards */}
       <div className="stats-grid" style={{ display: "flex", flexDirection: "row", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
 
-        <StatCard cls="blue" label="Total KYC" value={counts.All} icon={FileText} iconColor={C.accent} />
-        <StatCard cls="green" label="Verified" value={counts.Verified} icon={CheckCircle2} iconColor={C.green} />
-        <StatCard cls="gold" label="Pending" value={counts.Pending} icon={Clock} iconColor={C.gold} />
-        <StatCard cls="red" label="Rejected" value={counts.Rejected} icon={XCircle} iconColor={C.red} />
+        <StatCard label="Total KYC" value={counts.All} icon={FileText} iconColor={C.accent} border="hover:border-blue-500" bgColor="bg-blue-500/10" borderColor="border-blue-200" />
+        <StatCard label="Verified" value={counts.Verified} icon={CheckCircle2} iconColor={C.green} border="hover:border-emerald-500" bgColor="bg-emerald-500/10" borderColor="border-emerald-200" />
+        <StatCard label="Pending" value={counts.Pending} icon={Clock} iconColor={C.gold} border="hover:border-amber-500" bgColor="bg-amber-500/10" borderColor="border-amber-200" />
+        <StatCard label="Rejected" value={counts.Rejected} icon={XCircle} iconColor={C.red} border="hover:border-red-500" bgColor="bg-red-500/10" borderColor="border-red-200" />
+
       </div>
 
 
@@ -578,6 +610,10 @@ export default function AdminKYC() {
 
       {/* Search + Filter */}
       <div className="tab-search-row" style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+
+
+
+
         {/* Tabs on the Left */}
         <div className="tabs-wrap" style={{ display: "flex", gap: 4, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4 }}>
           {FILTERS.map(f => (
@@ -589,7 +625,9 @@ export default function AdminKYC() {
         </div>
 
         {/* Search on the Right */}
-        <div className="search-box-wrap" style={{ position: "relative", flex: 1, minWidth: 200, maxWidth: 320 }}>
+        <div className="search-box-wrap" style={{ position: "relative", width: "100%", maxWidth: "320px", flexShrink: 0 }}>
+
+
 
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, email or PAN..."
@@ -607,6 +645,8 @@ export default function AdminKYC() {
                   <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                 ))}
               </tr>
+
+
             </thead>
 
             <tbody>
@@ -665,18 +705,29 @@ export default function AdminKYC() {
 
       <div className="cards-to-show">
         {filtered.map(k => (
-          <div key={k.id} className="mobile-card">
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-              <span style={{ fontSize: 11, fontWeight: 800, color: C.accent }}>{k.id}</span>
+          <div key={k.id} className="mobile-card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: 20 }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: C.accent, letterSpacing: "0.05em", background: "rgba(59,130,246,0.1)", padding: "2px 8px", borderRadius: 5, height: 20, display: "flex", alignItems: "center", boxSizing: "border-box" }}>{k.id}</span>
               <StatusBadge status={k.status} />
             </div>
-            <h4 style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 800 }}>{k.name}</h4>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 8, marginTop: 4 }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: C.text }}>{k.pan}</span>
-              <button onClick={() => { setSelected(k); setModal("view"); }} style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "4px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700 }}>View</button>
+
+            <div style={{ padding: "4px 0" }}>
+              <h4 style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 800, color: C.text }}>{k.name}</h4>
+              <p style={{ margin: 0, fontSize: 11, color: C.muted, fontWeight: 600 }}>
+                PAN: <span style={{ fontFamily: "monospace", color: C.text, letterSpacing: "0.02em" }}>{k.pan}</span>
+              </p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 10, marginTop: "auto" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>{k.submitted}</span>
+              <button onClick={() => { setSelected(k); setModal("view"); }}
+                style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "5px 10px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
+                View
+              </button>
+
             </div>
           </div>
         ))}
+
       </div>
 
 

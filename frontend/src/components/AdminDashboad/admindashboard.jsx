@@ -36,7 +36,6 @@ const STAT_CARDS = [
     border: "hover:border-blue-500",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-200",
-    trend: { value: 12.5, direction: "up" }
   },
   {
     label: "Total Accounts",
@@ -46,7 +45,6 @@ const STAT_CARDS = [
     border: "hover:border-emerald-500",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-200",
-    trend: { value: 8.2, direction: "up" }
   },
   {
     label: "Total Balance",
@@ -56,7 +54,6 @@ const STAT_CARDS = [
     border: "hover:border-amber-500",
     bgColor: "bg-amber-500/10",
     borderColor: "border-amber-200",
-    trend: { value: 5.8, direction: "up" }
   },
   {
     label: "Total Transactions",
@@ -66,7 +63,6 @@ const STAT_CARDS = [
     border: "hover:border-violet-500",
     bgColor: "bg-violet-500/10",
     borderColor: "border-violet-200",
-    trend: { value: 3.2, direction: "down" }
   },
   {
     label: "Pending KYC",
@@ -76,7 +72,6 @@ const STAT_CARDS = [
     border: "hover:border-red-500",
     bgColor: "bg-red-500/10",
     borderColor: "border-red-200",
-    trend: { value: 2.1, direction: "down" }
   },
   {
     label: "Account Requests",
@@ -86,7 +81,6 @@ const STAT_CARDS = [
     border: "hover:border-cyan-500",
     bgColor: "bg-cyan-500/10",
     borderColor: "border-cyan-200",
-    trend: { value: 15.4, direction: "up" }
   },
 ];
 
@@ -177,7 +171,8 @@ function DashboardView() {
                     group-hover:rotate-[10deg]
                   `}
                 >
-                  <Icon size={20} className="opacity-90" />
+                  <Icon size={24} className="opacity-90" />
+
                 </div>
               </div>
 
@@ -262,7 +257,9 @@ function DashboardView() {
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebar] = useState(window.innerWidth > 1024);
+  const [sidebarOpen, setSidebar] = useState(window.innerWidth >= 1024);
+
+
 
   const active = location.pathname.split("/")[2] || "dashboard";
 

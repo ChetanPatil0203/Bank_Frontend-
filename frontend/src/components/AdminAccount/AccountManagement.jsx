@@ -22,10 +22,12 @@ const ACCOUNTS = [
 
 const RESPONSIVE_STYLES = `
   @media (max-width: 768px) {
+
+
     .stats-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
     .stat-card-wrap { 
-      background: #fff !important;
       border: 1px solid #f1f5f9 !important;
+
       border-radius: 18px !important;
       padding: 14px !important;
       display: flex !important;
@@ -37,13 +39,21 @@ const RESPONSIVE_STYLES = `
       max-width: none !important;
     }
   }
-  @media (min-width: 769px) {
+  @media (min-width: 1024px) {
+    .stat-card-wrap {
+      flex: 1 1 calc(16.66% - 9px) !important;
+      max-width: calc(16.66% - 9px) !important;
+      min-width: 120px !important;
+    }
+  }
+  @media (min-width: 769px) and (max-width: 1023px) {
     .stat-card-wrap {
       flex: 1 1 calc(33.33% - 8px) !important;
       max-width: calc(33.33% - 8px) !important;
       min-width: 140px !important;
     }
   }
+
 
 
 
@@ -67,7 +77,13 @@ const RESPONSIVE_STYLES = `
     .modal-container { padding: 10px !important; }
     .modal-content { max-width: 95% !important; border-radius: 16px !important; }
     .table-to-hide { display: none !important; }
-    .cards-to-show { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .cards-to-show {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 10px !important;
+    }
+
+
     .mobile-card { 
       background: #fff !important; 
       border: 1px solid #e2e8f0 !important; 
@@ -118,11 +134,26 @@ function Badge({ status }) {
   };
   const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
   return (
-    <span style={{ background: s.bg, color: s.color, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99, letterSpacing: "0.04em" }}>
+    <span style={{
+      background: s.bg,
+      color: s.color,
+      fontSize: 10,
+      fontWeight: 800,
+      padding: "2px 8px",
+      borderRadius: 99,
+      letterSpacing: "0.04em",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4,
+      height: 20,
+      boxSizing: "border-box"
+    }}>
+      <span style={{ width: 5, height: 5, borderRadius: "50%", background: s.color, display: "inline-block" }} />
       {status}
     </span>
   );
 }
+
 
 const TH = ({ children, center }) => (
   <th style={{ padding: "12px 16px", textAlign: center ? "center" : "left", fontSize: 11, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", background: "#f8faff", whiteSpace: "nowrap", borderBottom: `1px solid ${C.border}` }}>{children}</th>
@@ -254,6 +285,8 @@ export default function AccountsView() {
 
   return (
     <div>
+
+
       <style>{RESPONSIVE_STYLES}</style>
       {/* Header */}
       <div className="mb-3">
@@ -271,21 +304,19 @@ export default function AccountsView() {
 
 
         {[
-          { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard },
-          { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2 },
-          { label: "Inactive", value: accounts.filter(a => a.status === "Inactive").length, color: C.gold, icon: PauseCircle },
-          { label: "Closed", value: accounts.filter(a => a.status === "Closed").length, color: C.red, icon: Ban },
-          { label: "New Requests", value: newReqs.length, color: C.accent, icon: UserPlus },
-          { label: "Pending", value: requests.length, color: C.purple, icon: Clock },
+          { label: "Total Accounts", value: accounts.length, color: C.accent, icon: CreditCard, border: "hover:border-blue-500", bgColor: "bg-blue-500/10", borderColor: "border-blue-200", },
+          { label: "Active", value: accounts.filter(a => a.status === "Active").length, color: C.green, icon: CheckCircle2, border: "hover:border-emerald-500", bgColor: "bg-emerald-500/10", borderColor: "border-emerald-200", },
+          { label: "Inactive", value: accounts.filter(a => a.status === "Inactive").length, color: C.gold, icon: PauseCircle, border: "hover:border-amber-500", bgColor: "bg-amber-500/10", borderColor: "border-amber-200", },
+          { label: "Closed", value: accounts.filter(a => a.status === "Closed").length, color: C.red, icon: Ban, border: "hover:border-red-500", bgColor: "bg-red-500/10", borderColor: "border-red-200", },
+          { label: "New Requests", value: newReqs.length, color: C.accent, icon: UserPlus, border: "hover:border-blue-500", bgColor: "bg-blue-500/10", borderColor: "border-blue-200", },
+          { label: "Pending", value: requests.length, color: C.purple, icon: Clock, border: "hover:border-violet-500", bgColor: "bg-violet-500/10", borderColor: "border-violet-200", },
         ].map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} className={`stat-card-wrap`} style={{
-              background: C.card,
+            <div key={i} className={`stat-card-wrap ${s.bgColor} border ${s.borderColor} ${s.border}`} style={{
               borderRadius: 18,
               padding: "14px 16px",
               boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
-              border: `1px solid #f1f5f9`,
               display: "flex",
               flexDirection: "column",
               gap: 8,
@@ -295,11 +326,13 @@ export default function AccountsView() {
 
 
 
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <p style={{ fontSize: 11, color: C.muted, margin: 0, fontWeight: 800, letterSpacing: "0.02em" }}>{s.label}</p>
 
                 <div style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: s.color }}>
-                  <Icon size={18} />
+                  <Icon size={22} />
+
                 </div>
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: 0, trackingTight: "-0.02em" }}>{s.value}</h3>
@@ -312,6 +345,10 @@ export default function AccountsView() {
 
       {/* Tabs and Search Row */}
       <div className="tab-search-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+
+
+
+
         <div className="tabs-wrap" style={{ display: "flex", gap: 6, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: 4, width: "fit-content" }}>
 
           {TABS.map(t => (
@@ -323,7 +360,9 @@ export default function AccountsView() {
         </div>
 
         {/* Unified Search Bar on the Right */}
-        <div className="search-box-wrap" style={{ position: "relative", width: "100%", maxWidth: 320 }}>
+        <div className="search-box-wrap" style={{ position: "relative", width: "100%", maxWidth: "320px", flexShrink: 0 }}>
+
+
 
           <Search size={14} style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
           <input
@@ -349,6 +388,8 @@ export default function AccountsView() {
                       <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                     ))}
                   </tr>
+
+
                 </thead>
 
                 <tbody>
@@ -393,20 +434,30 @@ export default function AccountsView() {
           </div>
           <div className="cards-to-show">
             {filtered.map(a => (
-              <div key={a.id} className="mobile-card">
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: C.accent }}>{a.id}</span>
+              <div key={a.id} className="mobile-card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: 20 }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.accent, letterSpacing: "0.05em", background: "rgba(59,130,246,0.1)", padding: "2px 8px", borderRadius: 5, height: 20, display: "flex", alignItems: "center", boxSizing: "border-box" }}>{a.id}</span>
                   <Badge status={a.status} />
                 </div>
-                <h4 style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 800 }}>{a.holder}</h4>
-                <p style={{ margin: "0 0 10px", fontSize: 11, color: C.muted, fontFamily: "monospace" }}>{a.account}</p>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 8 }}>
+
+                <div style={{ padding: "4px 0" }}>
+                  <h4 style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 800, color: C.text }}>{a.holder}</h4>
+                  <p style={{ margin: 0, fontSize: 11, color: C.muted, fontWeight: 600 }}>
+                    A/C: <span style={{ fontFamily: "monospace", color: C.text }}>{a.account}</span>
+                  </p>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${C.border}`, paddingTop: 10, marginTop: "auto" }}>
                   <span style={{ fontSize: 13, fontWeight: 800, color: C.green }}>{a.balance}</span>
-                  <button onClick={() => { setSelected(a); setModal("details"); }} style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "4px 8px", borderRadius: 6, fontSize: 10, fontWeight: 700 }}>View</button>
+                  <button onClick={() => { setSelected(a); setModal("details"); }}
+                    style={{ border: "none", background: "#eff6ff", color: C.accent, padding: "5px 10px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    View
+                  </button>
+
                 </div>
               </div>
             ))}
           </div>
+
 
         </>
       )}
@@ -436,6 +487,8 @@ export default function AccountsView() {
                         <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
                       ))}
                     </tr>
+
+
                   </thead>
 
                   <tbody>
@@ -479,6 +532,32 @@ export default function AccountsView() {
               </div>
             )}
           </div>
+
+          <div className="cards-to-show">
+            {filteredNar.map(a => (
+              <div key={a.id} className="mobile-card" style={{ padding: "14px", display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.accent, letterSpacing: "0.05em", background: "rgba(59,130,246,0.1)", padding: "2px 6px", borderRadius: 4 }}>{a.id}</span>
+                  <Badge status={a.kyc} />
+                </div>
+                <div style={{ padding: "4px 0" }}>
+                  <h4 style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 800, color: C.text }}>{a.name}</h4>
+                  <p style={{ margin: 0, fontSize: 11, color: C.muted, fontWeight: 600 }}>{a.type} • {a.applied}</p>
+                </div>
+                <div style={{ display: "flex", gap: 6, borderTop: `1px solid ${C.border}`, paddingTop: 10, marginTop: "auto" }}>
+                  <button onClick={() => { setSelectedNar(a); setModal("nar-details"); }}
+                    style={{ flex: 1, border: "none", background: "#eff6ff", color: C.accent, padding: "6px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    Review
+                  </button>
+                  <button onClick={() => handleNarApprove(a)}
+                    style={{ flex: 1, border: "none", background: "#dcfce7", color: "#15803d", padding: "6px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    Approve
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </>
       )}
 
