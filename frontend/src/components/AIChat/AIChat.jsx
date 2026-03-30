@@ -166,7 +166,7 @@ const AIChat = () => {
             </button>
 
             {/* Chat Panel - Mobile Responsive */}
-            <div className={`fixed bottom-20 right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] md:w-[450px] h-[calc(100vh-12rem)] md:h-[680px] bg-white rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-500 origin-bottom-right transform flex flex-col ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-10 pointer-events-none'}`}>
+            <div className={`fixed bottom-20 right-4 md:bottom-24 md:right-6 w-[calc(100vw-2rem)] md:w-[450px] h-[calc(100vh-12rem)] md:h-[680px] bg-transparent bg-white/10 backdrop-blur-sm rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-500 origin-bottom-right transform flex flex-col ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-10 pointer-events-none'}`}>
 
                 {/* Header Section */}
                 <div className={`${brandGradient} p-5 md:p-6 text-white shrink-0`}>
