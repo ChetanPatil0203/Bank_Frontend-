@@ -7,19 +7,20 @@ import {
   Landmark, GitBranch,
   UserPlus, Heart,
   ImagePlus, X,
-  FileText, PenLine, Clock, RefreshCw, Upload, Eye
+  FileText, PenLine, Clock, Upload, HelpCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { openAccount } from "../../utils/apiServices";
 
-/* ── SUCCESS POPUP ── */
+/* ════════════════════════════════════════════════════
+   SUCCESS POPUP
+   ════════════════════════════════════════════════════ */
 function SuccessPopup({ data }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
       background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 16,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
     }}>
       <div style={{
         background: "#fff", borderRadius: 20, overflow: "hidden",
@@ -68,14 +69,15 @@ function SuccessPopup({ data }) {
   );
 }
 
-/* ── PENDING REQUEST POPUP ── */
+/* ════════════════════════════════════════════════════
+   PENDING POPUP — manual close only, no auto-dismiss
+   ════════════════════════════════════════════════════ */
 function PendingPopup({ name, onClose }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
       background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 16,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
     }}>
       <div style={{
         background: "#fff", borderRadius: 24, overflow: "hidden",
@@ -83,12 +85,16 @@ function PendingPopup({ name, onClose }) {
         boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
         animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
       }}>
+        {/* Header */}
         <div style={{
           background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)",
-          padding: "36px 32px 28px", textAlign: "center", position: "relative", overflow: "hidden",
+          padding: "36px 32px 28px", textAlign: "center",
+          position: "relative", overflow: "hidden",
         }}>
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
           <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
+
+          {/* Animated clock icon */}
           <div style={{ display:"flex", justifyContent:"center", marginBottom: 16, position:"relative", zIndex:1 }}>
             <div style={{
               width: 72, height: 72, borderRadius: "50%",
@@ -101,7 +107,8 @@ function PendingPopup({ name, onClose }) {
                 style={{ filter: "drop-shadow(0 0 8px rgba(251,191,36,0.5))" }}/>
             </div>
           </div>
-          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6, position:"relative", zIndex:1 }}>
+
+          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.55)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6, position:"relative", zIndex:1 }}>
             Request Submitted
           </p>
           <h2 style={{ fontSize: 22, fontWeight: 700, color: "#fff", margin: 0, position:"relative", zIndex:1, lineHeight: 1.3 }}>
@@ -111,7 +118,11 @@ function PendingPopup({ name, onClose }) {
             Your account opening request has been sent to the admin for review.
           </p>
         </div>
+
+        {/* Body */}
         <div style={{ padding: "24px 28px 28px", background: "#f8faff" }}>
+
+          {/* Applicant card */}
           <div style={{
             background: "#fff", border: "1.5px solid #dbeafe", borderRadius: 16,
             padding: "16px 20px", marginBottom: 16,
@@ -131,54 +142,61 @@ function PendingPopup({ name, onClose }) {
             <div style={{
               marginLeft: "auto", background: "#fef9c3", border: "1px solid #fde047",
               borderRadius: 20, padding: "4px 12px",
-              fontSize: 11, fontWeight: 700, color: "#854d0e", letterSpacing: "0.05em",
+              fontSize: 11, fontWeight: 700, color: "#854d0e",
               display: "flex", alignItems: "center", gap: 5,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#f59e0b", display: "inline-block", animation: "blink 1.2s ease-in-out infinite" }}/>
               PENDING
             </div>
           </div>
+
+          {/* Progress steps */}
           <div style={{ marginBottom: 20 }}>
             {[
               { label: "Application Submitted", done: true },
               { label: "Admin Review", done: false, active: true },
               { label: "Account Activation", done: false },
-            ].map((step, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: i < 2 ? 8 : 0 }}>
+            ].map((s, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: i < 2 ? 10 : 0 }}>
                 <div style={{
                   width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
-                  background: step.done ? "#22c55e" : step.active ? "#2563eb" : "#e2e8f0",
+                  background: s.done ? "#22c55e" : s.active ? "#2563eb" : "#e2e8f0",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: step.active ? "0 0 0 4px rgba(37,99,235,0.15)" : "none",
-                  animation: step.active ? "pulseRing 2s ease-in-out infinite" : "none",
+                  boxShadow: s.active ? "0 0 0 4px rgba(37,99,235,0.15)" : "none",
+                  animation: s.active ? "pulseRing 2s ease-in-out infinite" : "none",
                 }}>
-                  {step.done
+                  {s.done
                     ? <CheckCircle size={14} color="#fff" strokeWidth={2.5}/>
-                    : step.active
+                    : s.active
                       ? <Clock size={13} color="#fff" strokeWidth={2.5}/>
                       : <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#94a3b8", display: "block" }}/>
                   }
                 </div>
                 <span style={{
-                  fontSize: 13, fontWeight: step.active ? 600 : 500,
-                  color: step.done ? "#16a34a" : step.active ? "#1d4ed8" : "#94a3b8",
+                  fontSize: 13, fontWeight: s.active ? 600 : 500,
+                  color: s.done ? "#16a34a" : s.active ? "#1d4ed8" : "#94a3b8",
                 }}>
-                  {step.label}
+                  {s.label}
                 </span>
               </div>
             ))}
           </div>
+
           <p style={{ fontSize: 12, color: "#64748b", textAlign: "center", marginBottom: 18, lineHeight: 1.6 }}>
             The admin will review your application shortly. You will be notified once your account is activated.
           </p>
-          <button onClick={onClose} style={{
-            width: "100%", padding: "12px 0",
-            background: "linear-gradient(135deg, #1e3a5f, #2563eb)",
-            color: "#fff", fontWeight: 700, fontSize: 14,
-            border: "none", borderRadius: 12, cursor: "pointer",
-            boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
-            transition: "opacity 0.2s",
-          }}
+
+          {/* ✅ Manual close only — no timer */}
+          <button
+            onClick={onClose}
+            style={{
+              width: "100%", padding: "13px 0",
+              background: "linear-gradient(135deg, #1e3a5f, #2563eb)",
+              color: "#fff", fontWeight: 700, fontSize: 14,
+              border: "none", borderRadius: 12, cursor: "pointer",
+              boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
+              transition: "opacity 0.2s",
+            }}
             onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
             onMouseLeave={e => e.currentTarget.style.opacity = "1"}
           >
@@ -186,16 +204,19 @@ function PendingPopup({ name, onClose }) {
           </button>
         </div>
       </div>
+
       <style>{`
-        @keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.25)} 50%{box-shadow:0 0 0 8px rgba(37,99,235,0)} }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes popIn    { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes pulseRing{ 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.25)} 50%{box-shadow:0 0 0 8px rgba(37,99,235,0)} }
+        @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0.3} }
       `}</style>
     </div>
   );
 }
 
-/* ── SIGNATURE MODAL ── */
+/* ════════════════════════════════════════════════════
+   SIGNATURE MODAL
+   ════════════════════════════════════════════════════ */
 function SignatureModal({ isOpen, onClose, onSave }) {
   const canvasRef = useRef(null);
   const [signatureName, setSignatureName] = useState("");
@@ -223,14 +244,11 @@ function SignatureModal({ isOpen, onClose, onSave }) {
   const handleSave = () => {
     if (!signatureName.trim() || !applied) return;
     onSave({ dataUrl: canvasRef.current.toDataURL("image/png"), name: signatureName });
-    setSignatureName("");
-    setApplied(false);
+    setSignatureName(""); setApplied(false);
   };
 
   const handleClose = () => {
-    setSignatureName("");
-    setApplied(false);
-    onClose();
+    setSignatureName(""); setApplied(false); onClose();
   };
 
   if (!isOpen) return null;
@@ -239,8 +257,7 @@ function SignatureModal({ isOpen, onClose, onSave }) {
     <div style={{
       position: "fixed", inset: 0, zIndex: 9998,
       background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 16,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
     }}>
       <div style={{
         background: "#fff", borderRadius: 20, overflow: "hidden",
@@ -248,83 +265,103 @@ function SignatureModal({ isOpen, onClose, onSave }) {
         boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
         animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
       }}>
+        {/* Header */}
         <div style={{
           background: "linear-gradient(135deg, #1e3a7b 0%, #2d5a9e 100%)",
-          padding: "28px 32px", textAlign: "center", position: "relative", overflow: "hidden",
+          padding: "28px 32px", position: "relative", overflow: "hidden",
         }}>
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
           <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", position:"relative", zIndex:1 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0 }}>
-              <PenLine size={18} style={{ display: "inline-block", marginRight: 8 }}/>
-              Add Signature
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0, display:"flex", alignItems:"center", gap: 8 }}>
+              <PenLine size={18}/> Add Signature
             </h2>
             <button onClick={handleClose} style={{
-              background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", cursor: "pointer",
-              padding: "6px 8px", borderRadius: 6, fontSize: 18, display: "flex", alignItems: "center"
+              background: "rgba(255,255,255,0.15)", border: "none", color: "#fff",
+              cursor: "pointer", width: 34, height: 34, borderRadius: 8,
+              display: "flex", alignItems: "center", justifyContent: "center"
             }}>
-              <X size={20}/>
+              <X size={18}/>
             </button>
           </div>
         </div>
+
+        {/* Body */}
         <div style={{ padding: "24px 28px" }}>
-          <p style={{ fontSize: 12, color: "#64748b", marginBottom: 16, marginTop: 0 }}>
+          <p style={{ fontSize: 13, color: "#64748b", marginBottom: 16, marginTop: 0 }}>
             Type your full name to create your signature
           </p>
+
+          {/* Name input */}
           <div style={{ position: "relative", marginBottom: 12 }}>
-            <User size={14} style={{ position: "absolute", left: 10, top: 10, color: "#94a3b8", pointerEvents: "none" }}/>
+            <User size={14} style={{ position: "absolute", left: 12, top: "50%", transform:"translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }}/>
             <input
               type="text"
               value={signatureName}
               onChange={handleNameChange}
               placeholder="Type your full name"
               style={{
-                width: "100%", paddingLeft: 36, paddingRight: 12, paddingTop: 10, paddingBottom: 10,
-                borderRadius: 8, border: "1.5px solid #e2e8f0", fontSize: 13,
-                outline: "none", boxSizing: "border-box",
+                width: "100%", paddingLeft: 36, paddingRight: 12, paddingTop: 11, paddingBottom: 11,
+                borderRadius: 10, border: "1.5px solid #e2e8f0", fontSize: 14,
+                outline: "none", boxSizing: "border-box", fontFamily: "inherit",
+                background: "#f8faff",
               }}
-              onFocus={(e) => e.target.style.borderColor = "#3b82f6"}
-              onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
+              onFocus={e => e.target.style.borderColor = "#3b82f6"}
+              onBlur={e => e.target.style.borderColor = "#e2e8f0"}
             />
           </div>
+
+          {/* Preview canvas */}
           <div style={{
-            position: "relative", backgroundColor: "#fff", border: "1.5px solid #e2e8f0",
-            borderRadius: 12, overflow: "hidden", marginBottom: 16, height: 80,
+            position: "relative", backgroundColor: "#fff",
+            border: "1.5px solid #e2e8f0", borderRadius: 12,
+            overflow: "hidden", marginBottom: 20, height: 90,
           }}>
-            <canvas ref={canvasRef} width={500} height={80} style={{ display:"block", width: "100%", height: "100%" }}/>
+            <canvas ref={canvasRef} width={500} height={90}
+              style={{ display:"block", width: "100%", height: "100%" }}/>
             {!applied && (
               <div style={{
-                position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
-                pointerEvents: "none", backgroundColor: "rgba(248,250,252,0.5)"
+                position: "absolute", inset: 0, display: "flex",
+                alignItems: "center", justifyContent: "center",
+                pointerEvents: "none", background: "rgba(248,250,252,0.7)",
               }}>
-                <p style={{ color: "#cbd5e1", fontSize: 12, margin: 0, userSelect: "none" }}>Preview appears here</p>
+                <p style={{ color: "#cbd5e1", fontSize: 13, margin: 0 }}>Preview appears here</p>
               </div>
             )}
+            {/* Dashed baseline */}
             <div style={{
-              position: "absolute", bottom: 16, left: 12, right: 12,
+              position: "absolute", bottom: 18, left: 14, right: 14,
               borderBottom: "1.5px dashed #e2e8f0", pointerEvents: "none"
             }}/>
           </div>
+
+          {/* Buttons */}
           <div style={{ display: "flex", gap: 10 }}>
-            <button type="button" onClick={() => renderTyped(signatureName)}
+            <button
+              type="button"
+              onClick={() => renderTyped(signatureName)}
               disabled={!signatureName.trim()}
               style={{
-                flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 600,
-                border: "1.5px solid #3b82f6", background: "#eff6ff", color: "#1e40af", cursor: "pointer",
-                transition: "all 0.2s", opacity: signatureName.trim() ? 1 : 0.4,
+                flex: 1, padding: "11px 0", borderRadius: 10, fontSize: 13, fontWeight: 600,
+                border: "1.5px solid #3b82f6", background: "#eff6ff", color: "#1e40af",
+                cursor: signatureName.trim() ? "pointer" : "not-allowed",
+                opacity: signatureName.trim() ? 1 : 0.45, transition: "all 0.2s",
               }}
             >
               Preview
             </button>
-            <button type="button" onClick={handleSave}
+            <button
+              type="button"
+              onClick={handleSave}
               disabled={!applied}
               style={{
-                flex: 1, padding: "10px 0", borderRadius: 8, fontSize: 13, fontWeight: 600,
-                border: "none", background: "#1e3a7b", color: "#fff", cursor: "pointer",
-                transition: "all 0.2s", opacity: applied ? 1 : 0.4,
+                flex: 1, padding: "11px 0", borderRadius: 10, fontSize: 13, fontWeight: 700,
+                border: "none", background: applied ? "#1e3a7b" : "#94a3b8",
+                color: "#fff", cursor: applied ? "pointer" : "not-allowed",
+                transition: "all 0.2s", display:"flex", alignItems:"center", justifyContent:"center", gap: 6,
               }}
             >
-              ✓ Save Signature
+              <CheckCircle size={14}/> Save Signature
             </button>
           </div>
         </div>
@@ -334,20 +371,17 @@ function SignatureModal({ isOpen, onClose, onSave }) {
   );
 }
 
-/* ── DOCUMENT UPLOAD CARD ── */
+/* ════════════════════════════════════════════════════
+   DOCUMENT UPLOAD CARD
+   ════════════════════════════════════════════════════ */
 function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, preview, onUpload, onRemove, inputId }) {
   const isImage = file && file.type?.startsWith("image/");
-
   return (
     <div style={{
-      background: "#fff",
-      border: `1.5px solid ${file ? accentColor + "55" : "#e2e8f0"}`,
-      borderRadius: 14,
-      overflow: "hidden",
-      transition: "all 0.25s ease",
+      background: "#fff", border: `1.5px solid ${file ? accentColor + "55" : "#e2e8f0"}`,
+      borderRadius: 14, overflow: "hidden", transition: "all 0.25s ease",
       boxShadow: file ? `0 4px 16px ${accentColor}18` : "none",
     }}>
-      {/* Card Header */}
       <div style={{
         padding: "10px 14px",
         background: file ? `linear-gradient(135deg, ${accentColor}12, ${accentColor}06)` : "#f8faff",
@@ -368,39 +402,22 @@ function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, pr
         </div>
         {file && (
           <div style={{
-            background: "#dcfce7", border: "1px solid #86efac",
-            borderRadius: 20, padding: "2px 8px",
-            fontSize: 9, fontWeight: 700, color: "#15803d", letterSpacing: "0.05em",
-          }}>
-            ✓ UPLOADED
-          </div>
+            background: "#dcfce7", border: "1px solid #86efac", borderRadius: 20,
+            padding: "2px 8px", fontSize: 9, fontWeight: 700, color: "#15803d",
+          }}>✓ UPLOADED</div>
         )}
       </div>
-
-      {/* Upload area */}
       <div style={{ padding: "10px 14px" }}>
         {!file ? (
           <label htmlFor={inputId} style={{
             display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            border: "2px dashed #e2e8f0", borderRadius: 10,
-            padding: "20px 12px", cursor: "pointer",
-            transition: "all 0.2s",
-            gap: 6,
+            border: "2px dashed #e2e8f0", borderRadius: 10, padding: "20px 12px",
+            cursor: "pointer", transition: "all 0.2s", gap: 6,
           }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = accentColor;
-              e.currentTarget.style.background = accentColor + "08";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = "#e2e8f0";
-              e.currentTarget.style.background = "transparent";
-            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = accentColor; e.currentTarget.style.background = accentColor + "08"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = "#e2e8f0"; e.currentTarget.style.background = "transparent"; }}
           >
-            <div style={{
-              width: 36, height: 36, borderRadius: 10,
-              background: accentColor + "15",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: accentColor + "15", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <Upload size={16} color={accentColor}/>
             </div>
             <span style={{ fontSize: 11, fontWeight: 600, color: "#475569" }}>Click to upload</span>
@@ -409,42 +426,23 @@ function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, pr
           </label>
         ) : (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Preview */}
             {isImage && preview ? (
-              <div style={{
-                width: 52, height: 52, borderRadius: 8, flexShrink: 0,
-                overflow: "hidden", border: `2px solid ${accentColor}40`,
-              }}>
+              <div style={{ width: 52, height: 52, borderRadius: 8, flexShrink: 0, overflow: "hidden", border: `2px solid ${accentColor}40` }}>
                 <img src={preview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
               </div>
             ) : (
-              <div style={{
-                width: 52, height: 52, borderRadius: 8, flexShrink: 0,
-                background: accentColor + "15",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                border: `2px solid ${accentColor}30`,
-              }}>
+              <div style={{ width: 52, height: 52, borderRadius: 8, flexShrink: 0, background: accentColor + "15", display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${accentColor}30` }}>
                 <FileText size={20} color={accentColor}/>
               </div>
             )}
-
-            {/* File info */}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: "#1e293b", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {file.name}
-              </p>
-              <p style={{ fontSize: 10, color: "#94a3b8", margin: "2px 0 0" }}>
-                {(file.size / 1024).toFixed(1)} KB
-              </p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: "#1e293b", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{file.name}</p>
+              <p style={{ fontSize: 10, color: "#94a3b8", margin: "2px 0 0" }}>{(file.size / 1024).toFixed(1)} KB</p>
             </div>
-
-            {/* Remove */}
             <button type="button" onClick={onRemove} style={{
-              width: 28, height: 28, borderRadius: 8,
-              background: "#fef2f2", border: "1px solid #fecaca",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: "pointer", flexShrink: 0,
-              transition: "all 0.2s",
+              width: 28, height: 28, borderRadius: 8, background: "#fef2f2",
+              border: "1px solid #fecaca", display: "flex", alignItems: "center",
+              justifyContent: "center", cursor: "pointer", flexShrink: 0,
             }}
               onMouseEnter={e => e.currentTarget.style.background = "#fee2e2"}
               onMouseLeave={e => e.currentTarget.style.background = "#fef2f2"}
@@ -458,7 +456,9 @@ function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, pr
   );
 }
 
-/* ── MAIN PAGE ── */
+/* ════════════════════════════════════════════════════
+   MAIN PAGE
+   ════════════════════════════════════════════════════ */
 export default function OpenAccountPage() {
   const navigate = useNavigate();
 
@@ -466,24 +466,23 @@ export default function OpenAccountPage() {
     bank_holder_name: "", father_name: "", dob: "", gender: "",
     mobile: "", email: "", address: "", aadhaar: "", pan: "",
     account_type: "", branch: "", nominee_name: "", nominee_relation: "",
-    agree: false,
+    reason: "", agree: false,
   });
 
-  const [successData, setSuccessData]     = useState(null);
-  const [showPending, setShowPending]     = useState(false);
+  const [successData, setSuccessData]   = useState(null);
+  const [showPending, setShowPending]   = useState(false);
 
-  // ── Document uploads ──
-  const [photo, setPhoto]                     = useState(null);
-  const [photoPreview, setPhotoPreview]       = useState(null);
-  const [aadhaarDoc, setAadhaarDoc]           = useState(null);
-  const [aadhaarPreview, setAadhaarPreview]   = useState(null);
-  const [panDoc, setPanDoc]                   = useState(null);
-  const [panPreview, setPanPreview]           = useState(null);
+  const [photo, setPhoto]               = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [aadhaarDoc, setAadhaarDoc]     = useState(null);
+  const [aadhaarPreview, setAadhaarPreview] = useState(null);
+  const [panDoc, setPanDoc]             = useState(null);
+  const [panPreview, setPanPreview]     = useState(null);
 
-  const [signature, setSignature]         = useState(null);
+  const [signature, setSignature]                   = useState(null);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
-  const [loading, setLoading]             = useState(false);
-  const [alert, setAlert]                 = useState({ show: false, type: "", msg: "" });
+  const [loading, setLoading]                       = useState(false);
+  const [alert, setAlert]                           = useState({ show: false, type: "", msg: "" });
 
   useEffect(() => {
     try {
@@ -504,36 +503,21 @@ export default function OpenAccountPage() {
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleAadhaar = (e) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 12);
-    setFormData({ ...formData, aadhaar: value });
-  };
+  const handleAadhaar = (e) => setFormData({ ...formData, aadhaar: e.target.value.replace(/\D/g, "").slice(0, 12) });
+  const handlePan     = (e) => setFormData({ ...formData, pan: e.target.value.toUpperCase().slice(0, 10) });
 
-  const handlePan = (e) => {
-    const value = e.target.value.toUpperCase().slice(0, 10);
-    setFormData({ ...formData, pan: value });
-  };
-
-  // Generic file handler factory
   const makeFileHandler = (setFile, setPreview) => (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     setFile(file);
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (ev) => setPreview(ev.target.result);
       reader.readAsDataURL(file);
-    } else {
-      setPreview(null);
-    }
-    // Reset input value so same file can be re-uploaded
+    } else { setPreview(null); }
     e.target.value = "";
   };
 
-  const makeRemover = (setFile, setPreview) => () => {
-    setFile(null);
-    setPreview(null);
-  };
+  const makeRemover = (setFile, setPreview) => () => { setFile(null); setPreview(null); };
 
   const showAlertMsg = (type, msg) => {
     setAlert({ show: true, type, msg });
@@ -555,27 +539,16 @@ export default function OpenAccountPage() {
     if (!aadhaarDoc)                    { showAlertMsg("error", "Please upload your Aadhaar Card document"); return; }
     if (!panDoc)                        { showAlertMsg("error", "Please upload your PAN Card document"); return; }
     if (!signature)                     { showAlertMsg("error", "Please save your signature before submitting"); return; }
+    if (!formData.reason.trim())        { showAlertMsg("error", "Please state the purpose of opening this account"); return; }
 
-    setLoading(true);
-    setAlert({ show: false });
+    setLoading(true); setAlert({ show: false });
 
     const res = await openAccount({
-      bank_holder_name: formData.bank_holder_name,
-      father_name:      formData.father_name,
-      dob:              formData.dob,
-      gender:           formData.gender,
-      mobile:           formData.mobile,
-      email:            formData.email,
-      address:          formData.address,
-      aadhaar:          formData.aadhaar,
-      pan:              formData.pan,
-      account_type:     formData.account_type,
-      branch:           formData.branch,
-      nominee_name:     formData.nominee_name,
-      nominee_relation: formData.nominee_relation,
-      signature_name:   signature.name,
+      ...formData,
+      signature_name: signature.name,
+      photo, aadhaarDoc, panDoc,
     });
-     
+
     setLoading(false);
 
     if (res.ok && res.data.success) {
@@ -583,6 +556,7 @@ export default function OpenAccountPage() {
       setSuccessData(res.data.data);
       setTimeout(() => navigate("/dashboard"), 3500);
     } else {
+      // ✅ Show pending popup — NO auto-close, manual only
       setShowPending(true);
     }
   };
@@ -590,6 +564,8 @@ export default function OpenAccountPage() {
   return (
     <>
       {successData && <SuccessPopup data={successData} />}
+
+      {/* ✅ Pending popup — closes only on button click */}
       {showPending && (
         <PendingPopup
           name={formData.bank_holder_name || "Applicant"}
@@ -639,8 +615,7 @@ export default function OpenAccountPage() {
               </Field>
               <Field label="Date of Birth">
                 <IconInput icon={<Calendar size={15}/>}>
-                  <input type="date" name="dob" value={formData.dob}
-                    onChange={handleChange} required/>
+                  <input type="date" name="dob" value={formData.dob} onChange={handleChange} required/>
                 </IconInput>
               </Field>
               <Field label="Gender">
@@ -713,6 +688,13 @@ export default function OpenAccountPage() {
                     onChange={handleChange} required placeholder="e.g. Nashik Main Branch"/>
                 </IconInput>
               </Field>
+              <div className="md:col-span-2 flex flex-col gap-1">
+                <label className="text-xs font-medium text-gray-700">Purpose of Opening Account <span className="text-red-500">*</span></label>
+                <IconInput icon={<HelpCircle size={15}/>}>
+                  <input type="text" name="reason" value={formData.reason}
+                    onChange={handleChange} required placeholder="e.g. Salary, Savings, Business transitions"/>
+                </IconInput>
+              </div>
             </Section>
 
             {/* Nominee Details */}
@@ -731,7 +713,7 @@ export default function OpenAccountPage() {
               </Field>
             </Section>
 
-            {/* ── Document Upload Section ── */}
+            {/* Document Upload */}
             <div className="rounded-lg p-3 bg-gray-50">
               <h3 className="text-xs font-semibold text-blue-900 mb-3 flex items-center gap-2">
                 <FileText size={14} className="text-blue-700"/>
@@ -743,9 +725,9 @@ export default function OpenAccountPage() {
               <div className="flex items-center gap-2 mb-3 bg-white rounded-lg px-3 py-2 border border-gray-100">
                 <div className="flex items-center gap-1.5 flex-1">
                   {[
-                    { label: "Photo", done: !!photo },
+                    { label: "Photo",   done: !!photo },
                     { label: "Aadhaar", done: !!aadhaarDoc },
-                    { label: "PAN", done: !!panDoc },
+                    { label: "PAN",     done: !!panDoc },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-1">
                       <div style={{
@@ -756,67 +738,29 @@ export default function OpenAccountPage() {
                       }}>
                         {item.done
                           ? <CheckCircle size={11} color="#fff" strokeWidth={2.5}/>
-                          : <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#94a3b8", display: "block" }}/>
+                          : <span style={{ width:6, height:6, borderRadius:"50%", background:"#94a3b8", display:"block" }}/>
                         }
                       </div>
-                      <span style={{ fontSize: 10, fontWeight: item.done ? 600 : 400, color: item.done ? "#15803d" : "#94a3b8" }}>
+                      <span style={{ fontSize:10, fontWeight: item.done ? 600 : 400, color: item.done ? "#15803d" : "#94a3b8" }}>
                         {item.label}
                       </span>
-                      {i < 2 && <span style={{ color: "#e2e8f0", fontSize: 10, marginLeft: 2 }}>—</span>}
+                      {i < 2 && <span style={{ color:"#e2e8f0", fontSize:10, marginLeft:2 }}>—</span>}
                     </div>
                   ))}
                 </div>
-                <span style={{ fontSize: 10, fontWeight: 600, color: "#64748b" }}>
+                <span style={{ fontSize:10, fontWeight:600, color:"#64748b" }}>
                   {[photo, aadhaarDoc, panDoc].filter(Boolean).length}/3 uploaded
                 </span>
               </div>
 
-              {/* Three upload cards */}
               <div className="grid md:grid-cols-3 gap-3">
-
-                {/* Passport Photo */}
-                <DocumentUploadCard
-                  label="Passport Photo"
-                  sublabel="Clear face photo"
-                  icon={ImagePlus}
-                  accentColor="#6366f1"
-                  file={photo}
-                  preview={photoPreview}
-                  onUpload={makeFileHandler(setPhoto, setPhotoPreview)}
-                  onRemove={makeRemover(setPhoto, setPhotoPreview)}
-                  inputId="upload-photo"
-                />
-
-                {/* Aadhaar Card */}
-                <DocumentUploadCard
-                  label="Aadhaar Card"
-                  sublabel="Front side of Aadhaar"
-                  icon={ShieldCheck}
-                  accentColor="#0ea5e9"
-                  file={aadhaarDoc}
-                  preview={aadhaarPreview}
-                  onUpload={makeFileHandler(setAadhaarDoc, setAadhaarPreview)}
-                  onRemove={makeRemover(setAadhaarDoc, setAadhaarPreview)}
-                  inputId="upload-aadhaar"
-                />
-
-                {/* PAN Card */}
-                <DocumentUploadCard
-                  label="PAN Card"
-                  sublabel="Clear PAN card image"
-                  icon={CreditCard}
-                  accentColor="#f59e0b"
-                  file={panDoc}
-                  preview={panPreview}
-                  onUpload={makeFileHandler(setPanDoc, setPanPreview)}
-                  onRemove={makeRemover(setPanDoc, setPanPreview)}
-                  inputId="upload-pan"
-                />
-
+                <DocumentUploadCard label="Passport Photo"  sublabel="Clear face photo"     icon={ImagePlus}  accentColor="#6366f1" file={photo}      preview={photoPreview}   onUpload={makeFileHandler(setPhoto, setPhotoPreview)}         onRemove={makeRemover(setPhoto, setPhotoPreview)}       inputId="upload-photo"/>
+                <DocumentUploadCard label="Aadhaar Card"    sublabel="Front side of Aadhaar" icon={ShieldCheck} accentColor="#0ea5e9" file={aadhaarDoc} preview={aadhaarPreview} onUpload={makeFileHandler(setAadhaarDoc, setAadhaarPreview)} onRemove={makeRemover(setAadhaarDoc, setAadhaarPreview)} inputId="upload-aadhaar"/>
+                <DocumentUploadCard label="PAN Card"        sublabel="Clear PAN card image"  icon={CreditCard}  accentColor="#f59e0b" file={panDoc}     preview={panPreview}     onUpload={makeFileHandler(setPanDoc, setPanPreview)}         onRemove={makeRemover(setPanDoc, setPanPreview)}         inputId="upload-pan"/>
               </div>
             </div>
 
-            {/* Terms */}
+            {/* Terms checkbox */}
             <div className="flex gap-1.5 items-start">
               <input type="checkbox" name="agree" onChange={handleChange} className="mt-0.5" required/>
               <p className="text-[11px] text-gray-600">
@@ -825,56 +769,110 @@ export default function OpenAccountPage() {
               </p>
             </div>
 
-            {/* Submit + Signature */}
-            <div className="flex flex-col sm:flex-row gap-3 items-end">
+            {/* ══════════════════════════════════════════════
+                SUBMIT ROW — Signature LEFT · Button RIGHT
+                ══════════════════════════════════════════════ */}
+            <div style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 12,
+              flexWrap: "wrap",
+            }}>
 
-              <button type="submit" disabled={loading}
-                className="w-full md:w-40
-                  bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_60%,#0f1f4d_100%)]
-                  hover:bg-[#5b4ec2]
-                  text-white font-semibold rounded-xl py-3.5
-                  flex items-center justify-center gap-2
-                  transition-all transform active:scale-[0.98] shadow-lg">
-                {loading
-                  ? <><Loader size={16} className="animate-spin"/> Opening...</>
-                  : "Open Account"}
-              </button>
-
-              {/* Signature Field */}
-              <div onClick={() => setShowSignatureModal(true)} className="w-full sm:w-72 cursor-pointer">
-                <div className={`h-12 rounded-lg border-2 px-4 flex items-center transition-all shadow-sm
-                  ${signature
-                    ? "border-green-400 bg-gradient-to-r from-green-50 to-emerald-50"
-                    : "border-blue-300 bg-blue-50 hover:border-blue-500 hover:shadow-md"}
-                `}>
-                  {signature ? (
-                    <div className="flex items-center gap-2 w-full">
-                      <div className="w-7 h-7 rounded-full bg-green-300 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle size={16} className="text-green-700"/>
-                      </div>
-                      <span className="text-sm font-semibold text-green-800 truncate">
-                        {signature.name}
-                      </span>
+              {/* ── LEFT: Add Signature field ── */}
+              <div
+                onClick={() => setShowSignatureModal(true)}
+                style={{
+                  flex: "1 1 200px",
+                  height: 48,
+                  borderRadius: 12,
+                  border: `2px solid ${signature ? "#4ade80" : "#93c5fd"}`,
+                  background: signature
+                    ? "linear-gradient(135deg, #f0fdf4, #dcfce7)"
+                    : "linear-gradient(135deg, #eff6ff, #dbeafe)",
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "0 16px",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                  boxShadow: signature ? "0 2px 8px rgba(74,222,128,0.2)" : "0 2px 8px rgba(147,197,253,0.2)",
+                }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(37,99,235,0.2)"}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = signature ? "0 2px 8px rgba(74,222,128,0.2)" : "0 2px 8px rgba(147,197,253,0.2)"}
+              >
+                {signature ? (
+                  <>
+                    <div style={{
+                      width: 28, height: 28, borderRadius: "50%",
+                      background: "#bbf7d0",
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                    }}>
+                      <CheckCircle size={16} color="#15803d"/>
                     </div>
-                  ) : (
-                    <div className="flex items-center gap-2 text-blue-700">
-                      <PenLine size={16}/>
-                      <span className="text-sm font-medium">Add Signature</span>
-                    </div>
-                  )}
-                </div>
+                    <span style={{
+                      fontSize: 14, fontWeight: 700, color: "#15803d",
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                      fontFamily: "Georgia, serif", fontStyle: "italic",
+                    }}>
+                      {signature.name}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <PenLine size={18} color="#2563eb"/>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: "#2563eb" }}>
+                      Add Signature
+                    </span>
+                  </>
+                )}
               </div>
 
+              {/* ── RIGHT: Open Account button ── */}
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  flexShrink: 0,
+                  padding: "0 32px",
+                  height: 48,
+                  borderRadius: 12,
+                  border: "none",
+                  background: loading
+                    ? "#94a3b8"
+                    : "linear-gradient(180deg, #1e3a7b 0%, #152d68 60%, #0f1f4d 100%)",
+                  color: "#fff",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: loading ? "not-allowed" : "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: loading ? "none" : "0 4px 16px rgba(15,31,75,0.35)",
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.opacity = "0.9"; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+              >
+                {loading
+                  ? <><Loader size={16} style={{ animation: "spin 1s linear infinite" }}/> Opening...</>
+                  : "Open Account"
+                }
+              </button>
+
             </div>
+            {/* ── end submit row ── */}
 
           </form>
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </>
   );
 }
 
-/* ── Reusable Components ── */
+/* ── Reusable layout components ── */
 
 function Section({ title, children }) {
   return (
@@ -885,14 +883,13 @@ function Section({ title, children }) {
   );
 }
 
-function Field({ label, hint, children }) {
+function Field({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-gray-700">
         {label} <span className="text-red-500">*</span>
       </label>
       {children}
-      {hint && <p className="text-[10px] text-gray-400">{hint}</p>}
     </div>
   );
 }
@@ -901,8 +898,15 @@ function IconInput({ icon, children }) {
   return (
     <div className="relative flex items-center">
       <span className="absolute left-2.5 text-gray-400 pointer-events-none text-sm">{icon}</span>
-      <div className="w-full [&>input]:rounded-lg [&>input]:pl-7 [&>input]:pr-2.5 [&>input]:py-1.5 [&>input]:bg-white [&>input]:border [&>input]:w-full [&>input]:focus:ring-2 [&>input]:focus:ring-blue-500 [&>input]:outline-none [&>input]:text-xs
-                      [&>select]:rounded-lg [&>select]:pl-7 [&>select]:pr-2.5 [&>select]:py-1.5 [&>select]:bg-white [&>select]:border [&>select]:w-full [&>select]:focus:ring-2 [&>select]:focus:ring-blue-500 [&>select]:outline-none [&>select]:text-xs [&>select]:appearance-none">
+      <div className="w-full
+        [&>input]:rounded-lg [&>input]:pl-7 [&>input]:pr-2.5 [&>input]:py-1.5
+        [&>input]:bg-white [&>input]:border [&>input]:w-full
+        [&>input]:focus:ring-2 [&>input]:focus:ring-blue-500
+        [&>input]:outline-none [&>input]:text-xs
+        [&>select]:rounded-lg [&>select]:pl-7 [&>select]:pr-2.5 [&>select]:py-1.5
+        [&>select]:bg-white [&>select]:border [&>select]:w-full
+        [&>select]:focus:ring-2 [&>select]:focus:ring-blue-500
+        [&>select]:outline-none [&>select]:text-xs [&>select]:appearance-none">
         {children}
       </div>
     </div>

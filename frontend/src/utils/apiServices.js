@@ -22,10 +22,7 @@ async function request(endpoint, method = "GET", body = null, auth = false) {
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 export const registerUser   = (body) => request("/auth/register",  "POST", body);
-
-// Login saathi api (email aani password separate parametrs madhe pass hotat)
 export const loginUser      = (email, password) => request("/auth/login", "POST", { email, password });
-
 export const logoutUser     = ()     => request("/auth/logout",    "POST", null, true);
 
 // ─── USER ─────────────────────────────────────────────────────────────────────
@@ -36,7 +33,40 @@ export const verifyOtp      = (body) => request("/auth/verify-otp","POST", body)
 export const resetPassword  = (body) => request("/auth/reset-password","POST", body);
 
 // ─── ACCOUNT ──────────────────────────────────────────────────────────────────
-export const openAccount       = (body) => request("/users/open-account",   "POST", body, true);
+export const openAccount = async (data) => {
+  const formData = new FormData();
+  const token = localStorage.getItem("payzen_token");
+  
+  console.log("--- Frontend Submission Start ---");
+  Object.keys(data).forEach(key => {
+    if (data[key] !== null && data[key] !== undefined) {
+      formData.append(key, data[key]);
+      console.log(`Field: ${key}, Value:`, data[key]);
+    }
+  });
+
+  // Verify FormData contents
+  console.log("FormData Entries:", Array.from(formData.entries()));
+
+  const headers = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/accounts/open-request`, {
+      method: "POST",
+      headers: headers,
+      body: formData,
+    });
+    const result = await response.json();
+    console.log("Backend Response:", result);
+    return { ok: response.ok, data: result };
+  } catch (error) {
+    console.error("Upload error:", error);
+    return { ok: false, data: { message: error.message } };
+  }
+};
+
+
 export const getAccountStatus  = ()     => request("/users/account-status", "GET",  null, true);
 
 // ─── ADMIN — ACCOUNT REQUESTS ─────────────────────────────────────────────────
@@ -57,5 +87,42 @@ export const adminToggleAccountStatus = (accountId, status) =>
   request(`/admin/bank-accounts/${accountId}/status`, "PATCH", { status }, false);
 
 
-export const OpenAccountPage = (body) =>
-  request("/account/open", "POST", body, true);
+// ─── KYC — USER FLOW ─────────────────────────────────────────────────────────
+export const kycSendOtp = (email) =>
+  request("/kyc/send-otp", "POST", { email });
+
+export const kycVerifyOtp = (email, otp) =>
+  request("/kyc/verify-otp", "POST", { email, otp });
+
+export const kycSubmit = async (data) => {
+  const formData = new FormData();
+  const token = localStorage.getItem("payzen_token");
+
+  Object.keys(data).forEach((key) => {
+    if (data[key] !== null && data[key] !== undefined) {
+      formData.append(key, data[key]);
+    }
+  });
+
+  const headers = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/kyc/submit`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    const result = await response.json();
+    return { ok: response.ok, data: result };
+  } catch (error) {
+    return { ok: false, data: { message: error.message } };
+  }
+};
+
+// ─── KYC — ADMIN FLOW ────────────────────────────────────────────────────────
+export const adminGetAllKycs = () =>
+  request("/kyc/all", "GET", null, false);
+
+export const adminUpdateKycStatus = (customId, status, rejectReason = "") =>
+  request(`/kyc/${customId}/status`, "PUT", { status, rejectReason }, false);
