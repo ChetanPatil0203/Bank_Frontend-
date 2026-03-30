@@ -104,13 +104,65 @@ const AIChat = () => {
                 onChange={(e) => console.log(e.target.files[0])}
             />
 
-            {/* Floating Toggle Button - Always Chat Icon */}
+            {/* Floating Toggle Button - Transparent with Image Colors */}
             <button
-                className={`${brandGradient} w-14 h-14 md:w-16 md:h-16 rounded-2xl text-white shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none p-4`}
+                className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[9999] bg-transparent border border-white/10 backdrop-blur-md rounded-xl shadow-2xl flex items-center justify-center gap-3 transition-all duration-300 bg-white/10 p-2 px-2 md:px-2"
                 onClick={handleToggle}
                 aria-label="Toggle AI Assistant"
             >
-                <MessageSquare size={window.innerWidth < 768 ? 20 : 25} strokeWidth={2.5} />
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-[32px] h-[32px] md:w-[36px] md:h-[36px] shrink-0 transition-transform duration-300 group-hover:scale-110"
+                >
+                    <defs>
+                        {/* Deep Ruby Red - Top */}
+                        <radialGradient id="gemini_dark_red" cx="12" cy="8" r="10" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stopColor="#D93025" />
+                            <stop offset="100%" stopColor="#D93025" stopOpacity="0" />
+                        </radialGradient>
+
+                        {/* Deep Cobalt Blue - Right */}
+                        <radialGradient id="gemini_dark_blue" cx="16" cy="12" r="10" gradientUnits="userSpaceOnUse">
+                            <stop offset="5%" stopColor="#1967D2" />
+                            <stop offset="100%" stopColor="#1967D2" stopOpacity="0" />
+                        </radialGradient>
+
+                        {/* Deep Vivid Amber - Left */}
+                        <radialGradient id="gemini_dark_yellow" cx="8" cy="12" r="10" gradientUnits="userSpaceOnUse">
+                            <stop offset="5%" stopColor="#F9AB00" />
+                            <stop offset="100%" stopColor="#F9AB00" stopOpacity="0" />
+                        </radialGradient>
+
+                        {/* Deep Forest Green - Bottom */}
+                        <radialGradient id="gemini_dark_green" cx="12" cy="16" r="10" gradientUnits="userSpaceOnUse">
+                            <stop offset="5%" stopColor="#188038" />
+                            <stop offset="100%" stopColor="#188038" stopOpacity="0" />
+                        </radialGradient>
+                    </defs>
+
+                    {/* Shadow base for depth */}
+                    <path
+                        d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z"
+                        fill="black"
+                        fillOpacity="0.1"
+                    />
+
+                    {/* The Star Layers with Darker, Richer Colors */}
+                    <path d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z" fill="url(#gemini_dark_yellow)" />
+                    <path d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z" fill="url(#gemini_dark_red)" />
+                    <path d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z" fill="url(#gemini_dark_blue)" />
+                    <path d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z" fill="url(#gemini_dark_green)" />
+
+                    {/* High-Contrast center point */}
+                    <path
+                        d="M12 0C12 9 15 12 24 12C15 12 12 15 12 24C12 15 9 12 0 12C9 12 12 9 12 0Z"
+                        fill="white"
+                        fillOpacity="0.15"
+                    />
+                </svg>
+                <span className="font-semibold text-white tracking-tight">AI Mode</span>
             </button>
 
             {/* Chat Panel - Mobile Responsive */}
