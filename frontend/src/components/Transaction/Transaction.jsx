@@ -3,6 +3,8 @@ import {
   Wallet, Search, Calendar, ArrowDownCircle, ArrowUpCircle,
   TrendingUp, ChevronRight
 } from "lucide-react";
+// apiServices मधून तुमचं नवीन फंक्शन इम्पोर्ट करा
+import { getMyTransactions } from "../../utils/apiServices";
 
 /* ── Keyframes ── */
 const STYLES = `
@@ -50,34 +52,50 @@ const STYLES = `
 `;
 
 export default function TransactionHistory() {
-  const [search, setSearch]       = useState("");
+  const [search, setSearch]         = useState("");
   const [dateFilter, setDateFilter] = useState("");
+  
+  // बॅकएंड डेटासाठी नवीन स्टेट्स
+  const [transactions, setTransactions] = useState([]);
+  const [balance, setBalance]           = useState(0);
+  const [loading, setLoading]           = useState(true);
 
   useEffect(() => {
     const el = document.createElement("style");
     el.textContent = STYLES;
     document.head.appendChild(el);
+    
+    // डेटा खेचणे
+    fetchData();
+
     return () => document.head.removeChild(el);
   }, []);
 
-  const currentBalance = "₹45,800";
-
-  const transactions = [
-    { id:1, type:"Deposit",  amount:"₹10,000", date:"2026-02-05", time:"10:45 AM", status:"Success", user:"Chetan Patil" },
-    { id:2, type:"Withdraw", amount:"₹2,500",  date:"2026-02-04", time:"03:20 PM", status:"Success", user:"Chetan Patil" },
-    { id:3, type:"Deposit",  amount:"₹5,000",  date:"2026-02-02", time:"11:10 AM", status:"Success", user:"Rahul Sharma" },
-  ];
+  const fetchData = async () => {
+    try {
+      const res = await getMyTransactions();
+      if (res.success) {
+        setTransactions(res.data.transactions || []);
+        setBalance(res.data.balance || 0);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredTransactions = transactions.filter((txn) => {
+    const typeLabel = txn.type === "Deposit" ? "Deposit" : "Withdraw";
     const matchesSearch =
-      txn.type.toLowerCase().includes(search.toLowerCase()) ||
-      txn.user.toLowerCase().includes(search.toLowerCase());
+      typeLabel.toLowerCase().includes(search.toLowerCase()) ||
+      (txn.note && txn.note.toLowerCase().includes(search.toLowerCase()));
     const matchesDate = dateFilter === "" || txn.date === dateFilter;
     return matchesSearch && matchesDate;
   });
 
-  const totalDeposit  = transactions.filter(t=>t.type==="Deposit").length;
-  const totalWithdraw = transactions.filter(t=>t.type==="Withdraw").length;
+  const totalDeposit  = transactions.filter(t => t.type === "Deposit").length;
+  const totalWithdraw = transactions.filter(t => t.type === "Withdraw").length;
 
   return (
     <div className="min-h-screen py-3 px-3 bg-white"
@@ -99,33 +117,20 @@ export default function TransactionHistory() {
 
         {/* ── BALANCE CARD ── */}
         <div className="txn-card-in mb-4">
-          <div className="balance-card-bg rounded-[16px] p-[1.5px]"
-               style={{ boxShadow:"" }}>
+          <div className="balance-card-bg rounded-[16px] p-[1.5px]">
             <div className="relative rounded-[15px] overflow-hidden px-5 py-5">
-
-              {/* texture */}
               <div className="bal-glow-tr absolute -top-16 -right-16 w-72 h-72 rounded-full pointer-events-none" />
               <div className="bal-glow-bl absolute -bottom-10 left-[20%] w-48 h-48 rounded-full pointer-events-none" />
-              <div className="absolute inset-0 overflow-hidden rounded-[15px] pointer-events-none">
-                <div className="balance-shimmer balance-shimmer-bar absolute top-0 left-0 w-[40%] h-full" />
-              </div>
-
+              
               <div className="relative flex justify-between items-center flex-wrap gap-4">
-
-                {/* Left: balance */}
                 <div>
                   <p className="text-[10px] text-white/45 tracking-[.18em] uppercase mb-1">Current Balance</p>
                   <p className="text-[32px] font-extrabold text-white tracking-tight leading-none"
                      style={{ textShadow:"0 2px 24px rgba(255,255,255,.18)", fontFamily:"'Sora',sans-serif" }}>
-                    {currentBalance}
+                    ₹{balance.toLocaleString()}
                   </p>
-                  <div className="flex items-center gap-1 mt-1.5">
-                    <TrendingUp size={11} className="text-green-300" />
-                    <span className="text-[10px] text-green-300 font-semibold">+2.4% this month</span>
-                  </div>
                 </div>
 
-                {/* Right: mini stats */}
                 <div className="flex gap-3">
                   <div className="flex flex-col items-center px-3.5 py-2 rounded-[10px] border border-white/[.14]"
                        style={{ background:"rgba(255,255,255,.10)" }}>
@@ -157,7 +162,7 @@ export default function TransactionHistory() {
             <Search size={15} className="text-slate-400 flex-shrink-0" />
             <input
               type="text"
-              placeholder="Search by user or type..."
+              placeholder="Search by note or type..."
               className="w-full bg-transparent outline-none text-[13px] text-slate-700 placeholder:text-slate-400 font-medium"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -176,8 +181,6 @@ export default function TransactionHistory() {
 
         {/* ── TRANSACTIONS TABLE ── */}
         <div className="txn-fade-2 glass-wrap backdrop-blur-[18px] rounded-[16px] border border-white/80 overflow-hidden">
-
-          {/* Title bar */}
           <div className="flex justify-between items-center px-5 py-3 border-b border-slate-100/80">
             <h3 className="text-[15px] font-extrabold text-slate-800 tracking-wide">Recent Transactions</h3>
             <span className="text-[11px] font-semibold text-blue-500 flex items-center gap-1">
@@ -185,105 +188,39 @@ export default function TransactionHistory() {
             </span>
           </div>
 
-          {/* Scrollable table */}
-          <div
-            className="overflow-x-auto overflow-y-auto max-h-[360px]"
-            style={{
-              scrollbarWidth: "thin",
-              scrollbarColor: "rgba(30,58,123,0.25) rgba(240,244,255,0.60)",
-            }}
-          >
+          <div className="overflow-x-auto overflow-y-auto max-h-[360px]">
             <table className="w-full min-w-[640px] text-center">
-
-              {/* ── HEADER ── */}
               <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
                 <tr>
                   <th className="px-4 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">SR NO</th>
                   <th className="px-3 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">Type</th>
-                  <th className="px-3 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">User</th>
+                  <th className="px-3 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">Note</th>
                   <th className="px-3 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">Date & Time</th>
                   <th className="px-3 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">Status</th>
                   <th className="px-4 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">Amount</th>
                 </tr>
               </thead>
-
-              {/* ── ROWS ── */}
               <tbody>
                 {filteredTransactions.length > 0 ? (
                   filteredTransactions.map((txn, idx) => {
                     const isDeposit = txn.type === "Deposit";
-
                     return (
-                      <tr
-                        key={txn.id}
-                        className="border-b border-slate-100/70 transition-all duration-200"
-                        style={{
-                          background:
-                            idx % 2 === 0
-                              ? "rgba(255,255,255,0.55)"
-                              : "rgba(240,244,255,0.55)",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            "rgba(219,234,254,0.70)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background =
-                            idx % 2 === 0
-                              ? "rgba(255,255,255,0.55)"
-                              : "rgba(240,244,255,0.55)")
-                        }
-                      >
-                        {/* SR NO */}
-                        <td className="px-4 py-3 text-[11px] font-bold text-black">
-                          {String(idx + 1).padStart(2)}
-                        </td>
-
-                        {/* Type */}
+                      <tr key={txn.id} className="border-b border-slate-100/70 txn-row"
+                          style={{ background: idx % 2 === 0 ? "rgba(255,255,255,0.55)" : "rgba(240,244,255,0.55)" }}>
+                        <td className="px-4 py-3 text-[11px] font-bold text-black">{String(idx + 1).padStart(2, '0')}</td>
                         <td className="px-3 py-3">
-                          <div className="flex items-center justify-center gap-2">
-                            <span
-                              className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full
-                              ${isDeposit
-                                  ? "bg-emerald-500/10 text-emerald-600"
-                                  : "bg-red-500/10 text-red-600"
-                                }`}
-                            >
-                              {isDeposit ? "▲ Deposit" : "▼ Withdraw"}
-                            </span>
-                          </div>
-                        </td>
-
-                        {/* User */}
-                        <td className="px-3 py-3 text-[12px] font-semibold text-slate-700">
-                          {txn.user}
-                        </td>
-
-                        {/* Date & Time */}
-                        <td
-                          className="px-3 py-3 text-[12px] text-slate-600 font-medium"
-                          style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                        >
-                          {txn.date} • {txn.time}
-                        </td>
-
-                        {/* Status */}
-                        <td className="px-3 py-3">
-                          <span className="text-[11px] font-semibold text-emerald-600">
-                            Success
+                          <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${isDeposit ? "bg-emerald-500/10 text-emerald-600" : "bg-red-500/10 text-red-600"}`}>
+                            {isDeposit ? "▲ Deposit" : "▼ Withdraw"}
                           </span>
                         </td>
-
-                        {/* Amount */}
+                        <td className="px-3 py-3 text-[12px] font-semibold text-slate-700">{txn.note || "—"}</td>
+                        <td className="px-3 py-3 text-[12px] text-slate-600 font-medium" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                          {txn.date} • {txn.time}
+                        </td>
+                        <td className="px-3 py-3"><span className="text-[11px] font-semibold text-emerald-600">Success</span></td>
                         <td className="px-4 py-3">
-                          <span
-                            className={`text-[13px] font-extrabold px-2.5 py-0.5 rounded-lg
-                            ${isDeposit
-                                ? "text-emerald-600"
-                                : "text-red-600"
-                              }`}
-                          >
-                            {isDeposit ? "+" : "−"} {txn.amount}
+                          <span className={`text-[13px] font-extrabold ${isDeposit ? "text-emerald-600" : "text-red-600"}`}>
+                            {isDeposit ? "+" : "−"} ₹{txn.amount.toLocaleString()}
                           </span>
                         </td>
                       </tr>
@@ -295,12 +232,7 @@ export default function TransactionHistory() {
                       <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2">
                         <Search size={18} className="text-slate-400" />
                       </div>
-                      <p className="text-slate-500 font-semibold text-sm">
-                        No transactions found.
-                      </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Try changing your search or date filter.
-                      </p>
+                      <p className="text-slate-500 font-semibold text-sm">No transactions found.</p>
                     </td>
                   </tr>
                 )}
@@ -308,15 +240,12 @@ export default function TransactionHistory() {
             </table>
           </div>
 
-          {/* Footer */}
           <div className="flex justify-between items-center px-5 py-2 border-t border-slate-100/80"
                style={{ background:"rgba(241,245,255,0.70)" }}>
-            <span className="text-[11px] text-slate-400 font-medium">Showing {filteredTransactions.length} of {transactions.length} records</span>
+            <span className="text-[11px] text-slate-400 font-medium">Showing {filteredTransactions.length} records</span>
             <span className="text-[11px] text-slate-400 font-medium">Last updated: Today</span>
           </div>
-
         </div>
-
       </div>
     </div>
   );

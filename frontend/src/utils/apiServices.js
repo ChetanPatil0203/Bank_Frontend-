@@ -1,3 +1,5 @@
+
+
 export const BASE_URL = "http://localhost:5000/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
@@ -37,16 +39,11 @@ export const openAccount = async (data) => {
   const formData = new FormData();
   const token = localStorage.getItem("payzen_token");
   
-  console.log("--- Frontend Submission Start ---");
   Object.keys(data).forEach(key => {
     if (data[key] !== null && data[key] !== undefined) {
       formData.append(key, data[key]);
-      console.log(`Field: ${key}, Value:`, data[key]);
     }
   });
-
-  // Verify FormData contents
-  console.log("FormData Entries:", Array.from(formData.entries()));
 
   const headers = {};
   if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -57,17 +54,13 @@ export const openAccount = async (data) => {
       headers: headers,
       body: formData,
     });
-    const result = await response.json();
-    console.log("Backend Response:", result);
-    return { ok: response.ok, data: result };
+    return { ok: response.ok, data: await response.json() };
   } catch (error) {
-    console.error("Upload error:", error);
     return { ok: false, data: { message: error.message } };
   }
 };
 
-
-export const getAccountStatus  = ()     => request("/users/account-status", "GET",  null, true);
+export const getAccountStatus = () => request("/users/account-status", "GET", null, true);
 
 // ─── ADMIN — ACCOUNT REQUESTS ─────────────────────────────────────────────────
 export const adminGetRequests  = (status = "") =>
@@ -88,16 +81,12 @@ export const adminToggleAccountStatus = (accountId, status) =>
 
 
 // ─── KYC — USER FLOW ─────────────────────────────────────────────────────────
-export const kycSendOtp = (email) =>
-  request("/kyc/send-otp", "POST", { email });
-
-export const kycVerifyOtp = (email, otp) =>
-  request("/kyc/verify-otp", "POST", { email, otp });
+export const kycSendOtp = (email) => request("/kyc/send-otp", "POST", { email });
+export const kycVerifyOtp = (email, otp) => request("/kyc/verify-otp", "POST", { email, otp });
 
 export const kycSubmit = async (data) => {
   const formData = new FormData();
   const token = localStorage.getItem("payzen_token");
-
   Object.keys(data).forEach((key) => {
     if (data[key] !== null && data[key] !== undefined) {
       formData.append(key, data[key]);
@@ -113,16 +102,35 @@ export const kycSubmit = async (data) => {
       headers,
       body: formData,
     });
-    const result = await response.json();
-    return { ok: response.ok, data: result };
+    return { ok: response.ok, data: await response.json() };
   } catch (error) {
     return { ok: false, data: { message: error.message } };
   }
 };
 
 // ─── KYC — ADMIN FLOW ────────────────────────────────────────────────────────
-export const adminGetAllKycs = () =>
-  request("/kyc/all", "GET", null, false);
-
+export const adminGetAllKycs = () => request("/kyc/all", "GET", null, false);
 export const adminUpdateKycStatus = (customId, status, rejectReason = "") =>
   request(`/kyc/${customId}/status`, "PUT", { status, rejectReason }, false);
+
+// ─── TRANSACTION MANAGE (ADMIN) ───────────────────────────────────────────────
+export const getAdminAccounts = (search = "") => 
+    fetch(`${BASE_URL}/admin/accounts?search=${search}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
+    }).then(res => res.json());
+
+export const processTransaction = (data) => 
+    fetch(`${BASE_URL}/admin/transactions`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` 
+        },
+        body: JSON.stringify(data)
+    }).then(res => res.json());
+
+// ─── TRANSACTION HISTORY (USER) ───────────────────────────────────────────────
+export const getMyTransactions = () => 
+    fetch(`${BASE_URL}/auth/transactions`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
+    }).then(res => res.json());

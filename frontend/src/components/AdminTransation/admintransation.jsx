@@ -1,9 +1,9 @@
-// AdminTransactionManager.jsx
-
 import { useState } from "react";
 import {
   Search, TrendingUp, TrendingDown, CheckCircle, XCircle, User,
 } from "lucide-react";
+// apiServices मधून हे फंक्शन्स इम्पोर्ट करा
+import { getAdminAccounts, processTransaction } from "../../utils/apiServices";
 
 const C = {
   navy: "#0f1f4b", bg: "#f0f4ff", card: "#ffffff",
@@ -38,25 +38,11 @@ const RESPONSIVE_STYLES = `
     }
     .txn-item-right { text-align: left !important; width: 100% !important; border-top: 1px solid #f8fafc !important; padding-top: 10px !important; margin-top: 10px !important; }
 
-
-
-
     .modal-container { padding: 10px !important; }
-
     .modal-content { max-width: 95% !important; border-radius: 16px !important; }
     .options-btn-row { flex-direction: column !important; }
   }
 `;
-
-
-const ALL_ACCOUNTS = [
-  { id: "ACC001", holder: "Chetan Patil", account: "482910372846", type: "Savings", balance: 124500, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
-  { id: "ACC002", holder: "Rohit Sharma", account: "193847562031", type: "Current", balance: 380200, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
-  { id: "ACC003", holder: "Priya Desai", account: "847291038475", type: "Savings", balance: 45000, ifsc: "PYZN0002", branch: "Pune Central", status: "Inactive" },
-  { id: "ACC004", holder: "Amit Joshi", account: "302948172635", type: "Savings", balance: 92750, ifsc: "PYZN0001", branch: "Nashik Main", status: "Active" },
-  { id: "ACC005", holder: "Sneha Kulkarni", account: "719283047561", type: "Current", balance: 215300, ifsc: "PYZN0003", branch: "Mumbai West", status: "Active" },
-  { id: "ACC006", holder: "Vikas Nair", account: "583920174628", type: "Savings", balance: 12400, ifsc: "PYZN0002", branch: "Pune Central", status: "Closed" },
-];
 
 function formatINR(n) {
   return "₹" + Number(n).toLocaleString("en-IN");
@@ -81,7 +67,6 @@ function Modal({ title, onClose, children }) {
   return (
     <div className="modal-container" style={{ position: "fixed", inset: 0, background: "rgba(15,31,75,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div className="modal-content" style={{ background: C.card, borderRadius: 20, width: "100%", maxWidth: 420, boxShadow: "0 20px 60px rgba(15,31,75,0.2)", border: `1px solid ${C.border}` }}>
-
         <div style={{ padding: "18px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: C.text }}>{title}</h3>
           <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", fontSize: 16, color: C.muted }}>✕</button>
@@ -102,18 +87,26 @@ export default function AdminTransactionManager() {
   const [note, setNote] = useState("");
   const [txnType, setTxnType] = useState("");
   const [error, setError] = useState("");
-  const [accounts, setAccounts] = useState(ALL_ACCOUNTS);
+  const [loading, setLoading] = useState(false);
   const [lastTxn, setLastTxn] = useState(null);
 
-  // ── Search ──
-  function handleSearch() {
+  // ── Search API Call ──
+  async function handleSearch() {
     if (!query.trim()) return;
-    const res = accounts.filter(a =>
-      a.holder.toLowerCase().includes(query.toLowerCase()) ||
-      a.account.includes(query)
-    );
-    setResults(res);
+    setLoading(true);
+    try {
+      const res = await getAdminAccounts(query);
+      if (res.success) {
+        setResults(res.data);
+      } else {
+        setResults([]);
+      }
+    } catch (err) {
+      console.error("Search failed:", err);
+      setResults([]);
+    }
     setSearched(true);
+    setLoading(false);
   }
 
   // ── Account Click → Options Modal ──
@@ -127,75 +120,69 @@ export default function AdminTransactionManager() {
 
   // ── Open Txn Form ──
   function openForm(type) {
-    setTxnType(type);
+    setTxnType(type === "deposit" ? "Deposit" : "Withdraw");
     setAmount("");
     setNote("");
     setError("");
-    setModal(type); // "deposit" | "withdraw"
+    setModal(type);
   }
 
-  // ── Submit Transaction ──
-  function handleSubmit() {
+  // ── Submit Transaction API Call ──
+  async function handleSubmit() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       setError("कृपया valid amount टाका.");
       return;
     }
-    const amt = Number(amount);
-
-    if (txnType === "withdraw") {
-      if (amt > selected.balance) {
-        setError(`Insufficient balance! Available: ${formatINR(selected.balance)}`);
-        return;
-      }
-    }
-
-    // Update balance
-    const updatedAccounts = accounts.map(a => {
-      if (a.id !== selected.id) return a;
-      return {
-        ...a,
-        balance: txnType === "deposit"
-          ? a.balance + amt
-          : a.balance - amt,
-      };
-    });
-
-    const updatedSelected = updatedAccounts.find(a => a.id === selected.id);
-
-    setAccounts(updatedAccounts);
-    setSelected(updatedSelected);
-    setLastTxn({
-      type: txnType,
-      amount: amt,
-      prevBalance: txnType === "deposit" ? updatedSelected.balance - amt : updatedSelected.balance + amt,
-      newBalance: updatedSelected.balance,
-      holder: selected.holder,
-      account: selected.account,
-      note: note,
-      time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
-    });
-
+    
+    setLoading(true);
     setError("");
-    setModal("success");
+
+    try {
+      const res = await processTransaction({
+        account_number: selected.account_number,
+        type: txnType,
+        amount: Number(amount),
+        note: note
+      });
+
+      if (res.success) {
+        // Success: Update UI
+        setLastTxn({
+          ...res.data.transaction,
+          holder: selected.bank_holder_name, // display constant info
+          prevBalance: selected.balance,
+          newBalance: res.data.account.balance
+        });
+        
+        // Update the selected account locally so balance reflects instantly
+        setSelected(res.data.account);
+        
+        // Also update the result list so balance is updated there too
+        setResults(prev => prev.map(a => a.id === res.data.account.id ? res.data.account : a));
+        
+        setModal("success");
+      } else {
+        setError(res.message || "Transaction failed.");
+      }
+    } catch (err) {
+      setError("Server error आला. परत प्रयत्न करा.");
+    }
+    setLoading(false);
   }
 
   return (
     <div>
       <style>{RESPONSIVE_STYLES}</style>
+      
       {/* Header */}
       <div className="mb-3">
         <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Transaction Manager</h2>
         <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0" }}>Account search करा आणि Deposit / Withdraw करा</p>
       </div>
 
-
-
       {/* ── Search Box ── */}
       <div style={{ background: C.card, borderRadius: 16, padding: "16px 20px", boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, marginBottom: 20 }}>
-
-        <p style={{ fontSize: 11, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>
-          Account Search
-        </p>
+        <p style={{ fontSize: 11, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>Account Search</p>
         <div className="search-row" style={{ display: "flex", gap: 10 }}>
           <div style={{ position: "relative", flex: 1 }}>
             <Search size={15} style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", color: C.muted }} />
@@ -209,13 +196,12 @@ export default function AdminTransactionManager() {
           </div>
           <button
             onClick={handleSearch}
-            className="search-btn"
-            style={{ padding: "11px 24px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, whiteSpace: "nowrap" }}
+            disabled={loading}
+            style={{ padding: "11px 24px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, whiteSpace: "nowrap", opacity: loading ? 0.7 : 1 }}
           >
-            <Search size={14} /> Search
+            {loading ? "Searching..." : <><Search size={14} /> Search</>}
           </button>
         </div>
-
       </div>
 
       {/* ── Search Results ── */}
@@ -233,60 +219,39 @@ export default function AdminTransactionManager() {
                 {results.length} Result{results.length > 1 ? "s" : ""} Found — Account वर Click करा
               </p>
               <div className="txn-results-grid" style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-
-
                 {results.map(acc => (
                   <div
                     key={acc.id}
                     onClick={() => acc.status !== "Closed" && handleSelectAccount(acc)}
                     className="txn-item"
                     style={{
-                      background: C.card,
-                      borderRadius: 16,
-                      padding: "14px 16px",
-                      border: `1.5px solid #f1f5f9`,
+                      background: C.card, borderRadius: 16, padding: "14px 16px", border: `1.5px solid #f1f5f9`,
                       boxShadow: "0 4px 20px -4px rgba(0,0,0,0.05)",
-
                       cursor: acc.status === "Closed" ? "not-allowed" : "pointer",
                       opacity: acc.status === "Closed" ? 0.6 : 1,
-                      transition: "all 0.3s ease",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexWrap: "wrap",
-                      gap: 12,
+                      transition: "all 0.3s ease", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
                     }}
                     onMouseEnter={e => { if (acc.status !== "Closed") { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 12px 40px -12px rgba(0,0,0,0.12)"; } }}
                     onMouseLeave={e => { e.currentTarget.style.borderColor = "#f1f5f9"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 20px -4px rgba(0,0,0,0.05)"; }}
-
                   >
-                    {/* Left — Avatar + Info */}
                     <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                       <div style={{ width: 46, height: 46, borderRadius: "50%", background: `linear-gradient(135deg, #1e3a7b, #3b82f6)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "#fff", flexShrink: 0 }}>
-                        {acc.holder.charAt(0)}
+                        {acc.bank_holder_name.charAt(0)}
                       </div>
                       <div>
-                        <p style={{ fontSize: 15, fontWeight: 800, color: C.text, margin: 0 }}>{acc.holder}</p>
-                        <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0", fontFamily: "monospace" }}>{acc.account}</p>
-                        <p style={{ fontSize: 11, color: C.muted, margin: "2px 0 0" }}>{acc.type} • {acc.branch}</p>
+                        <p style={{ fontSize: 15, fontWeight: 800, color: C.text, margin: 0 }}>{acc.bank_holder_name}</p>
+                        <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0", fontFamily: "monospace" }}>{acc.account_number}</p>
+                        <p style={{ fontSize: 11, color: C.muted, margin: "2px 0 0" }}>{acc.account_type} • {acc.branch}</p>
                       </div>
                     </div>
-
-                    {/* Right — Balance + Status */}
                     <div className="txn-item-right" style={{ textAlign: "right" }}>
                       <p style={{ fontSize: 20, fontWeight: 800, color: C.green, margin: 0 }}>{formatINR(acc.balance)}</p>
                       <p style={{ fontSize: 11, color: C.muted, margin: "2px 0 6px" }}>Current Balance</p>
                       <Badge status={acc.status} />
                     </div>
-
                   </div>
                 ))}
               </div>
-              {results.some(a => a.status === "Closed") && (
-                <p style={{ fontSize: 12, color: C.muted, margin: "10px 0 0" }}>
-                  ⚠️ Closed accounts वर transaction करता येत नाही.
-                </p>
-              )}
             </div>
           )}
         </>
@@ -297,15 +262,14 @@ export default function AdminTransactionManager() {
       ════════════════════════ */}
       {modal === "options" && selected && (
         <Modal title="Transaction करा" onClose={() => setModal(null)}>
-          {/* Account Info Card */}
           <div style={{ background: "#f8faff", borderRadius: 12, padding: 16, marginBottom: 20, border: `1px solid ${C.border}` }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
               <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg,#1e3a7b,#3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "#fff" }}>
-                {selected.holder.charAt(0)}
+                {selected.bank_holder_name.charAt(0)}
               </div>
               <div>
-                <p style={{ fontSize: 14, fontWeight: 800, color: C.text, margin: 0 }}>{selected.holder}</p>
-                <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: "monospace" }}>{selected.account}</p>
+                <p style={{ fontSize: 14, fontWeight: 800, color: C.text, margin: 0 }}>{selected.bank_holder_name}</p>
+                <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: "monospace" }}>{selected.account_number}</p>
               </div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -313,148 +277,46 @@ export default function AdminTransactionManager() {
               <span style={{ fontSize: 22, fontWeight: 800, color: C.green }}>{formatINR(selected.balance)}</span>
             </div>
           </div>
-
-          {/* 2 Big Buttons */}
-          <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>
-            Transaction Type निवडा
-          </p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Transaction Type निवडा</p>
           <div className="options-btn-row" style={{ display: "flex", gap: 12 }}>
-
-            {/* Deposit Button */}
             <button
               onClick={() => openForm("deposit")}
               style={{ flex: 1, padding: "20px 16px", borderRadius: 14, border: `2px solid #bbf7d0`, background: "#f0fdf4", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#dcfce7"; e.currentTarget.style.borderColor = C.green; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#f0fdf4"; e.currentTarget.style.borderColor = "#bbf7d0"; }}
             >
-              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <TrendingUp size={22} color={C.green} />
-              </div>
+              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center" }}><TrendingUp size={22} color={C.green} /></div>
               <span style={{ fontSize: 14, fontWeight: 800, color: C.green }}>Deposit</span>
-              <span style={{ fontSize: 11, color: "#15803d", opacity: 0.8 }}>Amount Add करा</span>
             </button>
-
-            {/* Withdraw Button */}
             <button
               onClick={() => openForm("withdraw")}
               style={{ flex: 1, padding: "20px 16px", borderRadius: 14, border: `2px solid #fecaca`, background: "#fef2f2", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#fee2e2"; e.currentTarget.style.borderColor = C.red; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#fef2f2"; e.currentTarget.style.borderColor = "#fecaca"; }}
             >
-              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <TrendingDown size={22} color={C.red} />
-              </div>
+              <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center" }}><TrendingDown size={22} color={C.red} /></div>
               <span style={{ fontSize: 14, fontWeight: 800, color: C.red }}>Withdraw</span>
-              <span style={{ fontSize: 11, color: "#b91c1c", opacity: 0.8 }}>Amount काढा</span>
             </button>
           </div>
         </Modal>
       )}
 
       {/* ════════════════════════════
-          MODAL 2 — DEPOSIT / WITHDRAW FORM
+          MODAL 2 — FORM (DEPOSIT/WITHDRAW)
       ════════════════════════════ */}
       {(modal === "deposit" || modal === "withdraw") && selected && (
-        <Modal
-          title={modal === "deposit" ? "📥 Deposit" : "📤 Withdraw"}
-          onClose={() => { setModal("options"); setError(""); }}
-        >
-          {/* Mini Account Info */}
-          <div style={{ background: "#f8faff", borderRadius: 10, padding: "12px 16px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center", border: `1px solid ${C.border}` }}>
-            <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: C.text, margin: 0 }}>{selected.holder}</p>
-              <p style={{ fontSize: 11, color: C.muted, margin: "2px 0 0", fontFamily: "monospace" }}>{selected.account}</p>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <p style={{ fontSize: 11, color: C.muted, margin: 0 }}>Balance</p>
-              <p style={{ fontSize: 16, fontWeight: 800, color: C.green, margin: 0 }}>{formatINR(selected.balance)}</p>
-            </div>
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: C.red, fontWeight: 600 }}>
-              ⚠️ {error}
-            </div>
-          )}
-
-          {/* Amount Input */}
+        <Modal title={modal === "deposit" ? "📥 Deposit" : "📤 Withdraw"} onClose={() => { setModal("options"); setError(""); }}>
+          {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: C.red, fontWeight: 600 }}>⚠️ {error}</div>}
           <div style={{ marginBottom: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 }}>
-              Amount (₹) <span style={{ color: C.red }}>*</span>
-            </label>
-            <div style={{ position: "relative" }}>
-              <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", fontSize: 16, fontWeight: 700, color: modal === "deposit" ? C.green : C.red }}>₹</span>
-              <input
-                type="number"
-                placeholder="0"
-                value={amount}
-                onChange={e => { setAmount(e.target.value); setError(""); }}
-                autoFocus
-                style={{ width: "100%", boxSizing: "border-box", paddingLeft: 28, paddingRight: 12, paddingTop: 12, paddingBottom: 12, border: `2px solid ${modal === "deposit" ? "#bbf7d0" : "#fecaca"}`, borderRadius: 10, fontSize: 20, fontWeight: 800, color: modal === "deposit" ? C.green : C.red, outline: "none", background: modal === "deposit" ? "#f0fdf4" : "#fef2f2", fontFamily: "inherit" }}
-              />
-            </div>
-          </div>
-
-          {/* Live Preview */}
-          {amount && !isNaN(amount) && Number(amount) > 0 && (
-            <div style={{ background: "#f8faff", borderRadius: 10, padding: 14, marginBottom: 16, border: `1px solid ${C.border}` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>Current Balance</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{formatINR(selected.balance)}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>{modal === "deposit" ? "Deposit Amount" : "Withdraw Amount"}</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: modal === "deposit" ? C.green : C.red }}>
-                  {modal === "deposit" ? "+" : "-"}{formatINR(Number(amount))}
-                </span>
-              </div>
-              <div style={{ height: 1, background: C.border, margin: "8px 0" }} />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.05em" }}>New Balance</span>
-                <span style={{ fontSize: 16, fontWeight: 800, color: modal === "deposit" ? C.green : (selected.balance - Number(amount) < 0 ? C.red : C.text) }}>
-                  {formatINR(modal === "deposit"
-                    ? selected.balance + Number(amount)
-                    : selected.balance - Number(amount)
-                  )}
-                </span>
-              </div>
-              {modal === "withdraw" && selected.balance - Number(amount) < 0 && (
-                <p style={{ fontSize: 11, color: C.red, fontWeight: 700, margin: "8px 0 0" }}>⚠️ Insufficient balance!</p>
-              )}
-            </div>
-          )}
-
-          {/* Note */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", textTransform: "uppercase", display: "block", marginBottom: 6 }}>
-              Note (Optional)
-            </label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Amount (₹)</label>
             <input
-              placeholder="e.g. Cash payment, Salary credit..."
-              value={note}
-              onChange={e => setNote(e.target.value)}
-              style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: "#f8faff", fontFamily: "inherit" }}
+              type="number" value={amount} onChange={e => { setAmount(e.target.value); setError(""); }} placeholder="0" autoFocus
+              style={{ width: "100%", boxSizing: "border-box", padding: "12px", border: `2px solid ${modal === "deposit" ? "#bbf7d0" : "#fecaca"}`, borderRadius: 10, fontSize: 20, fontWeight: 800, outline: "none", background: modal === "deposit" ? "#f0fdf4" : "#fef2f2" }}
             />
           </div>
-
-          {/* Buttons */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Note</label>
+            <input placeholder="e.g. Cash payment..." value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", boxSizing: "border-box", padding: "10px", border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13 }} />
+          </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <button
-              onClick={() => { setModal("options"); setError(""); }}
-              style={{ flex: 1, padding: "11px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.muted, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
-            >
-              Back
-            </button>
-            <button
-              onClick={handleSubmit}
-              style={{ flex: 2, padding: "11px", borderRadius: 10, border: "none", background: modal === "deposit" ? C.green : C.red, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
-            >
-              {modal === "deposit"
-                ? <><TrendingUp size={15} /> Deposit Confirm</>
-                : <><TrendingDown size={15} /> Withdraw Confirm</>
-              }
-            </button>
+            <button onClick={() => { setModal("options"); setError(""); }} style={{ flex: 1, padding: "11px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", fontWeight: 700 }}>Back</button>
+            <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: "11px", borderRadius: 10, border: "none", background: modal === "deposit" ? C.green : C.red, color: "#fff", fontWeight: 700, opacity: loading ? 0.7 : 1 }}>{loading ? "Processing..." : "Confirm"}</button>
           </div>
         </Modal>
       )}
@@ -463,59 +325,32 @@ export default function AdminTransactionManager() {
           MODAL 3 — SUCCESS
       ════════════════════════ */}
       {modal === "success" && lastTxn && (
-        <Modal title="" onClose={() => { setModal(null); }}>
+        <Modal title="" onClose={() => setModal(null)}>
           <div style={{ textAlign: "center", marginBottom: 20 }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", background: lastTxn.type === "deposit" ? "#dcfce7" : "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
-              {lastTxn.type === "deposit"
-                ? <TrendingUp size={28} color={C.green} />
-                : <TrendingDown size={28} color={C.red} />
-              }
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: lastTxn.type === "Deposit" ? "#dcfce7" : "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+              {lastTxn.type === "Deposit" ? <TrendingUp size={28} color={C.green} /> : <TrendingDown size={28} color={C.red} />}
             </div>
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text, margin: "0 0 4px" }}>
-              {lastTxn.type === "deposit" ? "Deposit Successful!" : "Withdrawal Successful!"}
-            </h3>
-            <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>{lastTxn.time} — Admin द्वारे processed</p>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text }}>Success!</h3>
+            <p style={{ fontSize: 13, color: C.muted }}>Transaction यशस्वीरीत्या पूर्ण झाले.</p>
           </div>
-
-          {/* Transaction Summary */}
           <div style={{ background: "#f8faff", borderRadius: 12, padding: 16, marginBottom: 20, border: `1px solid ${C.border}` }}>
-            {[
-              ["Account Holder", lastTxn.holder],
-              ["Account No.", lastTxn.account],
-              ["Transaction", (lastTxn.type === "deposit" ? "+" : "-") + formatINR(lastTxn.amount)],
-              ["Previous Bal.", formatINR(lastTxn.prevBalance)],
-              ["New Balance", formatINR(lastTxn.newBalance)],
-              ...(lastTxn.note ? [["Note", lastTxn.note]] : []),
-            ].map(([k, v]) => (
-              <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.05em" }}>{k}</span>
-                <span style={{
-                  fontSize: 13, fontWeight: 700,
-                  color: k === "Transaction" ? (lastTxn.type === "deposit" ? C.green : C.red)
-                    : k === "New Balance" ? C.green : C.text,
-                  fontFamily: k === "Account No." ? "monospace" : "inherit",
-                }}>{v}</span>
-              </div>
-            ))}
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${C.border}` }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: C.muted }}>HOLDER</span>
+              <span style={{ fontSize: 13, fontWeight: 700 }}>{lastTxn.holder}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${C.border}` }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: C.muted }}>AMOUNT</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: lastTxn.type === "Deposit" ? C.green : C.red }}>{formatINR(lastTxn.amount)}</span>
+            </div>
+             <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: C.muted }}>NEW BALANCE</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: C.green }}>{formatINR(lastTxn.newBalance)}</span>
+            </div>
           </div>
-
-          {/* Done + New Transaction */}
-          <div style={{ display: "flex", gap: 10 }}>
-            <button
-              onClick={() => { setModal("options"); setAmount(""); setNote(""); }}
-              style={{ flex: 1, padding: "11px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", color: C.text, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
-            >
-              New Transaction
-            </button>
-            <button
-              onClick={() => setModal(null)}
-              style={{ flex: 1, padding: "11px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}
-            >
-              Done
-            </button>
-          </div>
+          <button onClick={() => setModal(null)} style={{ width: "100%", padding: "12px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontWeight: 700 }}>Done</button>
         </Modal>
       )}
     </div>
   );
 }
+
