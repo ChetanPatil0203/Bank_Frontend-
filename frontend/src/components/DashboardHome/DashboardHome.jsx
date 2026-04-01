@@ -86,17 +86,53 @@ const STYLES = `
 
 export default function DashboardHome() {
   const [showDetails, setShowDetails] = useState(false);
+  const [accountData, setAccountData] = useState({
+    balance: 0,
+    account_number: "•••• •••• •••• ••••",
+    recentTxns: []
+  });
+  
   const navigate = useNavigate();
-
   const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
   const userName = payzenUser?.name || "User";
+  const token = localStorage.getItem("payzen_token");
 
   useEffect(() => {
     const el = document.createElement("style");
     el.textContent = STYLES;
     document.head.appendChild(el);
+    
+    // BACKEND FETCH
+    fetchDashboardData();
+
     return () => document.head.removeChild(el);
   }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/v1/auth/transactions", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const result = await response.json();
+      if (result.success) {
+        setAccountData({
+          balance: result.data.balance,
+          account_number: result.data.account_number,
+          recentTxns: result.data.transactions || []
+        });
+      }
+    } catch (err) {
+      console.error("Dashboard Load Error:", err);
+    }
+  };
+
+  const getTransactionIcon = (note = "", type) => {
+    const n = note.toLowerCase();
+    if (n.includes("amazon")) return ShoppingBag;
+    if (n.includes("hotel")) return Hotel;
+    if (n.includes("flight")) return Plane;
+    return type === "Deposit" ? ArrowDownToLine : ArrowUpFromLine;
+  };
 
   // QUICK ACTIONS WITH COLORS
   const quickActions = [
@@ -108,13 +144,6 @@ export default function DashboardHome() {
     { name: "Transactions", icon: Receipt, path: "/transactions", iconColor: "#06b6d4", bgColor: "#ecf9ff", borderColor: "#a5f3fc" },
     { name: "Help & Support", icon: Headset, path: "/helpsupport", iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
     { name: "My Wallet", icon: Wallet, path: "/wallet", iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
-  ];
-
-  const recentTxns = [
-    { name: "Amazon Purchase", amount: "−₹2,450", date: "Today, 2:34 PM", type: "debit", icon: ShoppingBag },
-    { name: "Salary Credit", amount: "+₹85,000", date: "Yesterday", type: "credit", icon: ArrowDownToLine },
-    { name: "Hotel Booking", amount: "−₹6,200", date: "Feb 20", type: "debit", icon: Hotel },
-    { name: "Flight Ticket", amount: "−₹12,800", date: "Feb 18", type: "debit", icon: Plane },
   ];
 
   const tileBase = () =>
@@ -136,9 +165,7 @@ export default function DashboardHome() {
           Account Overview
         </h2>
 
-        {/* ══════════════════════════════
-            PREMIUM BANK CARD
-        ══════════════════════════════ */}
+        {/* PREMIUM BANK CARD */}
         <div className="anim-card-in mb-6 sm:mb-8">
           <div className="bank-card-outer rounded-[20px] sm:rounded-[28px] p-[2px]">
             <div className="bank-card-body relative rounded-[18px] sm:rounded-[26px] overflow-hidden min-h-[180px] sm:min-h-[220px] px-6 sm:px-10 pt-6 sm:pt-9 pb-6 sm:pb-8">
@@ -195,7 +222,7 @@ export default function DashboardHome() {
                     color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
                     textShadow: "0 1px 8px rgba(0,0,0,.4)"
                   }}>
-                  {showDetails ? "1234  5678  9012  0123" : "••••  ••••  ••••  0123"}
+                  {showDetails ? (accountData.account_number || "••••  ••••  ••••  ••••") : `••••  ••••  ••••  ${(accountData.account_number || "").slice(-4)}`}
                 </span>
               </div>
 
@@ -213,15 +240,10 @@ export default function DashboardHome() {
                     <p className="m-0 text-[7px] sm:text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
                     <div className="flex items-center gap-2 sm:gap-3">
                       <p className="balance-text m-0 text-[19px] sm:text-[30px] font-extrabold text-white tracking-tight transition-all duration-300 whitespace-nowrap">
-                        {showDetails ? "₹ 50,000" : "₹ •••••"}
+                        {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
                       </p>
 
-                      {showDetails && (
-                        <div className="trend-badge flex items-center gap-1 px-2 py-1 rounded-md border">
-                          <TrendingUp size={9} className="text-green-300" />
-                          <span className="text-[8px] font-bold text-green-300">+2.4%</span>
-                        </div>
-                      )}
+                     
                     </div>
                   </div>
                 </div>
@@ -322,9 +344,12 @@ export default function DashboardHome() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentTxns.map((txn, i) => {
-                    const Icon = txn.icon;
-                    const isC = txn.type === "credit";
+                  {accountData.recentTxns.length === 0 ? (
+                    <tr><td colSpan="6" className="py-10 text-slate-400 italic">No transactions found</td></tr>
+                  ) : (
+                  accountData.recentTxns.map((txn, i) => {
+                    const isCredit = txn.type === "Deposit";
+                    const Icon = getTransactionIcon(txn.note, txn.type);
                     return (
                       <tr key={i} className="border-b border-slate-200 hover:bg-blue-50 transition">
                         <td className="px-3 sm:px-6 py-3 sm:py-4 text-[11px] sm:text-[13px] font-bold text-black">
@@ -333,36 +358,36 @@ export default function DashboardHome() {
                         <td className="px-2 sm:px-4 py-3 sm:py-4 text-center">
                           <div className="flex items-center justify-center gap-2 sm:gap-3">
                             <div className={`w-7 sm:w-9 h-7 sm:h-9 rounded-lg flex items-center justify-center flex-shrink-0
-                              ${isC ? "bg-emerald-100" : "bg-red-100"}`}>
-                              <Icon size={14} className={`${isC ? "text-emerald-600" : "text-red-600"} sm:w-4 sm:h-4`} strokeWidth={2} />
+                              ${isCredit ? "bg-emerald-100" : "bg-red-100"}`}>
+                              <Icon size={14} className={`${isCredit ? "text-emerald-600" : "text-red-600"} sm:w-4 sm:h-4`} strokeWidth={2} />
                             </div>
-                            <span className="text-[10px] sm:text-[14px] font-semibold text-slate-800 whitespace-nowrap">{txn.name}</span>
+                            <span className="text-[10px] sm:text-[14px] font-semibold text-slate-800 whitespace-nowrap">{txn.note || (isCredit ? "Credit" : "Debit")}</span>
                           </div>
                         </td>
                         <td className="px-2 sm:px-4 py-3 sm:py-4">
                           <span className={`text-[9px] sm:text-[12px] font-semibold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full
-                            ${isC ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"}`}>
-                            {isC ? "▲ Cr" : "▼ Dr"}
+                            ${isCredit ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"}`}>
+                            {isCredit ? "▲ Cr" : "▼ Dr"}
                           </span>
                         </td>
                         <td className="px-2 sm:px-4 py-3 sm:py-4 text-[9px] sm:text-[13px] text-slate-500 font-medium hidden sm:table-cell">{txn.date}</td>
                         <td className="px-2 sm:px-4 py-3 sm:py-4 hidden sm:table-cell">
                           <span className="text-[9px] sm:text-[12px] font-semibold text-emerald-600">Success</span>
                         </td>
-                        <td className={`px-3 sm:px-6 py-3 sm:py-4 text-[11px] sm:text-[15px] font-bold ${isC ? "text-emerald-600" : "text-red-600"}`}>
-                          {txn.amount}
+                        <td className={`px-3 sm:px-6 py-3 sm:py-4 text-[11px] sm:text-[15px] font-bold ${isCredit ? "text-emerald-600" : "text-red-600"}`}>
+                          {isCredit ? "+" : "−"}₹{txn.amount.toLocaleString()}
                         </td>
                       </tr>
                     );
-                  })}
+                  }))}
                 </tbody>
               </table>
             </div>
 
             <div className="flex justify-between items-center px-4 sm:px-8 py-2 sm:py-3 border-t border-slate-100/80 text-[10px] sm:text-[12px]"
               style={{ background: "rgba(241,245,255,0.70)" }}>
-              <span className="text-slate-400 font-medium">Showing {recentTxns.length} of {recentTxns.length}</span>
-              <span className="text-slate-400 font-medium hidden sm:inline">Last updated: Today</span>
+              <span className="text-slate-400 font-medium">Showing {accountData.recentTxns.length} records</span>
+              <span className="text-slate-400 font-medium hidden sm:inline">Last updated: Just now</span>
             </div>
 
           </div>

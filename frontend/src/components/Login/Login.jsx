@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ShieldAlert, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../utils/apiServices";
 
@@ -196,6 +196,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const [focusedField, setFocusedField] = useState(null);
+  const [loginError, setLoginError] = useState(""); // ← NEW
 
   const showToast = (msg, type) => setToast({ show: true, message: msg, type });
   const hideToast = () => setToast({ show: false, message: "", type: "" });
@@ -203,15 +204,17 @@ export default function LoginPage() {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    if (loginError) setLoginError(""); // ← Clear error on input change
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setLoginError(""); // ← Clear previous error
     const result = await loginUser(formData.email, formData.password);
     if (!result.ok) {
       const msg = result.data?.message || "Invalid Credentials!";
-      showToast(msg, "error");
+      setLoginError(msg); // ← Set inline error instead of toast
       setLoading(false);
       return;
     }
@@ -384,6 +387,20 @@ export default function LoginPage() {
                       <> Login </>
                     )}
                   </button>
+
+                  {/* ════ INLINE ERROR UI (below login button) ════ */}
+                  {loginError && (
+                    <div style={{
+                      marginTop: 15, display: "flex", justifyContent: "center", animation: "cardIn 0.4s ease-out"
+                    }}>
+                      <div style={{
+                        color: "#ef4444", fontSize: 11, fontWeight: 600,
+                        letterSpacing: "0.05em", textAlign: "center"
+                      }}>
+                        {loginError}
+                      </div>
+                    </div>
+                  )}
 
                   {loading && (
                     <p style={{ textAlign: "center", fontSize: 11, color: "rgba(148,163,184,0.4)", margin: 0, animation: "scanPulse 1.5s ease-in-out infinite" }}>
