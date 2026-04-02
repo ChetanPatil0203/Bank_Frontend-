@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { openAccount } from "../../utils/apiServices";
+import { messaging, getToken } from "../../firebase";
 
 /* ════════════════════════════════════════════════════
    SUCCESS POPUP
@@ -543,10 +544,24 @@ export default function OpenAccountPage() {
 
     setLoading(true); setAlert({ show: false });
 
+    let fcmToken = null;
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        fcmToken = await getToken(messaging, {
+          vapidKey: "BCM3f5cn_Z8Z1YRsOh-1dnoaOPPcBeN3OulbPGkVG1en-5PmdGjOG3lhde73D1eliwETI8xQRA-yeg0_1d2c9bE"
+        });
+        console.log("FCM Token secured:", fcmToken);
+      }
+    } catch (err) {
+      console.warn("FCM Token failed:", err);
+    }
+
     const res = await openAccount({
       ...formData,
       signature_name: signature.name,
       photo, aadhaarDoc, panDoc,
+      fcmToken: fcmToken
     });
 
     setLoading(false);

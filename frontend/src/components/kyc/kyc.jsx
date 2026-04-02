@@ -6,6 +6,7 @@ import {
   CheckCircle2, RefreshCw, KeyRound, Loader2
 } from "lucide-react";
 import { kycSendOtp, kycVerifyOtp, kycSubmit } from "../../utils/apiServices";
+import { messaging, getToken } from "../../firebase";
 
 /* ── Step Dot ── */
 function StepDot({ number, label, active, done }) {
@@ -110,10 +111,25 @@ export default function KYCPage() {
     setLoading(true); setError("");
     const verifyRes = await kycVerifyOtp(formData.email, otp);
     if (!verifyRes.ok) { setError(verifyRes.data?.message || "Invalid OTP."); setLoading(false); return; }
+
+    let fcmToken = null;
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        fcmToken = await getToken(messaging, {
+          vapidKey: "BCM3f5cn_Z8Z1YRsOh-1dnoaOPPcBeN3OulbPGkVG1en-5PmdGjOG3lhde73D1eliwETI8xQRA-yeg0_1d2c9bE"
+        });
+        console.log("FCM Token secured for KYC:", fcmToken);
+      }
+    } catch (err) {
+      console.warn("FCM Token failed for KYC:", err);
+    }
+
     const submitRes = await kycSubmit({
       fullName: formData.fullName, email: formData.email, mobile: formData.mobile,
       dob: formData.dob, address: formData.address, aadhaar: formData.aadhaar,
       pan: formData.pan, aadhaarFile: formData.aadhaarFile, panFile: formData.panFile,
+      fcmToken: fcmToken
     });
     setLoading(false);
     if (submitRes.ok) { setOtpVerified(true); setError(""); }
