@@ -1,5 +1,3 @@
-
-
 export const BASE_URL = "http://localhost:5000/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
@@ -115,8 +113,11 @@ export const adminUpdateKycStatus = (customId, status, rejectReason = "") =>
 
 // ─── TRANSACTION MANAGE (ADMIN) ───────────────────────────────────────────────
 export const getAdminAccounts = (search = "") => 
-    fetch(`${BASE_URL}/admin/accounts?search=${search}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
+    fetch(`${BASE_URL}/admin/txn-accounts?search=${search}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("payzen_token")}`
+        }
     }).then(res => res.json());
 
 export const processTransaction = (data) => 
@@ -134,3 +135,14 @@ export const getMyTransactions = () =>
     fetch(`${BASE_URL}/auth/transactions`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
     }).then(res => res.json());
+
+// admin login
+export const adminLogin = (data) => {
+    return fetch(`${BASE_URL}/auth/admin/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(res => res.json());
+};

@@ -82,8 +82,8 @@ export default function ProfilePage() {
   const initials = getInitials(profile.fullName);
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-6">
+    <div className="min-h-screen p-3 sm:p-6">
+      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-4 sm:p-6">
 
         {/* Toast */}
         {msg && (
@@ -97,22 +97,25 @@ export default function ProfilePage() {
         )}
 
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 mb-4 border-b">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between pb-4 mb-4 border-b gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             {/* Avatar */}
             <div style={{
-              width: 64, height: 64, borderRadius: "50%",
+              width: 52, height: 52, borderRadius: "50%",
               background: "linear-gradient(135deg, #1e3a7b, #2563eb)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 22, fontWeight: 700, color: "#fff",
+              fontSize: 18, fontWeight: 700, color: "#fff",
               border: "3px solid #e2e8f0",
               flexShrink: 0, userSelect: "none",
-            }}>
+            }}
+            className="sm:w-16 sm:h-16 sm:text-xl">
               {initials}
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-blue-900">{profile.fullName || "—"}</h2>
-              <p className="text-sm text-gray-500">
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-xl font-semibold text-blue-900 truncate">
+                {profile.fullName || "—"}
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">
                 {account ? `Account No: ${account.account_number}` : "Account: Not opened yet"}
               </p>
             </div>
@@ -121,17 +124,22 @@ export default function ProfilePage() {
           <button
             onClick={() => edit ? handleSave() : setEdit(true)}
             disabled={saving}
-            className="flex items-center gap-2 bg-[#1e3a7b] hover:bg-[#152d68]
-              text-white font-semibold px-5 py-2.5 rounded-xl
-              disabled:opacity-60 transition-all shadow-md">
-            {edit ? <Save size={16}/> : <Pencil size={16}/>}
-            {saving ? "Saving..." : edit ? "Save" : "Edit"}
+            className="flex items-center gap-1.5 sm:gap-2 bg-[#1e3a7b] hover:bg-[#152d68]
+              text-white font-semibold px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-sm
+              disabled:opacity-60 transition-all shadow-md flex-shrink-0">
+            {edit ? <Save size={15}/> : <Pencil size={15}/>}
+            <span className="hidden xs:inline sm:inline">
+              {saving ? "Saving..." : edit ? "Save" : "Edit"}
+            </span>
+            <span className="xs:hidden sm:hidden">
+              {saving ? "..." : edit ? "Save" : "Edit"}
+            </span>
           </button>
         </div>
 
         {/* Personal Details */}
-        <h3 className="text-base font-semibold text-blue-900 mb-3">Personal Details</h3>
-        <div className="grid md:grid-cols-2 gap-3 mb-6">
+        <h3 className="text-sm sm:text-base font-semibold text-blue-900 mb-3">Personal Details</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mb-6">
           <Field label="Full Name"     value={profile.fullName} />
           <Field label="Mobile"        value={profile.mobile} />
           <Field label="Email"         value={profile.email} />
@@ -139,18 +147,18 @@ export default function ProfilePage() {
           <Field label="Date of Birth" value={profile.date_of_birth} />
 
           {/* Address — editable */}
-          <div className="md:col-span-2 flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-600">Address</label>
+          <div className="col-span-1 sm:col-span-2 flex flex-col gap-1">
+            <label className="text-xs sm:text-sm font-medium text-gray-600">Address</label>
             {edit ? (
               <textarea
                 value={profile.address}
                 onChange={e => setProfile({ ...profile, address: e.target.value })}
                 placeholder="Enter your address..."
-                className="border rounded-xl px-3 py-2 text-sm h-20
+                className="border rounded-xl px-3 py-2 text-xs sm:text-sm h-20
                   focus:ring-2 focus:ring-blue-500 outline-none resize-none"
               />
             ) : (
-              <div className={`border rounded-xl px-3 py-2 text-sm min-h-[44px]
+              <div className={`border rounded-xl px-3 py-2 text-xs sm:text-sm min-h-[44px]
                 ${profile.address ? "text-gray-800" : "text-gray-300 italic"}`}>
                 {profile.address || "Address not added yet — click Edit to add"}
               </div>
@@ -159,25 +167,25 @@ export default function ProfilePage() {
         </div>
 
         {/* Account Details */}
-        <h3 className="text-base font-semibold text-blue-900 mb-3">Account Details</h3>
+        <h3 className="text-sm sm:text-base font-semibold text-blue-900 mb-3">Account Details</h3>
 
         {!account ? (
-          <div className="flex items-center justify-between
+          <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3
             bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-3">
-            <div className="flex items-center gap-2 text-amber-700 text-sm">
-              <span className="text-lg">🏦</span>
+            <div className="flex items-center gap-2 text-amber-700 text-xs sm:text-sm">
+              <span className="text-base sm:text-lg">🏦</span>
               <span>Bank account अजून open केलेला नाही.</span>
             </div>
             <button
               onClick={() => navigate("/open-account")}
               className="text-xs font-semibold bg-amber-500 hover:bg-amber-600
-                text-white px-4 py-2 rounded-lg transition-all">
+                text-white px-4 py-2 rounded-lg transition-all whitespace-nowrap">
               + Open Account
             </button>
           </div>
         ) : null}
 
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
           <Field label="Account Number" value={account?.account_number || ""} empty={!account} />
           <Field label="Account Type"   value={account?.account_type   || ""} empty={!account} />
           <Field label="Branch"         value={account?.branch         || ""} empty={!account} />
@@ -195,8 +203,8 @@ export default function ProfilePage() {
 function Field({ label, value, empty }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
-      <div className={`border rounded-xl px-3 py-2 text-sm
+      <label className="text-xs sm:text-sm font-medium text-gray-600">{label}</label>
+      <div className={`border rounded-xl px-3 py-2 text-xs sm:text-sm
         ${empty || !value
           ? "bg-gray-50 text-gray-300 italic"
           : "bg-gray-50 text-gray-800"}`}>

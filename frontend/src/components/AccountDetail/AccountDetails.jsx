@@ -1,10 +1,14 @@
-import { ArrowDownToLineIcon, CreditCard, User, Phone, Mail, MapPin, Shield, Users, Building2, Copy, CheckCheck, ChevronRight, BadgeCheck, AlertCircle } from "lucide-react";
+import {
+  ArrowDownToLineIcon, CreditCard, User, Phone, Mail,
+  MapPin, Shield, Users, Copy, CheckCheck,
+  BadgeCheck, AlertCircle
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../../utils/apiServices";
 import jsPDF from "jspdf";
 
-const PAYZEN_LOGO = "data:image/jpeg;base64,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";
+const PAYZEN_LOGO = "data:image/jpeg;base64,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";
 
 export default function AccountDetails() {
   const navigate = useNavigate();
@@ -45,7 +49,6 @@ export default function AccountDetails() {
     const acc = data.account || {};
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const W = 210, H = 297;
-
     doc.saveGraphicsState();
     doc.setGState(new doc.GState({ opacity: 0.12 }));
     doc.addImage(PAYZEN_LOGO, "JPEG", W / 2 - 35, H / 2 - 35, 70, 70);
@@ -54,7 +57,6 @@ export default function AccountDetails() {
     doc.setFontSize(75);
     doc.text("PayZen", W / 2, H / 2 - 5, { align: "center", angle: 45 });
     doc.restoreGraphicsState();
-
     doc.setFillColor(15, 36, 96);
     doc.rect(0, 0, W, 45, "F");
     const cx = 24, cy = 22, cr = 14;
@@ -77,7 +79,6 @@ export default function AccountDetails() {
     const today = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
     doc.setFontSize(8);
     doc.text(`Generated: ${today}`, W - 12, 22, { align: "right" });
-
     doc.setFillColor(240, 244, 255);
     doc.roundedRect(14, 51, W - 28, 20, 3, 3, "F");
     doc.setDrawColor(200, 210, 240);
@@ -109,7 +110,6 @@ export default function AccountDetails() {
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.text(acc.status ? acc.status.toUpperCase() : "ACTIVE", 174, 65.5);
-
     let y = 78;
     const drawSection = (title, rows) => {
       if (y > 262) return;
@@ -145,10 +145,8 @@ export default function AccountDetails() {
       if (rows.length % 2 !== 0) y += 11;
       y += 5;
     };
-
     const maskAadhaar = (v) => v ? v.replace(/(\d{4})(\d{4})(\d{4})/, "XXXX XXXX $3") : "—";
     const maskPan = (v) => v ? "XXXXX" + v.slice(5) : "—";
-
     drawSection("Account Information", [
       ["Account Holder Name", data.name || acc.bank_holder_name],
       ["Account Type", acc.account_type],
@@ -173,7 +171,6 @@ export default function AccountDetails() {
       ["Nominee Name", acc.nominee_name],
       ["Nominee Relation", acc.nominee_relation],
     ]);
-
     doc.setFillColor(15, 36, 96);
     doc.rect(0, H - 16, W, 16, "F");
     doc.setTextColor(180, 200, 240);
@@ -184,17 +181,18 @@ export default function AccountDetails() {
     doc.save(`PayZen_Account_${acc.account_number || "Details"}.pdf`);
   };
 
+  /* ── Loading ── */
   if (loading) return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: 16 }}>
-      <div style={{ width: 40, height: 40, border: "3px solid #e2e8f0", borderTopColor: "#1e3a7b", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-      <p style={{ color: "#64748b", fontSize: 14, fontFamily: "Georgia, serif" }}>Loading account details...</p>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
+      <div className="w-10 h-10 rounded-full border-[3px] border-slate-200 border-t-blue-900 animate-spin" />
+      <p className="text-slate-500 text-sm font-serif">Loading account details...</p>
     </div>
   );
 
+  /* ── Error ── */
   if (error) return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "60vh" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#dc2626", fontFamily: "Georgia, serif" }}>
+    <div className="flex items-center justify-center h-[60vh]">
+      <div className="flex items-center gap-2.5 text-red-600 font-serif">
         <AlertCircle size={20} /> {error}
       </div>
     </div>
@@ -204,64 +202,63 @@ export default function AccountDetails() {
 
   return (
     <>
+      {/* ── Global font + keyframes ── */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .acct-font { font-family: 'DM Sans', sans-serif; }
+        .serif     { font-family: 'Playfair Display', Georgia, serif; }
         .acct-card { animation: fadeSlideUp 0.5s ease both; }
         .acct-card:nth-child(2) { animation-delay: 0.07s; }
         .acct-card:nth-child(3) { animation-delay: 0.14s; }
         .acct-card:nth-child(4) { animation-delay: 0.21s; }
         .acct-card:nth-child(5) { animation-delay: 0.28s; }
-        .copy-btn:hover { background: #f1f5f9 !important; }
-        .dl-btn:hover { background: #162e66 !important; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,123,0.35) !important; }
-        .detail-row:hover { background: #f8faff !important; }
+        .copy-btn:hover  { background: #f1f5f9 !important; }
+        .dl-btn:hover    { background: #162e66 !important; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,58,123,0.35) !important; }
+        .detail-row:hover { background: #f8faff; }
+        .fade-in-1 { animation: fadeSlideUp 0.45s ease both; }
+        .fade-in-2 { animation: fadeSlideUp 0.5s ease 0.35s both; opacity: 0; animation-fill-mode: forwards; }
+        .fade-in-3 { animation: fadeSlideUp 0.5s ease 0.42s both; opacity: 0; animation-fill-mode: forwards; }
       `}</style>
 
-      <div style={{ minHeight: "100vh", background: "#f0f4f8", fontFamily: "'DM Sans', sans-serif", padding: "28px 20px 48px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      <div className="min-h-screen bg-slate-100 px-4 sm:px-6 py-6 sm:py-8 pb-12 acct-font">
+        <div className="max-w-4xl mx-auto">
 
           {/* ── PAGE HEADER ── */}
-          <div style={{ marginBottom: 28, animation: "fadeSlideUp 0.4s ease both" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div className="fade-in-1 mb-6 sm:mb-7">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
               <div>
-                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 4 }}>
+                <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-slate-400 mb-1">
                   PayZen Bank
                 </p>
-                <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontWeight: 700, color: "#0f1e3c", margin: 0, lineHeight: 1.2 }}>
+                <h1 className="serif text-2xl sm:text-3xl font-bold text-[#0f1e3c] leading-tight m-0">
                   Account Details
                 </h1>
               </div>
 
               <button
                 onClick={downloadPDF}
-                className="dl-btn"
-                style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  background: "#1e3a7b", color: "#fff",
-                  border: "none", borderRadius: 10, cursor: "pointer",
-                  padding: "11px 20px", fontSize: 13, fontWeight: 600,
-                  fontFamily: "'DM Sans', sans-serif",
-                  boxShadow: "0 4px 14px rgba(30,58,123,0.25)",
-                  transition: "all 0.2s ease",
-                }}
+                className="dl-btn flex items-center gap-2 self-start sm:self-auto bg-blue-900 text-white border-0 rounded-xl cursor-pointer px-4 sm:px-5 py-3 text-[13px] font-semibold shadow-[0_4px_14px_rgba(30,58,123,0.25)] transition-all duration-200 acct-font"
               >
                 <ArrowDownToLineIcon size={15} />
-                Download Statement
+                <span>Download Statement</span>
               </button>
             </div>
           </div>
 
+          {/* ── NO ACCOUNT ── */}
           {!acc && (
-            <div style={{ background: "#fff", borderRadius: 16, padding: "56px 32px", textAlign: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-              <div style={{ width: 64, height: 64, background: "#f1f5f9", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-                <CreditCard size={28} color="#94a3b8" />
+            <div className="bg-white rounded-2xl p-10 sm:p-14 text-center shadow-sm">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CreditCard size={28} className="text-slate-400" />
               </div>
-              <p style={{ color: "#64748b", fontSize: 15, marginBottom: 20 }}>No bank account linked to your profile.</p>
+              <p className="text-slate-500 text-[15px] mb-5">No bank account linked to your profile.</p>
               <button
                 onClick={() => navigate("/open-account")}
-                style={{ background: "#1e3a7b", color: "#fff", border: "none", borderRadius: 10, padding: "12px 28px", fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}
+                className="bg-blue-900 text-white border-0 rounded-xl px-7 py-3 font-semibold text-sm cursor-pointer acct-font"
               >
                 + Open New Account
               </button>
@@ -270,61 +267,65 @@ export default function AccountDetails() {
 
           {acc && (
             <>
-              {/* ── ACCOUNT CARD (Bank Card Style) ── */}
-              <div style={{
-                background: "linear-gradient(135deg, #0f1e3c 0%, #1e3a7b 50%, #2d52a8 100%)",
-                borderRadius: 20, padding: "28px 32px", marginBottom: 24,
-                boxShadow: "0 12px 40px rgba(15,30,60,0.28)",
-                position: "relative", overflow: "hidden",
-                animation: "fadeSlideUp 0.45s ease both",
-              }}>
+              {/* ── BANK CARD ── */}
+              <div className="fade-in-1 relative rounded-2xl overflow-hidden mb-5 sm:mb-6 shadow-[0_12px_40px_rgba(15,30,60,0.28)] bg-gradient-to-br from-[#0f1e3c] via-[#1e3a7b] to-[#2d52a8] px-5 sm:px-8 py-6 sm:py-7">
                 {/* Decorative circles */}
-                <div style={{ position: "absolute", width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.04)", top: -60, right: -40 }} />
-                <div style={{ position: "absolute", width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,0.05)", bottom: -50, right: 80 }} />
-                <div style={{ position: "absolute", width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.04)", top: 20, right: 200 }} />
+                <div className="absolute w-[200px] h-[200px] rounded-full bg-white/[0.04] -top-[60px] -right-10 pointer-events-none" />
+                <div className="absolute w-[140px] h-[140px] rounded-full bg-white/[0.05] -bottom-[50px] right-20 pointer-events-none" />
+                <div className="absolute w-20 h-20 rounded-full bg-white/[0.04] top-5 right-[200px] pointer-events-none" />
 
-                <div style={{ position: "relative", zIndex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28 }}>
+                <div className="relative z-10">
+                  {/* Top: Name + Status */}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6 sm:mb-7">
                     <div>
-                      <p style={{ color: "rgba(180,200,240,0.7)", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>Account Holder</p>
-                      <p style={{ color: "#fff", fontSize: 20, fontWeight: 700, fontFamily: "'Playfair Display', serif", margin: 0 }}>{data.name || "—"}</p>
+                      <p className="text-[10px] text-blue-200/70 font-semibold tracking-[0.12em] uppercase mb-1">
+                        Account Holder
+                      </p>
+                      <p className="serif text-lg sm:text-xl font-bold text-white m-0">
+                        {data.name || "—"}
+                      </p>
                     </div>
-                    <div style={{ textAlign: "right" }}>
-                      <span style={{
-                        display: "inline-flex", alignItems: "center", gap: 5,
-                        background: acc.status === "active" ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
-                        color: acc.status === "active" ? "#4ade80" : "#f87171",
-                        border: `1px solid ${acc.status === "active" ? "rgba(74,222,128,0.3)" : "rgba(248,113,113,0.3)"}`,
-                        borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 600,
-                      }}>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: acc.status === "active" ? "#4ade80" : "#f87171" }} />
-                        {acc.status ? acc.status.charAt(0).toUpperCase() + acc.status.slice(1) : "Active"}
-                      </span>
-                    </div>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold self-start border
+                      ${acc.status === "active"
+                        ? "bg-green-500/15 text-green-300 border-green-400/30"
+                        : "bg-red-500/15 text-red-300 border-red-400/30"}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${acc.status === "active" ? "bg-green-400" : "bg-red-400"}`} />
+                      {acc.status ? acc.status.charAt(0).toUpperCase() + acc.status.slice(1) : "Active"}
+                    </span>
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
-                    <CardField label="Account Number" value={acc.account_number} onCopy={() => copyToClipboard(acc.account_number, "accno")} copied={copiedField === "accno"} />
-                    <CardField label="IFSC Code" value={acc.ifsc} onCopy={() => copyToClipboard(acc.ifsc, "ifsc")} copied={copiedField === "ifsc"} />
+                  {/* Account Fields — stack on mobile, 3-col on sm+ */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                    <CardField
+                      label="Account Number" value={acc.account_number}
+                      onCopy={() => copyToClipboard(acc.account_number, "accno")}
+                      copied={copiedField === "accno"}
+                    />
+                    <CardField
+                      label="IFSC Code" value={acc.ifsc}
+                      onCopy={() => copyToClipboard(acc.ifsc, "ifsc")}
+                      copied={copiedField === "ifsc"}
+                    />
                     <CardField label="Account Type" value={acc.account_type} />
                   </div>
 
-                  <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  {/* Bottom: Branch + Bank */}
+                  <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div>
-                      <p style={{ color: "rgba(180,200,240,0.6)", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>Branch</p>
-                      <p style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 500, margin: 0 }}>{acc.branch || "—"}</p>
+                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">Branch</p>
+                      <p className="text-slate-200 text-[13px] font-medium m-0">{acc.branch || "—"}</p>
                     </div>
-                    <div style={{ textAlign: "right" }}>
-                      <p style={{ color: "rgba(180,200,240,0.6)", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3 }}>Bank</p>
-                      <p style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 500, margin: 0, fontFamily: "'Playfair Display', serif" }}>PayZen Bank</p>
+                    <div className="sm:text-right">
+                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">Bank</p>
+                      <p className="serif text-slate-200 text-[13px] font-medium m-0">PayZen Bank</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* ── SECTIONS GRID ── */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-
+              {/* ── INFO SECTIONS GRID ── */}
+              {/* 2-col on md+, 1-col on mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                 <InfoSection
                   title="Personal Information"
                   icon={<User size={15} />}
@@ -335,7 +336,6 @@ export default function AccountDetails() {
                     { label: "Father's Name", value: acc.father_name },
                   ]}
                 />
-
                 <InfoSection
                   title="Contact Information"
                   icon={<Phone size={15} />}
@@ -345,61 +345,50 @@ export default function AccountDetails() {
                     { label: "Email Address", value: data.email, copy: true, field: "email", copiedField, onCopy: () => copyToClipboard(data.email, "email") },
                   ]}
                 />
-
                 <InfoSection
                   title="KYC Information"
                   icon={<Shield size={15} />}
                   className="acct-card"
                   badge={{ label: "KYC Verified", color: "green" }}
                   rows={[
-                    {
-                      label: "Aadhaar Number",
-                      value: acc.aadhaar ? acc.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, "XXXX XXXX $3") : "—"
-                    },
-                    {
-                      label: "PAN Number",
-                      value: acc.pan ? "XXXXX" + acc.pan.slice(5) : "—"
-                    },
+                    { label: "Aadhaar Number", value: acc.aadhaar ? acc.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, "XXXX XXXX $3") : "—" },
+                    { label: "PAN Number",     value: acc.pan ? "XXXXX" + acc.pan.slice(5) : "—" },
                   ]}
                 />
-
                 <InfoSection
                   title="Nominee Information"
                   icon={<Users size={15} />}
                   className="acct-card"
                   rows={[
-                    { label: "Nominee Name", value: acc.nominee_name },
+                    { label: "Nominee Name",     value: acc.nominee_name },
                     { label: "Nominee Relation", value: acc.nominee_relation },
                   ]}
                 />
-
               </div>
 
-              {/* ── ADDRESS FULL WIDTH ── */}
-              <div style={{ marginTop: 20, animation: "fadeSlideUp 0.5s ease both 0.35s", opacity: 0, animationFillMode: "forwards" }}>
-                <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8edf5", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
-                  <div style={{ padding: "16px 20px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 30, height: 30, background: "#eff6ff", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "#1e3a7b" }}>
-                        <MapPin size={15} />
-                      </div>
-                      <span style={{ fontWeight: 600, color: "#0f1e3c", fontSize: 14, fontFamily: "'Playfair Display', serif" }}>Registered Address</span>
+              {/* ── ADDRESS ── */}
+              <div className="fade-in-2 mt-4 sm:mt-5">
+                <div className="bg-white rounded-2xl border border-[#e8edf5] overflow-hidden shadow-sm">
+                  <div className="px-5 py-4 border-b border-slate-50 flex items-center gap-2">
+                    <div className="w-[30px] h-[30px] bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 shrink-0">
+                      <MapPin size={15} />
                     </div>
+                    <span className="serif font-semibold text-[#0f1e3c] text-sm">Registered Address</span>
                   </div>
-                  <div style={{ padding: "18px 20px" }}>
-                    <p style={{ color: "#374151", fontSize: 14, lineHeight: 1.7, margin: 0 }}>{data.address || "—"}</p>
+                  <div className="px-5 py-4">
+                    <p className="text-slate-700 text-sm leading-relaxed m-0">{data.address || "—"}</p>
                   </div>
                 </div>
               </div>
 
               {/* ── DISCLAIMER ── */}
-              <div style={{ marginTop: 24, padding: "14px 20px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 12, display: "flex", alignItems: "flex-start", gap: 10, animation: "fadeSlideUp 0.5s ease both 0.42s", opacity: 0, animationFillMode: "forwards" }}>
-                <AlertCircle size={15} color="#d97706" style={{ flexShrink: 0, marginTop: 1 }} />
-                <p style={{ color: "#92400e", fontSize: 12, lineHeight: 1.6, margin: 0 }}>
-                  Sensitive information such as Aadhaar and PAN numbers are partially masked for your security. For full details, visit your nearest PayZen Bank branch with valid ID proof.
+              <div className="fade-in-3 mt-5 px-4 sm:px-5 py-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5">
+                <AlertCircle size={15} className="text-amber-600 shrink-0 mt-0.5" />
+                <p className="text-amber-900 text-[12px] leading-relaxed m-0">
+                  Sensitive information such as Aadhaar and PAN numbers are partially masked for your security.
+                  For full details, visit your nearest PayZen Bank branch with valid ID proof.
                 </p>
               </div>
-
             </>
           )}
         </div>
@@ -408,17 +397,22 @@ export default function AccountDetails() {
   );
 }
 
-/* ── CARD FIELD (inside blue bank card) ── */
+/* ── CARD FIELD — inside blue bank card ── */
 function CardField({ label, value, onCopy, copied }) {
   return (
     <div>
-      <p style={{ color: "rgba(180,200,240,0.65)", fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 5 }}>{label}</p>
-      <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-        <p style={{ color: "#fff", fontSize: 14, fontWeight: 700, margin: 0, letterSpacing: "0.03em", fontFamily: "'DM Sans', monospace" }}>{value || "—"}</p>
+      <p className="text-[10px] text-blue-200/65 font-semibold tracking-[0.1em] uppercase mb-1.5">
+        {label}
+      </p>
+      <div className="flex items-center gap-1.5">
+        <p className="text-white text-sm font-bold m-0 tracking-[0.03em] font-mono">
+          {value || "—"}
+        </p>
         {onCopy && value && (
           <button
             onClick={onCopy}
-            style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 5, padding: "3px 5px", cursor: "pointer", display: "flex", alignItems: "center", color: copied ? "#4ade80" : "rgba(255,255,255,0.6)", transition: "all 0.2s" }}
+            className={`bg-white/10 border-0 rounded-[5px] p-1 cursor-pointer flex items-center transition-colors duration-200
+              ${copied ? "text-green-400" : "text-white/60"}`}
           >
             {copied ? <CheckCheck size={12} /> : <Copy size={12} />}
           </button>
@@ -431,26 +425,20 @@ function CardField({ label, value, onCopy, copied }) {
 /* ── INFO SECTION ── */
 function InfoSection({ title, icon, rows, badge, className }) {
   return (
-    <div
-      className={className}
-      style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8edf5", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}
-    >
+    <div className={`${className} bg-white rounded-2xl border border-[#e8edf5] overflow-hidden shadow-sm`}>
       {/* Header */}
-      <div style={{ padding: "15px 20px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 30, height: 30, background: "#eff6ff", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "#1e3a7b" }}>
+      <div className="px-5 py-[15px] border-b border-slate-50 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-[30px] h-[30px] bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 shrink-0">
             {icon}
           </div>
-          <span style={{ fontWeight: 600, color: "#0f1e3c", fontSize: 14, fontFamily: "'Playfair Display', serif" }}>{title}</span>
+          <span className="serif font-semibold text-[#0f1e3c] text-sm">{title}</span>
         </div>
         {badge && (
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: 4,
-            background: badge.color === "green" ? "#f0fdf4" : "#fef2f2",
-            color: badge.color === "green" ? "#16a34a" : "#dc2626",
-            border: `1px solid ${badge.color === "green" ? "#bbf7d0" : "#fecaca"}`,
-            borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 600,
-          }}>
+          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-[3px] text-[10px] font-semibold border
+            ${badge.color === "green"
+              ? "bg-green-50 text-green-700 border-green-200"
+              : "bg-red-50 text-red-600 border-red-200"}`}>
             <BadgeCheck size={11} /> {badge.label}
           </span>
         )}
@@ -461,31 +449,28 @@ function InfoSection({ title, icon, rows, badge, className }) {
         {rows.map((row, i) => (
           <div
             key={i}
-            className="detail-row"
-            style={{
-              padding: "13px 20px",
-              borderBottom: i < rows.length - 1 ? "1px solid #f8fafc" : "none",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              transition: "background 0.15s ease",
-            }}
+            className={`detail-row px-5 py-[13px] flex justify-between items-center transition-colors duration-150
+              ${i < rows.length - 1 ? "border-b border-slate-50" : ""}`}
           >
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, marginBottom: 3, textTransform: "uppercase", letterSpacing: "0.06em" }}>{row.label}</p>
-              <p style={{ fontSize: 14, color: "#1e293b", fontWeight: 600, margin: 0 }}>{row.value || "—"}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] text-slate-400 font-medium mb-[3px] uppercase tracking-[0.06em]">
+                {row.label}
+              </p>
+              <p className="text-sm text-slate-800 font-semibold m-0 truncate">
+                {row.value || "—"}
+              </p>
             </div>
             {row.copy && row.value && (
               <button
-                className="copy-btn"
+                className={`copy-btn ml-3 shrink-0 border border-slate-200 rounded-lg px-2 py-1.5 cursor-pointer
+                  flex items-center gap-1.5 text-[11px] font-medium transition-all duration-150 bg-transparent acct-font
+                  ${row.copiedField === row.field ? "text-green-600" : "text-slate-500"}`}
                 onClick={row.onCopy}
-                style={{
-                  background: "transparent", border: "1px solid #e2e8f0", borderRadius: 7,
-                  padding: "5px 8px", cursor: "pointer",
-                  display: "flex", alignItems: "center", gap: 5,
-                  color: row.copiedField === row.field ? "#16a34a" : "#64748b",
-                  fontSize: 11, fontWeight: 500, transition: "all 0.15s", fontFamily: "'DM Sans', sans-serif",
-                }}
               >
-                {row.copiedField === row.field ? <><CheckCheck size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+                {row.copiedField === row.field
+                  ? <><CheckCheck size={12} /> Copied</>
+                  : <><Copy size={12} /> Copy</>
+                }
               </button>
             )}
           </div>

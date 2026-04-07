@@ -12,12 +12,12 @@ import { adminGetAllKycs, adminUpdateKycStatus, kycSendOtp, kycVerifyOtp, kycSub
 function StatusBadge({ status }) {
   const map = {
     Verified: "bg-green-100 text-green-700",
-    Pending: "bg-yellow-100 text-yellow-700",
+    Pending:  "bg-yellow-100 text-yellow-700",
     Rejected: "bg-red-100 text-red-700",
   };
   const dot = {
     Verified: "bg-green-500",
-    Pending: "bg-yellow-500",
+    Pending:  "bg-yellow-500",
     Rejected: "bg-red-500",
   };
   return (
@@ -31,12 +31,12 @@ function StatusBadge({ status }) {
 /* ── Stat Card ── */
 function StatCard({ label, value, icon: Icon, iconClass }) {
   return (
-    <div className="flex-1 min-w-[120px] bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-col gap-2 hover:-translate-y-1 transition-transform duration-200">
+    <div className="flex-1 min-w-[110px] bg-white rounded-2xl border border-gray-100 shadow-sm p-3 sm:p-4 flex flex-col gap-2 hover:-translate-y-1 transition-transform duration-200">
       <div className="flex items-center justify-between">
         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</p>
-        <Icon size={20} className={iconClass} />
+        <Icon size={18} className={iconClass} />
       </div>
-      <h3 className="text-2xl font-black text-gray-800 tracking-tight">{value}</h3>
+      <h3 className="text-xl sm:text-2xl font-black text-gray-800 tracking-tight">{value}</h3>
     </div>
   );
 }
@@ -53,7 +53,7 @@ function Input({ label, name, value, onChange, type = "text", placeholder, maxLe
         <input
           type={type} name={name} value={value} onChange={onChange}
           maxLength={maxLength} placeholder={placeholder}
-          className={`w-full border rounded-xl py-2 text-sm bg-gray-50 focus:ring-2 focus:ring-blue-500 
+          className={`w-full border rounded-xl py-2 text-sm bg-gray-50 focus:ring-2 focus:ring-blue-500
             focus:bg-white outline-none transition-all ${icon ? "pl-8 pr-3" : "px-3"}
             ${error ? "border-red-400" : "border-gray-200"}`}
         />
@@ -131,13 +131,13 @@ function KYCForm({ onSubmit, onCancel }) {
   const STEPS = ["Personal Info", "Documents", "OTP"];
 
   return (
-    <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-3 sm:p-4">
       <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl border border-gray-100 max-h-[92vh] flex flex-col">
-        
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl z-10">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl z-10">
           <div>
-            <h3 className="text-base font-bold text-gray-800 flex items-center gap-2">
+            <h3 className="text-sm sm:text-base font-bold text-gray-800 flex items-center gap-2">
               <FileText size={16} className="text-blue-900" /> Submit New KYC
             </h3>
             <p className="text-xs text-gray-400 mt-0.5">Step {step} of 3</p>
@@ -148,20 +148,20 @@ function KYCForm({ onSubmit, onCancel }) {
         </div>
 
         {/* Stepper */}
-        <div className="flex items-center px-6 pt-4 pb-2 gap-2">
+        <div className="flex items-center px-4 sm:px-6 pt-4 pb-2 gap-1 sm:gap-2">
           {STEPS.map((label, i) => {
             const s = i + 1; const active = step === s; const done = step > s;
             return (
               <div key={s} className="flex items-center" style={{ flex: i < STEPS.length - 1 ? 1 : 0 }}>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
+                <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs font-bold
                     ${active || done ? "bg-blue-900 text-white" : "bg-gray-100 text-gray-400"}`}>
                     {done ? "✓" : s}
                   </div>
-                  <span className={`text-xs font-semibold ${active ? "text-blue-900" : "text-gray-400"}`}>{label}</span>
+                  <span className={`text-[10px] sm:text-xs font-semibold hidden sm:inline ${active ? "text-blue-900" : "text-gray-400"}`}>{label}</span>
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div className={`flex-1 h-0.5 mx-3 rounded-full ${step > s ? "bg-blue-900" : "bg-gray-200"}`} />
+                  <div className={`flex-1 h-0.5 mx-1 sm:mx-3 rounded-full ${step > s ? "bg-blue-900" : "bg-gray-200"}`} />
                 )}
               </div>
             );
@@ -169,7 +169,7 @@ function KYCForm({ onSubmit, onCancel }) {
         </div>
 
         {/* Body */}
-        <div className="px-6 py-4 overflow-y-auto flex-1">
+        <div className="px-4 sm:px-6 py-4 overflow-y-auto flex-1">
 
           {/* Step 1 */}
           {step === 1 && (
@@ -177,7 +177,7 @@ function KYCForm({ onSubmit, onCancel }) {
               <p className="text-[10px] font-bold text-blue-900 uppercase tracking-widest pb-2 border-b-2 border-gray-100">Personal Information</p>
               <Input label="Full Name" name="name" value={form.name} onChange={f("name")}
                 placeholder="e.g. Rahul Mehta" icon={<User size={13} />} required error={errors.name} />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input label="Email" type="email" name="email" value={form.email} onChange={f("email")}
                   placeholder="email@gmail.com" icon={<Mail size={13} />} required error={errors.email} />
                 <Input label="Phone" type="tel" name="phone" value={form.phone} onChange={f("phone")}
@@ -216,8 +216,10 @@ function KYCForm({ onSubmit, onCancel }) {
                 onChange={(e) => setForm({ ...form, pan: e.target.value.toUpperCase() })}
                 maxLength={10} placeholder="e.g. ABCDE1234F" icon={<CreditCard size={13} />} required error={errors.pan} />
 
-              {[{ id: "aadhaar-upload", key: "aadhaarDoc", label: "Aadhaar Document" },
-                { id: "pan-upload", key: "panDoc", label: "PAN Document" }].map(({ id, key, label }) => (
+              {[
+                { id: "aadhaar-upload", key: "aadhaarDoc", label: "Aadhaar Document" },
+                { id: "pan-upload",     key: "panDoc",     label: "PAN Document"     },
+              ].map(({ id, key, label }) => (
                 <div key={id}>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">{label}</p>
                   <label htmlFor={id}
@@ -326,9 +328,9 @@ export default function AdminKYC() {
   }
 
   const counts = {
-    All: kycList.length,
+    All:      kycList.length,
     Verified: kycList.filter(k => k.status === "Verified").length,
-    Pending: kycList.filter(k => k.status === "Pending").length,
+    Pending:  kycList.filter(k => k.status === "Pending").length,
     Rejected: kycList.filter(k => k.status === "Rejected").length,
   };
 
@@ -374,7 +376,7 @@ export default function AdminKYC() {
     <div className="font-sans">
       {showForm && <KYCForm onSubmit={handleFormSubmit} onCancel={() => setShowForm(false)} />}
 
-      <h2 className="text-lg font-black text-gray-800 mb-3">KYC Management</h2>
+      <h2 className="text-base sm:text-lg font-black text-gray-800 mb-3">KYC Management</h2>
 
       {/* New KYC Button */}
       <div className="mb-4">
@@ -385,11 +387,11 @@ export default function AdminKYC() {
       </div>
 
       {/* Stat Cards */}
-      <div className="flex flex-wrap gap-2.5 mb-5">
-        <StatCard label="Total KYC" value={counts.All} icon={FileText} iconClass="text-blue-500" />
-        <StatCard label="Verified" value={counts.Verified} icon={CheckCircle2} iconClass="text-green-500" />
-        <StatCard label="Pending" value={counts.Pending} icon={Clock} iconClass="text-yellow-500" />
-        <StatCard label="Rejected" value={counts.Rejected} icon={XCircle} iconClass="text-red-500" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
+        <StatCard label="Total KYC"  value={counts.All}      icon={FileText}     iconClass="text-blue-500"   />
+        <StatCard label="Verified"   value={counts.Verified} icon={CheckCircle2} iconClass="text-green-500"  />
+        <StatCard label="Pending"    value={counts.Pending}  icon={Clock}        iconClass="text-yellow-500" />
+        <StatCard label="Rejected"   value={counts.Rejected} icon={XCircle}      iconClass="text-red-500"    />
       </div>
 
       {/* Alert */}
@@ -401,11 +403,11 @@ export default function AdminKYC() {
       )}
 
       {/* Filter + Search */}
-      <div className="flex flex-wrap gap-3 items-center justify-between mb-4">
-        <div className="flex gap-1 bg-white border border-gray-200 rounded-xl p-1">
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-4">
+        <div className="flex flex-wrap gap-1 bg-white border border-gray-200 rounded-xl p-1 w-full sm:w-auto">
           {FILTERS.map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap
+              className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap
                 ${filter === f ? "bg-blue-900 text-white shadow-sm" : "text-gray-500 hover:bg-gray-50"}`}>
               {f}
               <span className={`ml-1.5 text-[10px] font-black px-1.5 py-0.5 rounded-full
@@ -415,7 +417,7 @@ export default function AdminKYC() {
             </button>
           ))}
         </div>
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full sm:max-w-xs">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search name, email or PAN..."
@@ -430,15 +432,15 @@ export default function AdminKYC() {
         </div>
       )}
 
-      {/* Table */}
+      {/* Table — scrollable on mobile */}
       {!loading && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse min-w-[700px]">
               <thead>
                 <tr className="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900">
                   {["#", "Name", "Email", "Aadhaar", "PAN", "Submitted", "Status", "Actions"].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-3 sm:px-4 py-3 text-left text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -452,34 +454,34 @@ export default function AdminKYC() {
                   </tr>
                 ) : filtered.map((k, i) => (
                   <tr key={k.id} className="hover:bg-blue-50/50 transition-colors border-b border-gray-50 last:border-0">
-                    <td className="px-4 py-3 text-xs text-gray-400 font-semibold">{i + 1}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 font-semibold">{i + 1}</td>
+                    <td className="px-3 sm:px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
                           {k.name?.charAt(0)}
                         </div>
-                        <span className="text-sm font-bold text-gray-800 whitespace-nowrap">{k.name}</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-800 whitespace-nowrap">{k.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{k.email}</td>
-                    <td className="px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">{k.aadhaar}</td>
-                    <td className="px-4 py-3 text-xs font-mono font-bold text-blue-600 whitespace-nowrap">{k.pan}</td>
-                    <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{k.submitted}</td>
-                    <td className="px-4 py-3"><StatusBadge status={k.status} /></td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5">
+                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{k.email}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">{k.aadhaar}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs font-mono font-bold text-blue-600 whitespace-nowrap">{k.pan}</td>
+                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{k.submitted}</td>
+                    <td className="px-3 sm:px-4 py-3"><StatusBadge status={k.status} /></td>
+                    <td className="px-3 sm:px-4 py-3">
+                      <div className="flex items-center gap-1 flex-wrap">
                         <button onClick={() => { setSelected(k); setModal("view"); }}
-                          className="flex items-center gap-1 px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[11px] font-bold rounded-lg transition-colors">
+                          className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
                           <Eye size={11} /> View
                         </button>
                         {k.status === "Pending" && (
                           <>
                             <button onClick={() => { setSelected(k); setModal("approve"); }}
-                              className="flex items-center gap-1 px-2.5 py-1 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-colors">
+                              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
                               <CheckCircle size={11} /> Approve
                             </button>
                             <button onClick={() => { setSelected(k); setModal("reject"); setRejectReason(""); setRejectError(""); }}
-                              className="flex items-center gap-1 px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[11px] font-bold rounded-lg transition-colors">
+                              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
                               <XCircle size={11} /> Reject
                             </button>
                           </>
@@ -496,22 +498,22 @@ export default function AdminKYC() {
 
       {/* ── VIEW MODAL ── */}
       {modal === "view" && selected && (
-        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl border border-gray-100 max-h-[90vh] flex flex-col">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl">
-              <h3 className="text-base font-bold text-gray-800">🪪 KYC Details</h3>
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 sticky top-0 bg-white rounded-t-2xl">
+              <h3 className="text-sm sm:text-base font-bold text-gray-800">🪪 KYC Details</h3>
               <button onClick={() => setModal(null)} className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors">
                 <X size={15} />
               </button>
             </div>
-            <div className="px-6 py-4 overflow-y-auto flex-1 space-y-4">
+            <div className="px-4 sm:px-6 py-4 overflow-y-auto flex-1 space-y-4">
               {/* Profile */}
-              <div className="flex items-center gap-4 bg-gray-50 rounded-xl p-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-2xl font-black shrink-0">
+              <div className="flex items-center gap-3 sm:gap-4 bg-gray-50 rounded-xl p-3 sm:p-4">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-xl sm:text-2xl font-black shrink-0">
                   {selected.name?.charAt(0)}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-800">{selected.name}</p>
+                  <p className="font-bold text-gray-800 text-sm sm:text-base">{selected.name}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{selected.email}</p>
                   <div className="mt-1.5"><StatusBadge status={selected.status} /></div>
                 </div>
@@ -520,16 +522,16 @@ export default function AdminKYC() {
               {/* Personal Info */}
               <div>
                 <p className="text-[10px] font-black text-blue-900 uppercase tracking-widest mb-2 pb-2 border-b-2 border-gray-100">Personal Information</p>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                <div className="grid grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-2">
                   {[["Phone", selected.phone], ["Date of Birth", selected.dob], ["Submitted", selected.submitted]].map(([k, v]) => (
                     <div key={k}>
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">{k}</p>
-                      <p className="text-sm font-semibold text-gray-700">{v}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-gray-700">{v}</p>
                     </div>
                   ))}
                   <div className="col-span-2">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Address</p>
-                    <p className="text-sm font-semibold text-gray-700">{selected.address}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-gray-700">{selected.address}</p>
                   </div>
                 </div>
               </div>
@@ -541,7 +543,7 @@ export default function AdminKYC() {
                   {[["Aadhaar Number", selected.aadhaar, false], ["PAN Number", selected.pan, true]].map(([k, v, isPan]) => (
                     <div key={k} className="flex justify-between items-center py-2.5">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">{k}</span>
-                      <span className={`text-sm font-bold font-mono ${isPan ? "text-blue-600" : "text-gray-700"}`}>{v}</span>
+                      <span className={`text-xs sm:text-sm font-bold font-mono ${isPan ? "text-blue-600" : "text-gray-700"}`}>{v}</span>
                     </div>
                   ))}
                   {[["Aadhaar Doc", selected.aadhaarDoc], ["PAN Doc", selected.panDoc]].map(([k, v]) => (
@@ -564,7 +566,7 @@ export default function AdminKYC() {
               {selected.status === "Rejected" && selected.rejectReason && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-3">
                   <p className="text-[10px] font-bold text-red-500 uppercase tracking-wide mb-1">Rejection Reason</p>
-                  <p className="text-sm font-semibold text-red-700">{selected.rejectReason}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-red-700">{selected.rejectReason}</p>
                 </div>
               )}
 
@@ -579,15 +581,15 @@ export default function AdminKYC() {
 
       {/* ── APPROVE MODAL ── */}
       {modal === "approve" && selected && (
-        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-gray-100">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h3 className="font-bold text-gray-800">✅ Approve KYC</h3>
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100">
+              <h3 className="font-bold text-gray-800 text-sm sm:text-base">✅ Approve KYC</h3>
               <button onClick={() => setModal(null)} className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500">
                 <X size={15} />
               </button>
             </div>
-            <div className="px-5 py-4 space-y-3">
+            <div className="px-4 sm:px-5 py-4 space-y-3">
               <p className="text-sm text-gray-700">Approve KYC for <strong>{selected.name}</strong>?</p>
               <p className="text-xs text-gray-500">PAN: <span className="font-mono font-bold text-gray-700">{selected.pan}</span></p>
               <div className="bg-green-50 border border-green-200 rounded-xl px-3 py-2 text-xs text-green-700 font-semibold">
@@ -607,15 +609,15 @@ export default function AdminKYC() {
 
       {/* ── REJECT MODAL ── */}
       {modal === "reject" && selected && (
-        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-blue-950/50 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-gray-100">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <h3 className="font-bold text-gray-800">❌ Reject KYC</h3>
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100">
+              <h3 className="font-bold text-gray-800 text-sm sm:text-base">❌ Reject KYC</h3>
               <button onClick={() => setModal(null)} className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500">
                 <X size={15} />
               </button>
             </div>
-            <div className="px-5 py-4 space-y-3">
+            <div className="px-4 sm:px-5 py-4 space-y-3">
               <p className="text-sm text-gray-700">Reject KYC for <strong>{selected.name}</strong>?</p>
               <div>
                 <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">

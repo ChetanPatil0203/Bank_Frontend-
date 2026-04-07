@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { adminLogin } from "../../utils/apiServices";
 
 /* ═══════════════════════════════════════
    TOAST
@@ -232,21 +233,33 @@ export default function AdminLogin() {
     setTimeout(() => setShakeCard(false), 500);
   };
 
-  // ── Direct navigate to admin dashboard on login ──
+  // ── Call real backend API ──
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!formData.email || !formData.password) {
-    triggerRedAlert();
-    showToast("Email aani Password bharaa!", "error");
-    return;
-  }
-  setLoading(true);
-  setTimeout(() => {
-    showToast("Admin Login Successful! 🎉", "success");
-    setTimeout(() => navigate("/admindashboard/dashboard"), 1000); // ← हे fix केलं
-    setLoading(false);
-  }, 1500);
-};
+    e.preventDefault();
+    if (!formData.email || !formData.password) {
+      triggerRedAlert();
+      showToast("Email aani Password bharaa!", "error");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await adminLogin(formData);
+      if (res.success) {
+        localStorage.setItem("payzen_token", res.token);
+        localStorage.setItem("payzen_user", JSON.stringify(res.user));
+        showToast(res.message || "Admin Login Successful! 🎉", "success");
+        setTimeout(() => navigate("/admindashboard/dashboard"), 1000);
+      } else {
+        triggerRedAlert();
+        showToast(res.message || "Invalid Credentials!", "error");
+      }
+    } catch (err) {
+      triggerRedAlert();
+      showToast("Server error! Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const inputStyle = (name) => ({
     width: "100%", boxSizing: "border-box",
@@ -382,8 +395,6 @@ export default function AdminLogin() {
                     </div>
                   </div>
 
-                  
-
                   {/* Submit */}
                   <button type="submit" disabled={loading} style={{
                     width: "100%", marginTop: 4, padding: "14px 24px",
@@ -417,10 +428,6 @@ export default function AdminLogin() {
                 </div>
               </form>
 
-             
-
-        
-
             </div>
           </div>
         </div>
@@ -428,3 +435,4 @@ export default function AdminLogin() {
     </>
   );
 }
+

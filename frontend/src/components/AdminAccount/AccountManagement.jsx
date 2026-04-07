@@ -262,7 +262,7 @@ function CreateAccountModal({ onClose, onSuccess }) {
       if (files.pan) fd.append("pan_doc", files.pan);
       if (signatureData) fd.append("signature", signatureData);
 
-      const res = await fetch(`${BASE_URL}/requests`, { method: "POST", body: fd });
+      const res = await fetch(`${BASE_URL}/account-requests`, { method: "POST", body: fd });
       if (res.ok) {
         onSuccess && onSuccess();
         onClose();
@@ -729,7 +729,7 @@ export default function AccountsView() {
     try {
       const [accRes, reqRes] = await Promise.all([
         fetch(`${BASE_URL}/accounts`),
-        fetch(`${BASE_URL}/requests`)
+        fetch(`${BASE_URL}/account-requests`)
       ]);
       const accData = await accRes.json();
       const reqData = await reqRes.json();
@@ -780,11 +780,11 @@ export default function AccountsView() {
   }
 
   async function handleApprove(req) {
-    try { const res = await fetch(`${BASE_URL}/requests/${req.id}/approve`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await fetch(`${BASE_URL}/account-requests/${req.id}/approve`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
   }
 
   async function handleReject(req) {
-    try { const res = await fetch(`${BASE_URL}/requests/${req.id}/reject`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await fetch(`${BASE_URL}/account-requests/${req.id}/reject`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
   }
 
   const TABS = [
