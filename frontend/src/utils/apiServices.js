@@ -22,15 +22,21 @@ async function request(endpoint, method = "GET", body = null, auth = false) {
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 export const registerUser   = (body) => request("/auth/register",  "POST", body);
-export const loginUser      = (email, password) => request("/auth/login", "POST", { email, password });
+export const loginUser      = (email, password, fcm_token = null) => request("/auth/login", "POST", { email, password, fcm_token });
 export const logoutUser     = ()     => request("/auth/logout",    "POST", null, true);
 
 // ─── USER ─────────────────────────────────────────────────────────────────────
-export const getProfile     = ()     => request("/users/profile",  "GET",  null, true);
-export const updateProfile  = (body) => request("/users/profile",  "PUT",  body, true);
+export const getProfile     = ()     => request("/settings/profile",  "GET",  null, true);
+export const updateProfile  = (body) => request("/settings/profile",  "PUT",  body, true);
 export const sendOtp        = (body) => request("/auth/send-otp",  "POST", body);
 export const verifyOtp      = (body) => request("/auth/verify-otp","POST", body);
 export const resetPassword  = (body) => request("/auth/reset-password","POST", body);
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+export const getPreferences    = ()     => request("/settings/preferences", "GET", null, true);
+export const updatePreferences = (body) => request("/settings/preferences", "PUT", body, true);
+export const changePassword    = (body) => request("/settings/security/change-password", "POST", body, true);
+export const getLoginActivity  = ()     => request("/settings/security/activity", "GET", null, true);
 
 // ─── ACCOUNT ──────────────────────────────────────────────────────────────────
 export const openAccount = async (data) => {

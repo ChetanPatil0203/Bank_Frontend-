@@ -11,23 +11,17 @@ import AdminTransactionManager from "../AdminTransation/admintransation.jsx";
 import AdminKYC from "../AdminKYC/kyc.jsx";
 import AdminSettings from "../AdminSetting/setting.jsx";
 
-/* ── Data ── */
-const TRANSACTIONS = [
-  { id: "TXN001", user: "Chetan Patil",     type: "Credit", amount: "₹25,000",  date: "13 Mar 2026", status: "Success" },
-  { id: "TXN002", user: "Rohit Sharma",     type: "Debit",  amount: "₹8,500",   date: "13 Mar 2026", status: "Success" },
-  { id: "TXN003", user: "Priya Desai",      type: "Credit", amount: "₹1,20,000",date: "12 Mar 2026", status: "Pending" },
-  { id: "TXN004", user: "Amit Joshi",       type: "Debit",  amount: "₹3,200",   date: "12 Mar 2026", status: "Failed"  },
-  { id: "TXN005", user: "Sneha Kulkarni",   type: "Credit", amount: "₹50,000",  date: "11 Mar 2026", status: "Success" },
-];
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
-const STAT_CARDS = [
-  { label: "Total Users",        value: "12,480", icon: Users,    color: "text-blue-600",   bgColor: "bg-blue-500/10",    borderColor: "border-blue-200",   border: "hover:border-blue-500"   },
-  { label: "Total Accounts",     value: "9,341",  icon: CreditCard,color:"text-emerald-600",bgColor: "bg-emerald-500/10", borderColor: "border-emerald-200",border: "hover:border-emerald-500"},
-  { label: "Total Balance",      value: "₹84.2L", icon: Wallet,   color: "text-amber-600",  bgColor: "bg-amber-500/10",   borderColor: "border-amber-200",  border: "hover:border-amber-500"  },
-  { label: "Total Transactions", value: "3,892",  icon: Repeat,   color: "text-violet-600", bgColor: "bg-violet-500/10",  borderColor: "border-violet-200", border: "hover:border-violet-500" },
-  { label: "Pending KYC",        value: "1,638",  icon: FileClock,color: "text-red-600",    bgColor: "bg-red-500/10",     borderColor: "border-red-200",    border: "hover:border-red-500"    },
-  { label: "Account Requests",   value: "247",    icon: Building2,color: "text-cyan-600",   bgColor: "bg-cyan-500/10",    borderColor: "border-cyan-200",   border: "hover:border-cyan-500"   },
-];
+/* ── Mapping Icons to Stat Labels ── */
+const STAT_CONFIG = {
+  "Total Users":        { icon: Users,      color: "text-blue-600",   bgColor: "bg-blue-500/10",    borderColor: "border-blue-200",   border: "hover:border-blue-500"   },
+  "Total Accounts":     { icon: CreditCard, color: "text-emerald-600",bgColor: "bg-emerald-500/10", borderColor: "border-emerald-200",border: "hover:border-emerald-500"},
+  "Total Balance":      { icon: Wallet,     color: "text-amber-600",  bgColor: "bg-amber-500/10",   borderColor: "border-amber-200",  border: "hover:border-amber-500"  },
+  "Total Transactions": { icon: Repeat,     color: "text-violet-600", bgColor: "bg-violet-500/10",  borderColor: "border-violet-200", border: "hover:border-violet-500" },
+  "Pending KYC":        { icon: FileClock,  color: "text-red-600",    bgColor: "bg-red-500/10",     borderColor: "border-red-200",    border: "hover:border-red-500"    },
+  "Account Requests":   { icon: Building2,  color: "text-cyan-600",   bgColor: "bg-cyan-500/10",    borderColor: "border-cyan-200",   border: "hover:border-cyan-500"   },
+};
 
 const NAV = [
   { id: "dashboard",   label: "Dashboard",   icon: LayoutDashboard },
@@ -53,24 +47,33 @@ function Badge({ status }) {
 }
 
 /* ── Dashboard View ── */
-function DashboardView() {
+function DashboardView({ stats, transactions, loading }) {
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-slate-500 font-medium animate-pulse">Fetching real-time data...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-3">
         <h2 className="text-lg sm:text-xl font-extrabold text-slate-800">Dashboard Overview</h2>
       </div>
 
-      {/* Stat Cards — 2 cols mobile, 3 cols sm, 6 cols lg */}
+      {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-5">
-        {STAT_CARDS.map((s, i) => {
-          const Icon = s.icon;
+        {stats.map((s, i) => {
+          const config = STAT_CONFIG[s.label] || STAT_CONFIG["Total Users"];
+          const Icon = config.icon;
           return (
             <div
               key={i}
-              style={{ animationDelay: `${i * 50}ms` }}
               className={`
                 group relative overflow-hidden
-                ${s.bgColor} border ${s.borderColor} ${s.border}
+                ${config.bgColor} border ${config.borderColor} ${config.border}
                 rounded-2xl px-3 py-3 sm:px-4 sm:py-4
                 shadow-sm flex flex-col gap-2 sm:gap-3
                 transition-all duration-300
@@ -81,7 +84,7 @@ function DashboardView() {
                 <p className="text-[11px] sm:text-[13px] tracking-wide text-slate-500 font-bold leading-snug">
                   {s.label}
                 </p>
-                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${s.color} transition-transform duration-500 group-hover:rotate-[10deg]`}>
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${config.color} transition-transform duration-500 group-hover:rotate-[10deg]`}>
                   <Icon size={20} className="opacity-90" />
                 </div>
               </div>
@@ -97,7 +100,7 @@ function DashboardView() {
       {/* Transactions */}
       <div className="mb-3">
         <h2 className="text-lg sm:text-xl font-extrabold text-slate-800">Recent Transactions</h2>
-        <p className="text-xs sm:text-[13px] text-slate-500 mt-1">Last 5 transactions across all accounts</p>
+        <p className="text-xs sm:text-[13px] text-slate-500 mt-1">Last 5 transactions from the database</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -113,21 +116,28 @@ function DashboardView() {
               </tr>
             </thead>
             <tbody>
-              {TRANSACTIONS.map((t, idx) => (
+              {transactions.map((t) => (
                 <tr key={t.id} className="border-b border-slate-100 hover:bg-blue-50/40 transition-colors">
-                  <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-800 font-semibold whitespace-nowrap">{t.id}</td>
+                  <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-800 font-semibold whitespace-nowrap">#{t.id}</td>
                   <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-800 whitespace-nowrap">{t.user}</td>
                   <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] whitespace-nowrap">
-                    <span className={`flex items-center gap-1 text-xs font-bold ${t.type === "Credit" ? "text-emerald-600" : "text-red-500"}`}>
-                      {t.type === "Credit" ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+                    <span className={`flex items-center gap-1 text-xs font-bold ${t.type === "Credit" || t.type === "Deposit" ? "text-emerald-600" : "text-red-500"}`}>
+                      {(t.type === "Credit" || t.type === "Deposit") ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
                       {t.type}
                     </span>
                   </td>
-                  <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-800 font-semibold whitespace-nowrap">{t.amount}</td>
+                  <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-800 font-semibold whitespace-nowrap">
+                    ₹{t.amount.toLocaleString()}
+                  </td>
                   <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] text-slate-500 whitespace-nowrap">{t.date}</td>
                   <td className="px-3 sm:px-4 py-3 text-xs sm:text-[13px] whitespace-nowrap"><Badge status={t.status} /></td>
                 </tr>
               ))}
+              {transactions.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="text-center py-10 text-slate-400">No transactions found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -141,8 +151,26 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebar] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1024);
+  const [dashData, setDashData] = useState({ stats: [], transactions: [] });
+  const [loading, setLoading] = useState(true);
 
   const active = location.pathname.split("/")[2] || "dashboard";
+
+  /* Fetch Dynamic Stats */
+  useEffect(() => {
+    if (active === "dashboard") {
+      setLoading(true);
+      fetch(`${API_BASE_URL}/admin/dashboard-stats`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setDashData(data.data);
+          }
+        })
+        .catch(err => console.error("Error fetching stats:", err))
+        .finally(() => setLoading(false));
+    }
+  }, [active]);
 
   /* Close sidebar on resize to mobile */
   useEffect(() => {
@@ -232,7 +260,7 @@ export default function AdminDashboard() {
                 className={`
                   w-full flex items-center gap-3 px-3 py-2.5 rounded-[10px]
                   text-sm cursor-pointer mb-0.5 transition-all duration-150
-                  text-left whitespace-nowrap border-l-[3px] border-none
+                  text-left whitespace-nowrap border-l-[3px]
                   ${isActive
                     ? "bg-white/10 text-white font-bold border-l-blue-500"
                     : "bg-transparent text-white/80 font-medium border-l-transparent hover:bg-white/[0.08]"
@@ -256,13 +284,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ── MAIN CONTENT ── */}
       <div className="flex-1 flex flex-col min-w-0 w-full overflow-hidden">
-
-        {/* Header */}
         <div className="bg-[linear-gradient(180deg,#1e3a7b_0%,#152d68_40%,#0f1f4d_100%)] border-b border-white/10 px-3 sm:px-4 md:px-6 h-14 sm:h-16 flex items-center justify-between sticky top-0 z-[100]">
-
-          {/* Hamburger */}
           <div className="w-9 flex items-center">
             {!sidebarOpen && (
               <button
@@ -273,30 +296,19 @@ export default function AdminDashboard() {
               </button>
             )}
           </div>
-
-          {/* Brand */}
           <div className="flex flex-col items-center">
             <div className="flex items-baseline gap-0.5">
               <span className="font-serif text-[17px] sm:text-[21px] font-black text-white" style={{ letterSpacing: -1 }}>Pay</span>
               <span className="zen-text font-serif text-[17px] sm:text-[21px] font-black" style={{ letterSpacing: -1 }}>Zen</span>
             </div>
-            <p className="text-[7px] sm:text-[8px] tracking-[0.2em] uppercase text-white/25 whitespace-nowrap">SECURE · SMART · BANKING</p>
           </div>
-
-          {/* Right */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              className="bg-white/[0.06] border border-white/10 rounded-[10px] p-1.5 sm:p-2 relative flex hover:bg-white/10 transition-colors"
-              aria-label="Notifications"
-            >
+            <button className="bg-white/[0.06] border border-white/10 rounded-[10px] p-1.5 sm:p-2 relative flex hover:bg-white/10 transition-colors">
               <Bell size={15} color="rgba(255,255,255,0.6)" />
               <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500 border border-[#0f1f4b]" />
             </button>
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <div
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                style={{ background: "linear-gradient(135deg,#1e3a7b,#3b82f6)" }}
-              >
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: "linear-gradient(135deg,#1e3a7b,#3b82f6)" }}>
                 AD
               </div>
               <span className="hidden sm:inline text-[12px] sm:text-[13px] font-semibold text-white/80 whitespace-nowrap">Hello, Admin</span>
@@ -304,9 +316,8 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Page Content */}
         <div className="p-3 sm:p-4 md:p-7 flex-1 overflow-y-auto">
-          {active === "dashboard"   && <DashboardView />}
+          {active === "dashboard"   && <DashboardView stats={dashData.stats} transactions={dashData.transactions} loading={loading} />}
           {active === "accounts"    && <AccountsView />}
           {active === "kyc"         && <AdminKYC />}
           {active === "txn-manager" && <AdminTransactionManager />}
@@ -315,4 +326,4 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
-}
+}

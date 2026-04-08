@@ -211,7 +211,16 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setLoginError(""); // ← Clear previous error
-    const result = await loginUser(formData.email, formData.password);
+    
+    let fcmToken = null;
+    try {
+      const { requestFcmToken } = await import("../../utils/fcmHelper");
+      fcmToken = await requestFcmToken();
+    } catch (err) {
+      console.error("FCM Token retrieval failed:", err);
+    }
+
+    const result = await loginUser(formData.email, formData.password, fcmToken);
     if (!result.ok) {
       const msg = result.data?.message || "Invalid Credentials!";
       setLoginError(msg); // ← Set inline error instead of toast
