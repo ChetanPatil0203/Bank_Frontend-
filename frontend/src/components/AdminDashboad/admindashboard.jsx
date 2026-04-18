@@ -5,11 +5,13 @@ import {
   FileText, LogOut, Bell, Menu, X,
   TrendingUp, TrendingDown, Settings,
   Building2, FileClock, Repeat, Wallet, Users,
+  MessagesSquare,
 } from "lucide-react";
 import AccountsView from "../AdminAccount/AccountManagement.jsx";
 import AdminTransactionManager from "../AdminTransation/admintransation.jsx";
 import AdminKYC from "../AdminKYC/kyc.jsx";
 import AdminSettings from "../AdminSetting/setting.jsx";
+import AdminSupport from "../AdminSupport/AdminSupport.jsx";
 
 const API_BASE_URL = "http://localhost:5000/api/v1";
 
@@ -28,6 +30,7 @@ const NAV = [
   { id: "accounts",    label: "Accounts",    icon: CreditCard       },
   { id: "txn-manager", label: "Transaction", icon: ArrowLeftRight   },
   { id: "kyc",         label: "KYC",         icon: FileText         },
+  { id: "support",     label: "Support",     icon: MessagesSquare   },
   { id: "settings",    label: "Settings",    icon: Settings         },
 ];
 
@@ -321,6 +324,7 @@ export default function AdminDashboard() {
           {active === "accounts"    && <AccountsView />}
           {active === "kyc"         && <AdminKYC />}
           {active === "txn-manager" && <AdminTransactionManager />}
+          {active === "support"     && <AdminSupport />}
           {active === "settings"    && <AdminSettings />}
         </div>
       </div>

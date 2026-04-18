@@ -142,6 +142,18 @@ export const getMyTransactions = () =>
         headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
     }).then(res => res.json());
 
+// ─── SUPPORT SYSTEM ──────────────────────────────────────────────────────────
+export const createSupportTicket = (body) => request("/support/tickets", "POST", body, true);
+export const getMyTickets         = ()     => request("/support/my-tickets", "GET", null, true);
+export const getTicketDetails     = (id)   => request(`/support/tickets/${id}`, "GET", null, true);
+export const addTicketMessage     = (id, msg) => request(`/support/tickets/${id}/message`, "POST", { message: msg }, true);
+
+// ─── ADMIN — SUPPORT ──────────────────────────────────────────────────────────
+export const adminGetTickets        = (status = "") => 
+  request(`/support/admin/tickets${status ? `?status=${status}` : ""}`, "GET", null, true);
+export const adminUpdateTicketStatus = (id, status) => 
+  request(`/support/admin/tickets/${id}/status`, "PATCH", { status }, true);
+
 // admin login
 export const adminLogin = (data) => {
     return fetch(`${BASE_URL}/auth/admin/login`, {
