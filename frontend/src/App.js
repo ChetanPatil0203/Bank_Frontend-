@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useState } from "react";
 import "./App.css";
 
 import HeaderSection from "./components/HeaderSection/HeaderSection.jsx";
@@ -21,9 +22,11 @@ import DashboarPage from "./components/AdminDashboad/admindashboard.jsx";
 import AdminLogin from "./components/AdminLogin/adminlogin.jsx";
 import AdminLogout from "./components/Adminlogout/adminlogout.jsx";
 import AIChat from "./components/AIChat/AIChat.jsx";
+import MoneyTransfer from "./components/MoneyTransfer/MoneyTransfer.jsx";
 
 
 function AppContent() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
 
   const noLayoutPages = ["/", "/login", "/registration", "/forgot", "/adminlogin", "/adminlogout"];
@@ -32,11 +35,16 @@ function AppContent() {
 
   return (
     <>
-      {showLayout && <HeaderSection />}
+      {showLayout && <HeaderSection sidebarOpen={sidebarOpen} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />}
       <AIChat />
       <div className="flex">
-        {showLayout && <Sidebar />}
-        <div className={showLayout ? "md:ml-64 w-full p-0 md:p-6" : "w-full"}>
+        {showLayout && <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        <div 
+          className={showLayout 
+            ? `transition-all duration-[280ms] ease-in-out w-full p-0 md:p-6 ${sidebarOpen ? "md:ml-[230px]" : "md:ml-[60px]"}`
+            : "w-full"
+          }
+        >
 
           <Routes>
             {/* Public Pages */}
@@ -48,6 +56,7 @@ function AppContent() {
 
             {/* Protected Pages */}
             <Route path="/dashboard" element={<DashboardHome />} />
+            <Route path="/deposit" element={<MoneyTransfer />} />
             <Route path="/create-account" element={<CreateAccount />} />
             <Route path="/open-account" element={<OpenAccount />} />
             <Route path="/profile" element={<ProfilePage />} />

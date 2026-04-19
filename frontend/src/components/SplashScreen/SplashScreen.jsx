@@ -36,12 +36,12 @@ export default function SplashScreen() {
   }, [navigate]);
 
   /* RESPONSIVE VALUES */
-  const orbit1 = isMobile ? 260 : 360;
-  const orbit2 = isMobile ? 200 : 270;
-  const orbit3 = isMobile ? 140 : 185;
-  const titleSize = isMobile ? 42 : 62;
-  const logoSize = isMobile ? 70 : 100;
-  const progressWidth = isMobile ? 180 : 220;
+  const orbit1 = isMobile ? 240 : 360;
+  const orbit2 = isMobile ? 180 : 270;
+  const orbit3 = isMobile ? 120 : 185;
+  const titleSize = isMobile ? 38 : 62;
+  const logoSize = isMobile ? 64 : 100;
+  const progressWidth = isMobile ? 160 : 220;
 
   /* PARTICLES — exact same as LoginPage */
   const pts = [
@@ -66,7 +66,7 @@ export default function SplashScreen() {
       position: "relative",
       overflow: "hidden",
       fontFamily: "Georgia, serif",
-      padding: isMobile ? 20 : 0,
+      padding: isMobile ? "0 16px" : 0,
     }}>
 
       <style>{`

@@ -63,7 +63,7 @@ export default function LogoutPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 bg-gray-50 py-6 sm:py-0">
 
       {showToast && (
         <Toast

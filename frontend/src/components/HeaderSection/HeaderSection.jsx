@@ -61,7 +61,7 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
           <div style={{ display:"flex", alignItems:"baseline", gap:2 }}>
             <span style={{
               fontFamily: "Georgia, serif",
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: 900,
               color: "#fff",
               letterSpacing: -1,
@@ -70,7 +70,7 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
             }}>Pay</span>
             <span style={{
               fontFamily: "Georgia, serif",
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: 900,
               letterSpacing: -1,
               lineHeight: 1,

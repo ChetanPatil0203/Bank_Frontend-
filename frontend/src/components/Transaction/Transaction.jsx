@@ -116,39 +116,36 @@ export default function TransactionHistory() {
         </div>
 
         {/* ── BALANCE CARD ── */}
-        <div className="txn-card-in mb-4">
-          <div className="balance-card-bg rounded-[16px] p-[1.5px]">
-            <div className="relative rounded-[15px] overflow-hidden px-5 py-5">
+        <div className="txn-card-in mb-6">
+          <div className="balance-card-bg rounded-3xl p-[1.5px] shadow-xl shadow-blue-900/20">
+            <div className="relative rounded-[23px] overflow-hidden px-6 py-6 sm:py-8">
               <div className="bal-glow-tr absolute -top-16 -right-16 w-72 h-72 rounded-full pointer-events-none" />
               <div className="bal-glow-bl absolute -bottom-10 left-[20%] w-48 h-48 rounded-full pointer-events-none" />
               
-              <div className="relative flex justify-between items-center flex-wrap gap-4">
+              <div className="relative flex flex-col gap-6">
                 <div>
-                  <p className="text-[10px] text-white/45 tracking-[.18em] uppercase mb-1">Current Balance</p>
-                  <p className="text-[32px] font-extrabold text-white tracking-tight leading-none"
-                     style={{ textShadow:"0 2px 24px rgba(255,255,255,.18)", fontFamily:"'Sora',sans-serif" }}>
+                  <p className="text-[10px] sm:text-[11px] text-white/50 tracking-[0.2em] font-black uppercase mb-2">Total Balance</p>
+                  <p className="text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none"
+                     style={{ textShadow:"0 4px 32px rgba(255,255,255,0.2)" }}>
                     ₹{balance.toLocaleString()}
                   </p>
                 </div>
 
-                <div className="flex gap-3">
-                  <div className="flex flex-col items-center px-3.5 py-2 rounded-[10px] border border-white/[.14]"
-                       style={{ background:"rgba(255,255,255,.10)" }}>
-                    <ArrowDownCircle size={16} className="text-green-300 mb-0.5" />
-                    <p className="text-[18px] font-extrabold text-white leading-none">{totalDeposit}</p>
-                    <p className="text-[9px] text-white/45 uppercase tracking-widest mt-0.5">Deposits</p>
+                <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
+                    <ArrowDownCircle size={18} className="text-emerald-400 mb-1.5" />
+                    <p className="text-lg font-black text-white leading-none">{totalDeposit}</p>
+                    <p className="text-[9px] text-white/40 font-black uppercase tracking-widest mt-1">In</p>
                   </div>
-                  <div className="flex flex-col items-center px-3.5 py-2 rounded-[10px] border border-white/[.14]"
-                       style={{ background:"rgba(255,255,255,.10)" }}>
-                    <ArrowUpCircle size={16} className="text-red-300 mb-0.5" />
-                    <p className="text-[18px] font-extrabold text-white leading-none">{totalWithdraw}</p>
-                    <p className="text-[9px] text-white/45 uppercase tracking-widest mt-0.5">Withdrawals</p>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
+                    <ArrowUpCircle size={18} className="text-rose-400 mb-1.5" />
+                    <p className="text-lg font-black text-white leading-none">{totalWithdraw}</p>
+                    <p className="text-[9px] text-white/40 font-black uppercase tracking-widest mt-1">Out</p>
                   </div>
-                  <div className="flex flex-col items-center px-3.5 py-2 rounded-[10px] border border-white/[.14]"
-                       style={{ background:"rgba(255,255,255,.10)" }}>
-                    <Wallet size={16} className="text-blue-200 mb-0.5" />
-                    <p className="text-[18px] font-extrabold text-white leading-none">{transactions.length}</p>
-                    <p className="text-[9px] text-white/45 uppercase tracking-widest mt-0.5">Total</p>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md">
+                    <Wallet size={18} className="text-blue-300 mb-1.5" />
+                    <p className="text-lg font-black text-white leading-none">{transactions.length}</p>
+                    <p className="text-[9px] text-white/40 font-black uppercase tracking-widest mt-1">Total</p>
                   </div>
                 </div>
               </div>
@@ -188,8 +185,9 @@ export default function TransactionHistory() {
             </span>
           </div>
 
-          <div className="overflow-x-auto overflow-y-auto max-h-[360px]">
-            <table className="w-full min-w-[640px] text-center">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[360px]">
+            <table className="w-full min-w-[700px] text-center">
               <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
                 <tr>
                   <th className="px-4 py-2.5 text-[10px] font-bold text-white tracking-[.16em] uppercase">SR NO</th>
@@ -205,7 +203,7 @@ export default function TransactionHistory() {
                   filteredTransactions.map((txn, idx) => {
                     const isDeposit = txn.type === "Deposit";
                     return (
-                      <tr key={txn.id} className="border-b border-slate-100/70 txn-row"
+                      <tr key={txn.id || idx} className="border-b border-slate-100/70 txn-row"
                           style={{ background: idx % 2 === 0 ? "rgba(255,255,255,0.55)" : "rgba(240,244,255,0.55)" }}>
                         <td className="px-4 py-3 text-[11px] font-bold text-black">{String(idx + 1).padStart(2, '0')}</td>
                         <td className="px-3 py-3">
@@ -238,6 +236,45 @@ export default function TransactionHistory() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden flex flex-col divide-y divide-slate-100 max-h-[500px] overflow-y-auto overscroll-contain">
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((txn, idx) => {
+                const isDeposit = txn.type === "Deposit";
+                return (
+                  <div key={txn.id || idx} className="p-4 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors">
+                    <div className="flex justify-between items-center gap-4">
+                      <div className="flex items-center gap-4 min-w-0">
+                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm
+                          ${isDeposit ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+                          {isDeposit ? <ArrowDownCircle size={20} /> : <ArrowUpCircle size={20} />}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[13px] font-black text-slate-800 truncate leading-tight mb-1">{txn.note || "General Transaction"}</span>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{txn.date} · {txn.time}</span>
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className={`text-[16px] font-black ${isDeposit ? "text-emerald-600" : "text-rose-600"}`}>
+                          {isDeposit ? "+" : "−"} ₹{txn.amount.toLocaleString()}
+                        </p>
+                        <p className="text-[9px] font-black text-emerald-500/80 uppercase tracking-tighter">Success</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-20 text-center px-6">
+                <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                  <TrendingUp size={24} className="text-slate-300" />
+                </div>
+                <p className="text-[13px] font-black text-slate-400 uppercase tracking-[0.2em]">No Matches Found</p>
+                <p className="text-xs text-slate-300 mt-2">Try adjusting your filters or search terms</p>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between items-center px-5 py-2 border-t border-slate-100/80"

@@ -432,66 +432,119 @@ export default function AdminKYC() {
         </div>
       )}
 
-      {/* Table — scrollable on mobile */}
+      {/* Table: Desktop & Mobile responsive views */}
       {!loading && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[700px]">
-              <thead>
-                <tr className="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900">
-                  {["#", "Name", "Email", "Aadhaar", "PAN", "Submitted", "Status", "Actions"].map(h => (
-                    <th key={h} className="px-3 sm:px-4 py-3 text-left text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={8} className="py-16 text-center text-gray-400 text-sm font-medium">
-                      <FileText size={30} className="mx-auto mb-3 opacity-30" />
-                      No records found
-                    </td>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Desktop Table View */}
+          <div className="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse min-w-[700px]">
+                <thead>
+                  <tr className="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900">
+                    {["#", "Name", "Email", "Aadhaar", "PAN", "Submitted", "Status", "Actions"].map(h => (
+                      <th key={h} className="px-3 sm:px-4 py-3 text-left text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">{h}</th>
+                    ))}
                   </tr>
-                ) : filtered.map((k, i) => (
-                  <tr key={k.id} className="hover:bg-blue-50/50 transition-colors border-b border-gray-50 last:border-0">
-                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 font-semibold">{i + 1}</td>
-                    <td className="px-3 sm:px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                          {k.name?.charAt(0)}
+                </thead>
+                <tbody>
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-16 text-center text-gray-400 text-sm font-medium">
+                        <FileText size={30} className="mx-auto mb-3 opacity-30" />
+                        No records found
+                      </td>
+                    </tr>
+                  ) : filtered.map((k, i) => (
+                    <tr key={k.id} className="hover:bg-blue-50/50 transition-colors border-b border-gray-50 last:border-0">
+                      <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 font-semibold">{i + 1}</td>
+                      <td className="px-3 sm:px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                            {k.name?.charAt(0)}
+                          </div>
+                          <span className="text-xs sm:text-sm font-bold text-gray-800 whitespace-nowrap">{k.name}</span>
                         </div>
-                        <span className="text-xs sm:text-sm font-bold text-gray-800 whitespace-nowrap">{k.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{k.email}</td>
-                    <td className="px-3 sm:px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">{k.aadhaar}</td>
-                    <td className="px-3 sm:px-4 py-3 text-xs font-mono font-bold text-blue-600 whitespace-nowrap">{k.pan}</td>
-                    <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{k.submitted}</td>
-                    <td className="px-3 sm:px-4 py-3"><StatusBadge status={k.status} /></td>
-                    <td className="px-3 sm:px-4 py-3">
-                      <div className="flex items-center gap-1 flex-wrap">
-                        <button onClick={() => { setSelected(k); setModal("view"); }}
-                          className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
-                          <Eye size={11} /> View
+                      </td>
+                      <td className="px-3 sm:px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{k.email}</td>
+                      <td className="px-3 sm:px-4 py-3 text-xs font-mono text-gray-700 whitespace-nowrap">{k.aadhaar}</td>
+                      <td className="px-3 sm:px-4 py-3 text-xs font-mono font-bold text-blue-600 whitespace-nowrap">{k.pan}</td>
+                      <td className="px-3 sm:px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{k.submitted}</td>
+                      <td className="px-3 sm:px-4 py-3"><StatusBadge status={k.status} /></td>
+                      <td className="px-3 sm:px-4 py-3">
+                        <div className="flex items-center gap-1 flex-wrap">
+                          <button onClick={() => { setSelected(k); setModal("view"); }}
+                            className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
+                            <Eye size={11} /> View
+                          </button>
+                          {k.status === "Pending" && (
+                            <>
+                              <button onClick={() => { setSelected(k); setModal("approve"); }}
+                                className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
+                                <CheckCircle size={11} /> Approve
+                              </button>
+                              <button onClick={() => { setSelected(k); setModal("reject"); setRejectReason(""); setRejectError(""); }}
+                                className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
+                                <XCircle size={11} /> Reject
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden flex flex-col gap-3">
+            {filtered.length === 0 ? (
+              <div className="bg-white rounded-2xl py-12 text-center text-gray-400 border border-gray-100">
+                <FileText size={28} className="mx-auto mb-2 opacity-30" />
+                <p className="text-sm">No records found</p>
+              </div>
+            ) : filtered.map((k) => (
+              <div key={k.id} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-2">
+                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-900 to-blue-500 flex items-center justify-center text-white text-[11px] font-bold">
+                        {k.name?.charAt(0)}
+                     </div>
+                     <span className="text-xs font-bold text-gray-800">{k.name}</span>
+                   </div>
+                   <StatusBadge status={k.status} />
+                </div>
+                <div className="flex flex-col gap-1 text-[11px]">
+                   <div className="flex justify-between">
+                     <span className="text-gray-400 font-bold uppercase tracking-wider">PAN / Aadhaar</span>
+                     <span className="font-mono font-bold text-blue-600">{k.pan} / {k.aadhaar}</span>
+                   </div>
+                   <div className="flex justify-between">
+                     <span className="text-gray-400 font-bold uppercase tracking-wider">Email</span>
+                     <span className="text-gray-500">{k.email}</span>
+                   </div>
+                </div>
+                <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
+                   <button onClick={() => { setSelected(k); setModal("view"); }}
+                     className="flex-1 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
+                     <Eye size={12} /> View
+                   </button>
+                   {k.status === "Pending" && (
+                     <>
+                        <button onClick={() => { setSelected(k); setModal("approve"); }}
+                          className="flex-1 py-1.5 bg-green-50 text-green-700 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
+                          Approve
                         </button>
-                        {k.status === "Pending" && (
-                          <>
-                            <button onClick={() => { setSelected(k); setModal("approve"); }}
-                              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-green-50 hover:bg-green-100 text-green-700 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
-                              <CheckCircle size={11} /> Approve
-                            </button>
-                            <button onClick={() => { setSelected(k); setModal("reject"); setRejectReason(""); setRejectError(""); }}
-                              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[11px] font-bold rounded-lg transition-colors whitespace-nowrap">
-                              <XCircle size={11} /> Reject
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <button onClick={() => { setSelected(k); setModal("reject"); setRejectReason(""); setRejectError(""); }}
+                          className="flex-1 py-1.5 bg-red-50 text-red-600 text-[10px] font-bold rounded-lg transition-colors flex items-center justify-center gap-1">
+                          Reject
+                        </button>
+                     </>
+                   )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

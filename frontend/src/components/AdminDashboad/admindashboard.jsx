@@ -106,7 +106,8 @@ function DashboardView({ stats, transactions, loading }) {
         <p className="text-xs sm:text-[13px] text-slate-500 mt-1">Last 5 transactions from the database</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      {/* Transactions Table: Desktop View */}
+      <div className="hidden sm:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse min-w-[520px]">
             <thead>
@@ -144,6 +145,35 @@ function DashboardView({ stats, transactions, loading }) {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Transactions Card View: Mobile View */}
+      <div className="sm:hidden flex flex-col gap-3">
+        {transactions.map((t) => (
+          <div key={t.id} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col gap-3">
+             <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">#{t.id}</span>
+                <Badge status={t.status} />
+             </div>
+             <div className="flex justify-between items-end">
+                <div className="flex flex-col">
+                   <span className="text-xs text-slate-500 font-medium">{t.date}</span>
+                   <span className="text-sm font-bold text-slate-800">{t.user}</span>
+                </div>
+                <div className="flex flex-col items-end">
+                   <span className={`flex items-center gap-1 text-[10px] font-bold ${t.type === "Credit" || t.type === "Deposit" ? "text-emerald-600" : "text-red-500"}`}>
+                      {t.type}
+                   </span>
+                   <span className="text-base font-black text-slate-900 tracking-tight">₹{t.amount.toLocaleString()}</span>
+                </div>
+             </div>
+          </div>
+        ))}
+        {transactions.length === 0 && (
+          <div className="py-10 text-center text-slate-400 text-xs italic bg-white/50 rounded-2xl border border-dashed border-slate-200">
+             No recent transactions
+          </div>
+        )}
       </div>
     </div>
   );

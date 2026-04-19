@@ -234,14 +234,14 @@ export default function ForgotPassword() {
 
           {/* ════ CARD ════ */}
           <div className="w-full max-w-[460px] mx-auto" style={{ animation:"cardIn .8s cubic-bezier(.16,1,.3,1) both .1s" }}>
-            <div className="rounded-3xl backdrop-blur-3xl p-9 sm:p-6" style={{ background:"rgba(8,16,60,0.7)", border:"1px solid rgba(99,102,241,0.2)", boxShadow:"0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)" }}>
+            <div className="rounded-3xl backdrop-blur-3xl p-6 sm:p-9" style={{ background:"rgba(8,16,60,0.7)", border:"1px solid rgba(99,102,241,0.2)", boxShadow:"0 0 0 1px rgba(255,255,255,0.03) inset, 0 24px 80px rgba(0,0,0,0.6), 0 0 100px rgba(37,99,235,0.12)" }}>
 
               {/* Mobile Logo */}
               <MobileLogo />
 
               {/* Heading */}
               <div className="text-center mb-5">
-                <h2 className="text-[26px] sm:text-[22px] font-extrabold tracking-tight m-0 mb-1.5" style={{ color:"#f1f5f9", letterSpacing:"-0.03em" }}>Forgot Password</h2>
+                <h2 className="text-[22px] sm:text-[26px] font-extrabold tracking-tight m-0 mb-1.5" style={{ color:"#f1f5f9", letterSpacing:"-0.03em" }}>Forgot Password</h2>
                 <p className="text-[13px] m-0" style={{ color:"rgba(148,163,184,0.6)" }}>Reset Your Account Securely</p>
               </div>
 

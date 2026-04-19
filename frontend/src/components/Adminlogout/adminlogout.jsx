@@ -10,8 +10,8 @@ export default function Logout() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4 py-8 font-sans">
-      <div className="bg-white rounded-2xl p-8 sm:p-12 w-full max-w-sm sm:max-w-md shadow-xl border border-slate-200 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4 py-6 sm:py-8 font-sans">
+      <div className="bg-white rounded-2xl p-6 sm:p-12 w-full max-w-sm sm:max-w-md shadow-xl border border-slate-200 text-center">
 
         {/* Icon */}
         <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-5">

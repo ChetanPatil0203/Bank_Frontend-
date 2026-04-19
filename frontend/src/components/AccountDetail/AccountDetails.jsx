@@ -228,22 +228,22 @@ export default function AccountDetails() {
         <div className="max-w-4xl mx-auto">
 
           {/* ── PAGE HEADER ── */}
-          <div className="fade-in-1 mb-6 sm:mb-7">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="fade-in-1 mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-slate-400 mb-1">
-                  PayZen Bank
+                <p className="text-[10px] sm:text-[11px] font-black tracking-[0.2em] uppercase text-blue-900/40 mb-1">
+                  OFFICIAL RECORD
                 </p>
-                <h1 className="serif text-2xl sm:text-3xl font-bold text-[#0f1e3c] leading-tight m-0">
+                <h1 className="serif text-2xl sm:text-3xl font-extrabold text-[#0f1e3c] leading-tight m-0 tracking-tight">
                   Account Details
                 </h1>
               </div>
 
               <button
                 onClick={downloadPDF}
-                className="dl-btn flex items-center gap-2 self-start sm:self-auto bg-blue-900 text-white border-0 rounded-xl cursor-pointer px-4 sm:px-5 py-3 text-[13px] font-semibold shadow-[0_4px_14px_rgba(30,58,123,0.25)] transition-all duration-200 acct-font"
+                className="dl-btn w-full sm:w-auto flex items-center justify-center gap-2 bg-[#0f1e3c] text-white border-0 rounded-2xl cursor-pointer px-6 py-3.5 text-[13px] font-bold shadow-[0_10px_20px_rgba(15,30,60,0.2)] transition-all duration-300 acct-font hover:scale-[1.02] active:scale-95"
               >
-                <ArrowDownToLineIcon size={15} />
+                <ArrowDownToLineIcon size={16} />
                 <span>Download Statement</span>
               </button>
             </div>
@@ -294,19 +294,20 @@ export default function AccountDetails() {
                     </span>
                   </div>
 
-                  {/* Account Fields — stack on mobile, 3-col on sm+ */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                  {/* Account Fields — 2-col on mobile, 3-col on sm+ */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-6 gap-x-4 sm:gap-5">
                     <CardField
                       label="Account Number" value={acc.account_number}
                       onCopy={() => copyToClipboard(acc.account_number, "accno")}
                       copied={copiedField === "accno"}
+                      className="col-span-2 sm:col-span-1"
                     />
                     <CardField
                       label="IFSC Code" value={acc.ifsc}
                       onCopy={() => copyToClipboard(acc.ifsc, "ifsc")}
                       copied={copiedField === "ifsc"}
                     />
-                    <CardField label="Account Type" value={acc.account_type} />
+                    <CardField label="Type" value={acc.account_type} />
                   </div>
 
                   {/* Bottom: Branch + Bank */}
@@ -398,23 +399,23 @@ export default function AccountDetails() {
 }
 
 /* ── CARD FIELD — inside blue bank card ── */
-function CardField({ label, value, onCopy, copied }) {
+function CardField({ label, value, onCopy, copied, className = "" }) {
   return (
-    <div>
-      <p className="text-[10px] text-blue-200/65 font-semibold tracking-[0.1em] uppercase mb-1.5">
+    <div className={className}>
+      <p className="text-[10px] text-blue-200/60 font-black uppercase tracking-[0.15em] mb-2">
         {label}
       </p>
-      <div className="flex items-center gap-1.5">
-        <p className="text-white text-sm font-bold m-0 tracking-[0.03em] font-mono">
+      <div className="flex items-center gap-2">
+        <p className="text-white text-sm sm:text-base font-black m-0 tracking-wider font-mono">
           {value || "—"}
         </p>
         {onCopy && value && (
           <button
             onClick={onCopy}
-            className={`bg-white/10 border-0 rounded-[5px] p-1 cursor-pointer flex items-center transition-colors duration-200
-              ${copied ? "text-green-400" : "text-white/60"}`}
+            className={`bg-white/10 border-0 rounded-lg w-7 h-7 cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-white/20 active:scale-90
+              ${copied ? "text-emerald-400 bg-emerald-400/20" : "text-white/60"}`}
           >
-            {copied ? <CheckCheck size={12} /> : <Copy size={12} />}
+            {copied ? <CheckCheck size={14} /> : <Copy size={14} />}
           </button>
         )}
       </div>

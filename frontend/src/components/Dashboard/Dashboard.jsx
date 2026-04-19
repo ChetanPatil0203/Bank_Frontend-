@@ -191,8 +191,7 @@ function SidebarInner({ isOpen, onToggle, menuItems, isMobile }) {
 /* ═══════════════════════════════════════════════════════════
    MAIN SIDEBAR
 ═══════════════════════════════════════════════════════════ */
-function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+function Sidebar({ isOpen, onToggle }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const menuItems = [
@@ -270,7 +269,7 @@ function Sidebar() {
       `}>
         <SidebarInner
           isOpen={isOpen}
-          onToggle={() => setIsOpen(!isOpen)}
+          onToggle={onToggle}
           menuItems={menuItems}
           isMobile={false}
         />

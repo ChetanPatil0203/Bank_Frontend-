@@ -219,10 +219,14 @@ export default function RegistrationPage() {
         input[type="date"]::-webkit-datetime-edit-year-field:focus { background:rgba(99,102,241,0.22); border-radius:3px; }
         @media (min-width:1024px) { .brand-panel { display:flex !important; } }
         .f2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-        @media (max-width:520px) {
-          .f2 { grid-template-columns:1fr !important; }
-          .rg-card  { padding:28px 20px 24px !important; border-radius:18px !important; }
-          .rg-title { font-size:21px !important; }
+        @media (max-width: 1023px) {
+          .rg-card      { padding: 32px 24px !important; border-radius: 22px !important; width: 100% !important; margin: 0 auto !important; }
+          .rg-title     { font-size: 24px !important; }
+        }
+        @media (max-width: 520px) {
+          .f2 { grid-template-columns: 1fr !important; gap: 12px; }
+          .rg-card { padding: 24px 18px !important; border-radius: 18px !important; }
+          .rg-title { font-size: 22px !important; }
         }
       `}</style>
 
@@ -246,8 +250,20 @@ export default function RegistrationPage() {
             animation:"cardIn .75s cubic-bezier(.16,1,.3,1) both .05s",
           }}>
 
-            {/* Mobile logo */}
-            <div className="brand-panel" style={{ display:"none", flexDirection:"column", alignItems:"center", marginBottom:20 }}>
+            {/* Mobile logo — only shown on small/med screens */}
+            <div className="lg:hidden flex flex-col items-center mb-6">
+              <div className="relative mb-3">
+                <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
+                <svg width="48" height="48" viewBox="0 0 100 100" fill="none" className="relative">
+                  <path d="M50 4 L90 26 L90 74 L50 96 L10 74 L10 26 Z" fill="rgba(29,78,216,0.25)" stroke="rgba(56,189,248,0.8)" strokeWidth="2.5" />
+                  <text x="50" y="63" fontFamily="Georgia,serif" fontSize="36" fontWeight="900" fill="white" textAnchor="middle">P</text>
+                </svg>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="font-['Georgia',serif] text-2xl font-black text-white tracking-tight">Pay</span>
+                <span className="font-['Georgia',serif] text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Zen</span>
+              </div>
+              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-blue-400/40 mt-1">Private Banking</p>
             </div>
 
             {/* Heading */}

@@ -1,4 +1,4 @@
-import { Pencil, Save, CheckCircle } from "lucide-react";
+import { Pencil, Save, CheckCircle, User, Phone, Mail, MapPin, Calendar, CreditCard, Hash, Landmark } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../../utils/apiServices";
@@ -138,28 +138,33 @@ export default function ProfilePage() {
         </div>
 
         {/* Personal Details */}
-        <h3 className="text-sm sm:text-base font-semibold text-blue-900 mb-3">Personal Details</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mb-6">
-          <Field label="Full Name"     value={profile.fullName} />
-          <Field label="Mobile"        value={profile.mobile} />
-          <Field label="Email"         value={profile.email} />
-          <Field label="Gender"        value={profile.gender} />
-          <Field label="Date of Birth" value={profile.date_of_birth} />
+        <div className="flex items-center gap-2 mb-4">
+          <User size={18} className="text-blue-900" />
+          <h3 className="text-sm sm:text-base font-bold text-blue-900">Personal Details</h3>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8">
+          <Field label="Full Name"     value={profile.fullName} icon={<User size={14} />} />
+          <Field label="Mobile"        value={profile.mobile} icon={<Phone size={14} />} />
+          <Field label="Email"         value={profile.email} icon={<Mail size={14} />} />
+          <Field label="Gender"        value={profile.gender} icon={<User size={14} />} />
+          <Field label="Date of Birth" value={profile.date_of_birth} icon={<Calendar size={14} />} />
 
           {/* Address — editable */}
-          <div className="col-span-1 sm:col-span-2 flex flex-col gap-1">
-            <label className="text-xs sm:text-sm font-medium text-gray-600">Address</label>
+          <div className="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+            <label className="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+              <MapPin size={12} /> Address
+            </label>
             {edit ? (
               <textarea
                 value={profile.address}
                 onChange={e => setProfile({ ...profile, address: e.target.value })}
                 placeholder="Enter your address..."
-                className="border rounded-xl px-3 py-2 text-xs sm:text-sm h-20
-                  focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                className="border-2 border-blue-50 bg-blue-50/20 rounded-2xl px-4 py-3 text-xs sm:text-sm h-24
+                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none transition-all"
               />
             ) : (
-              <div className={`border rounded-xl px-3 py-2 text-xs sm:text-sm min-h-[44px]
-                ${profile.address ? "text-gray-800" : "text-gray-300 italic"}`}>
+              <div className={`border border-gray-100 bg-gray-50/50 rounded-2xl px-4 py-3 text-xs sm:text-sm min-h-[50px]
+                ${profile.address ? "text-gray-800 font-medium" : "text-gray-300 italic"}`}>
                 {profile.address || "Address not added yet — click Edit to add"}
               </div>
             )}
@@ -167,31 +172,34 @@ export default function ProfilePage() {
         </div>
 
         {/* Account Details */}
-        <h3 className="text-sm sm:text-base font-semibold text-blue-900 mb-3">Account Details</h3>
+        <div className="flex items-center gap-2 mb-4">
+          <CreditCard size={18} className="text-blue-900" />
+          <h3 className="text-sm sm:text-base font-bold text-blue-900">Account Details</h3>
+        </div>
 
         {!account ? (
-          <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3
-            bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-3">
-            <div className="flex items-center gap-2 text-amber-700 text-xs sm:text-sm">
-              <span className="text-base sm:text-lg">🏦</span>
-              <span>Bank account अजून open केलेला नाही.</span>
+          <div className="flex flex-col xs:flex-row items-center justify-between gap-4
+            bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6 shadow-sm">
+            <div className="flex items-center gap-3 text-amber-800 text-xs sm:text-sm font-medium">
+              <span className="text-2xl">🏦</span>
+              <p>Bank account अजून open केलेला नाही. तुमची सेवा सुरू करण्यासाठी नवीन खाते उघडा.</p>
             </div>
             <button
               onClick={() => navigate("/open-account")}
-              className="text-xs font-semibold bg-amber-500 hover:bg-amber-600
-                text-white px-4 py-2 rounded-lg transition-all whitespace-nowrap">
-              + Open Account
+              className="w-full xs:w-auto text-xs font-black bg-amber-500 hover:bg-amber-600 active:scale-95
+                text-white px-6 py-2.5 rounded-xl transition-all whitespace-nowrap shadow-md shadow-amber-200">
+              CREATE ACCOUNT
             </button>
           </div>
         ) : null}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-          <Field label="Account Number" value={account?.account_number || ""} empty={!account} />
-          <Field label="Account Type"   value={account?.account_type   || ""} empty={!account} />
-          <Field label="Branch"         value={account?.branch         || ""} empty={!account} />
-          <Field label="IFSC Code"      value={account?.ifsc           || ""} empty={!account} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <Field label="Account Number" value={account?.account_number || ""} empty={!account} icon={<Hash size={14} />} />
+          <Field label="Account Type"   value={account?.account_type   || ""} empty={!account} icon={<CreditCard size={14} />} />
+          <Field label="Branch"         value={account?.branch         || ""} empty={!account} icon={<Landmark size={14} />} />
+          <Field label="IFSC Code"      value={account?.ifsc           || ""} empty={!account} icon={<Hash size={14} />} />
           {account?.bank_holder_name && (
-            <Field label="Account Holder" value={account.bank_holder_name} />
+            <Field label="Account Holder" value={account.bank_holder_name} icon={<User size={14} />} />
           )}
         </div>
 
@@ -200,11 +208,13 @@ export default function ProfilePage() {
   );
 }
 
-function Field({ label, value, empty }) {
+function Field({ label, value, empty, icon }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs sm:text-sm font-medium text-gray-600">{label}</label>
-      <div className={`border rounded-xl px-3 py-2 text-xs sm:text-sm
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+        {icon} {label}
+      </label>
+      <div className={`border border-gray-100 rounded-2xl px-4 py-3 text-xs sm:text-sm font-medium transition-all
         ${empty || !value
           ? "bg-gray-50 text-gray-300 italic"
           : "bg-gray-50 text-gray-800"}`}>

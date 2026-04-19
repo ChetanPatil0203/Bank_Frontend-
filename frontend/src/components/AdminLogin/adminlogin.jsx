@@ -296,8 +296,14 @@ export default function AdminLogin() {
         }
         @media (max-width: 1023px) {
           .lg-hide-logo { display: flex !important; }
-          .lg-card      { padding: 24px 18px 20px !important; border-radius: 18px !important; }
-          .lg-title     { font-size: 22px !important; }
+          .lg-card      { padding: 28px 24px 24px !important; border-radius: 20px !important; }
+          .lg-title     { font-size: 24px !important; }
+        }
+        @media (max-width: 640px) {
+          .lg-card { padding: 22px 18px 20px !important; border-radius: 18px !important; background: rgba(8, 16, 60, 0.85) !important; }
+          .lg-title { font-size: 21px !important; }
+          .lg-brand-sub { font-size: 11px !important; }
+          input { font-size: 14px !important; padding-top: 10px !important; padding-bottom: 10px !important; }
         }
       `}</style>
 

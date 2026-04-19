@@ -450,8 +450,8 @@ export default function AdminSettings() {
   };
 
   return (
-    <div className="min-h-screen py-3 px-3 bg-white font-sans">
-      <div className="w-full">
+    <div className="min-h-screen py-4 px-3 sm:px-6 bg-white font-sans">
+      <div className="w-full max-w-5xl mx-auto">
         {/* Page Title */}
         <div className="mb-4">
           <h1 className="text-lg font-black text-slate-800">Settings</h1>

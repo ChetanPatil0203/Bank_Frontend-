@@ -15,8 +15,8 @@ const C = {
 const RESPONSIVE_STYLES = `
   @media (max-width: 768px) {
     .header-row { flex-direction: column !important; align-items: stretch !important; }
-    .search-row { flex-direction: column !important; align-items: stretch !important; }
-    .txn-results-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .search-row { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
+    .txn-results-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
 
     .txn-item { 
       flex: none !important; 
@@ -24,23 +24,31 @@ const RESPONSIVE_STYLES = `
       max-width: none !important;
       background: #fff !important;
       border: 1px solid #f1f5f9 !important;
-      border-radius: 20px !important;
+      border-radius: 18px !important;
+      padding: 16px !important;
       box-sizing: border-box !important;
       flex-direction: column !important;
       align-items: flex-start !important;
       transition: all 0.3s ease !important;
-      box-shadow: 0 4px 20px -4px rgba(0,0,0,0.05) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
     }
     .txn-item:hover {
-      transform: translateY(-5px) !important;
-      border-color: #3b82f6 !important;
-      box-shadow: 0 12px 40px -12px rgba(0,0,0,0.12) !important;
+      transform: translateY(-2px) !important;
     }
-    .txn-item-right { text-align: left !important; width: 100% !important; border-top: 1px solid #f8fafc !important; padding-top: 10px !important; margin-top: 10px !important; }
+    .txn-item-right { 
+      text-align: left !important; 
+      width: 100% !important; 
+      border-top: 1px solid #f1f5f9 !important; 
+      padding-top: 12px !important; 
+      margin-top: 8px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
 
-    .modal-container { padding: 10px !important; }
-    .modal-content { max-width: 95% !important; border-radius: 16px !important; }
-    .options-btn-row { flex-direction: column !important; }
+    .modal-container { padding: 12px !important; }
+    .modal-content { max-width: 96% !important; border-radius: 20px !important; }
+    .options-btn-row { flex-direction: column !important; gap: 10px !important; }
   }
 `;
 

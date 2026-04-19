@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Minus, Paperclip, MoreVertical, Trash2, ThumbsUp, ThumbsDown, ChevronRight } from 'lucide-react';
+import { sendAIChatMessage } from '../../utils/apiServices';
 
 const GeminiStar = ({ size = 20, id = '' }) => (
   <svg viewBox="0 0 24 24" fill="none" style={{ width: size, height: size, flexShrink: 0, display: 'block' }}>
@@ -63,18 +64,20 @@ export default function AIChat() {
     if (!text.trim()) return;
     setMessages(p => [...p, { id: Date.now(), text, sender: 'user' }]);
     setInput('');
+    if (inputRef.current) inputRef.current.style.height = 'auto';
     setIsTyping(true);
     try {
       const history = messages.map(m => ({ role: m.sender === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
-      const res = await fetch('http://127.0.0.1:5000/api/v1/ai/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history }),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      setMessages(p => [...p, { id: Date.now() + 1, text: data.response, sender: 'bot', feedback: true }]);
+      
+      const response = await sendAIChatMessage(text, history);
+      
+      if (!response.ok || response.data?.error || !response.data?.success) {
+         throw new Error(response.data?.error || response.data?.message || 'Error from server');
+      }
+      
+      setMessages(p => [...p, { id: Date.now() + 1, text: response.data.response, sender: 'bot', feedback: true }]);
     } catch {
-      setMessages(p => [...p, { id: Date.now() + 1, text: "I'm having trouble connecting. Please ensure the backend is running.", sender: 'bot', feedback: false }]);
+      setMessages(p => [...p, { id: Date.now() + 1, text: "I'm having trouble connecting. Please ensure the backend is running and the API key is active.", sender: 'bot', feedback: false }]);
     } finally { setIsTyping(false); }
   };
 
@@ -124,17 +127,17 @@ export default function AIChat() {
         onClick={() => setIsOpen(o => !o)}
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
-          display: 'flex', alignItems: 'center', gap: 9,
-          padding: '11px 20px 11px 15px',
-          background: 'linear-gradient(145deg, #7c3aed 0%, #6d28d9 100%)',
+          display: isOpen ? 'none' : 'flex', alignItems: 'center', gap: 9,
+          padding: '12px 20px',
+          background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
           border: 'none', borderRadius: 50, cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(109,40,217,.38), 0 1px 4px rgba(0,0,0,.1)',
+          boxShadow: '0 10px 25px -5px rgba(124,58,237,0.4)',
           color: '#fff',
         }}
       >
-        <GeminiStar size={19} id="fab" />
-        <span style={{ fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.02em' }}>
-          {isOpen ? 'Close Chat' : 'AI Assistant'}
+        <GeminiStar size={20} id="fab" />
+        <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+          AI Assistant
         </span>
       </button>
 
@@ -143,13 +146,17 @@ export default function AIChat() {
         <div
           className="pz-panel"
           style={{
-            position: 'fixed', bottom: 80, right: 24, zIndex: 9998,
-            width: 385,
+            position: 'fixed', 
+            bottom: window.innerWidth < 640 ? 16 : 80, 
+            right: window.innerWidth < 640 ? 16 : 24, 
+            left: window.innerWidth < 640 ? 16 : 'auto',
+            zIndex: 9998,
+            width: window.innerWidth < 640 ? 'auto' : 385,
             background: '#ffffff',
-            borderRadius: 20,
-            boxShadow: '0 20px 60px rgba(0,0,0,.15), 0 4px 16px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.055)',
+            borderRadius: 24,
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)',
             display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            maxHeight: 'calc(100vh - 110px)',
+            maxHeight: window.innerWidth < 640 ? 'calc(100vh - 32px)' : 'calc(100vh - 110px)',
           }}
         >
           {/* ── Header ── */}
@@ -208,18 +215,29 @@ export default function AIChat() {
               display: 'flex', alignItems: 'center', gap: 5,
               background: 'rgba(255,255,255,.13)',
               border: '1px solid rgba(255,255,255,.17)',
-              borderRadius: 12, padding: '7px 6px 7px 12px',
+              borderRadius: 14, padding: '6px 6px 6px 14px',
             }}>
-              <input
+              <textarea
                 ref={inputRef}
-                type="text"
                 placeholder="Type your question..."
                 value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
+                onChange={e => {
+                  setInput(e.target.value);
+                  e.target.style.height = 'auto';
+                  e.target.style.height = `${Math.min(e.target.scrollHeight, 100)}px`;
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
+                rows={1}
                 style={{
                   flex: 1, background: 'transparent', border: 'none', outline: 'none',
                   fontSize: 13.5, color: '#fff', fontWeight: 500, minWidth: 0,
+                  resize: 'none', overflowY: 'auto', padding: 0, margin: 0,
+                  fontFamily: 'inherit',
                 }}
               />
               <button
@@ -305,7 +323,7 @@ export default function AIChat() {
                     style={{
                       display: 'flex',
                       justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                      alignItems: 'flex-end', gap: 8,
+                      alignItems: 'flex-start', gap: 8,
                     }}
                   >
                     {msg.sender === 'bot' && (
@@ -314,7 +332,7 @@ export default function AIChat() {
                         background: '#fff', border: '1px solid #ede9fe',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         boxShadow: '0 1px 4px rgba(124,58,237,.1)',
-                        marginBottom: 1,
+                        marginTop: 2,
                       }}>
                         <GeminiStar size={14} id={`m${msg.id}`} />
                       </div>
@@ -322,18 +340,18 @@ export default function AIChat() {
                     <div style={{ maxWidth: '79%' }}>
                       {msg.sender === 'user' ? (
                         <div style={{
-                          padding: '9px 13px',
+                          padding: '10px 14px',
                           background: 'linear-gradient(140deg, #7c3aed, #6d28d9)',
-                          borderRadius: '15px 15px 4px 15px',
-                          fontSize: 13.5, lineHeight: 1.6, color: '#fff', fontWeight: 500,
+                          borderRadius: '16px 16px 4px 16px',
+                          fontSize: 13.5, lineHeight: 1.5, color: '#fff', fontWeight: 500,
                           boxShadow: '0 2px 8px rgba(109,40,217,.26)',
                           wordBreak: 'break-word',
                         }}>{msg.text}</div>
                       ) : (
                         <div style={{
                           background: '#fff',
-                          borderRadius: '4px 15px 15px 15px',
-                          padding: '10px 12px',
+                          borderRadius: '4px 16px 16px 16px',
+                          padding: '12px 14px',
                           border: '1px solid #ede9fe',
                           boxShadow: '0 1px 4px rgba(0,0,0,.05)',
                           wordBreak: 'break-word',
@@ -361,18 +379,19 @@ export default function AIChat() {
                 ))}
 
                 {isTyping && (
-                  <div className="pz-card" style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+                  <div className="pz-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                     <div style={{
                       width: 27, height: 27, borderRadius: 8, flexShrink: 0,
                       background: '#fff', border: '1px solid #ede9fe',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       boxShadow: '0 1px 4px rgba(124,58,237,.1)',
+                      marginTop: 2,
                     }}>
                       <GeminiStar size={14} id="typing" />
                     </div>
                     <div style={{
-                      background: '#fff', borderRadius: '4px 15px 15px 15px',
-                      padding: '11px 15px', border: '1px solid #ede9fe',
+                      background: '#fff', borderRadius: '4px 16px 16px 16px',
+                      padding: '12px 15px', border: '1px solid #ede9fe',
                       display: 'flex', alignItems: 'center', gap: 5,
                       boxShadow: '0 1px 4px rgba(0,0,0,.05)',
                     }}>

@@ -193,53 +193,89 @@ export default function AdminSupport() {
           <p className="text-slate-500 font-medium">Fetching tickets...</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[600px]">
-              <thead>
-                <tr>
-                  {["Ticket Info", "Customer", "Category", "Status", "Priority", "Action"].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-white uppercase bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map((t) => (
-                  <tr key={t.id} className="border-b border-slate-100 hover:bg-blue-50/40 transition-colors cursor-pointer" onClick={() => fetchDetails(t.id)}>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-blue-900">{t.ticket_number}</span>
-                        <span className="text-[11px] text-slate-500 line-clamp-1">{t.subject}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-slate-700">{t.full_name}</td>
-                    <td className="px-4 py-3 text-xs text-slate-500">{t.issue_type}</td>
-                    <td className="px-4 py-3">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${STATUS_COLORS[t.status]}`}>
-                        {t.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${PRIORITY_COLORS[t.priority]}`}>
-                        {t.priority}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button className="p-1.5 hover:bg-blue-100 rounded-lg text-blue-600">
-                        <ChevronRight size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {tickets.length === 0 && (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Desktop Table View */}
+          <div className="hidden sm:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse min-w-[600px]">
+                <thead>
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-slate-400">No support tickets found</td>
+                    {["Ticket Info", "Customer", "Category", "Status", "Priority", "Action"].map(h => (
+                      <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-white uppercase bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {tickets.map((t) => (
+                    <tr key={t.id} className="border-b border-slate-100 hover:bg-blue-50/40 transition-colors cursor-pointer" onClick={() => fetchDetails(t.id)}>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-blue-900">{t.ticket_number}</span>
+                          <span className="text-[11px] text-slate-500 line-clamp-1">{t.subject}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-slate-700">{t.full_name}</td>
+                      <td className="px-4 py-3 text-xs text-slate-500">{t.issue_type}</td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${STATUS_COLORS[t.status]}`}>
+                          {t.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${PRIORITY_COLORS[t.priority]}`}>
+                          {t.priority}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button className="p-1.5 hover:bg-blue-100 rounded-lg text-blue-600">
+                          <ChevronRight size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {tickets.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="text-center py-10 text-slate-400">No support tickets found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden flex flex-col gap-3">
+             {tickets.length === 0 ? (
+                <div className="bg-white rounded-2xl py-12 text-center text-slate-400 border border-slate-200">
+                   <p className="text-sm">No tickets found</p>
+                </div>
+             ) : tickets.map((t) => (
+                <div key={t.id} onClick={() => fetchDetails(t.id)} className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col gap-3 active:scale-[0.98] transition-transform">
+                   <div className="flex justify-between items-start">
+                      <div className="flex flex-col">
+                         <span className="text-xs font-black text-blue-900">{t.ticket_number}</span>
+                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{t.issue_type}</span>
+                      </div>
+                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase ${STATUS_COLORS[t.status]}`}>
+                         {t.status}
+                      </span>
+                   </div>
+                   <div className="flex flex-col gap-1">
+                      <span className="text-sm font-bold text-slate-800 line-clamp-2 leading-snug">{t.subject}</span>
+                      <span className="text-xs text-slate-500 font-medium">Customer: {t.full_name}</span>
+                   </div>
+                   <div className="flex justify-between items-center pt-2 border-t border-slate-50">
+                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-md uppercase ${PRIORITY_COLORS[t.priority]}`}>
+                         {t.priority}
+                      </span>
+                      <div className="flex items-center text-blue-600 text-[11px] font-bold">
+                         Details <ChevronRight size={14} />
+                      </div>
+                   </div>
+                </div>
+             ))}
           </div>
         </div>
       )}

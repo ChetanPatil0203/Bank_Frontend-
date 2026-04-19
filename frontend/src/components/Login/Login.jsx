@@ -267,7 +267,12 @@ export default function LoginPage() {
         }
         @media (max-width: 1023px) {
           .lg-hide-logo { display: flex !important; }
-          .lg-card      { padding: 24px 18px 20px !important; border-radius: 18px !important; }
+          .lg-card      { padding: 32px 24px !important; border-radius: 24px !important; width: 100% !important; margin: 0 auto !important; }
+          .lg-title     { font-size: 24px !important; }
+          .lg-container { padding: 16px !important; }
+        }
+        @media (max-width: 480px) {
+          .lg-card      { padding: 24px 18px !important; border-radius: 20px !important; }
           .lg-title     { font-size: 22px !important; }
         }
       `}</style>

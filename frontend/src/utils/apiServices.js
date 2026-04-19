@@ -164,3 +164,9 @@ export const adminLogin = (data) => {
         body: JSON.stringify(data)
     }).then(res => res.json());
 };
+
+// ─── AI CHAT ──────────────────────────────────────────────────────────────────
+export const sendAIChatMessage = (text, history) => request("/ai/chat", "POST", { message: text, history });
+
+// ─── MONEY TRANSFER ───────────────────────────────────────────────────────────
+export const performTransfer = (data) => request("/auth/transfer", "POST", data, true);

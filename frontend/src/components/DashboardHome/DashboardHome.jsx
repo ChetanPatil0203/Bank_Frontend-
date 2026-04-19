@@ -116,14 +116,12 @@ export default function DashboardHome() {
   };
 
   const quickActions = [
-    { name: "Deposit Money",    icon: ArrowDownToLine, path: "/deposit",      iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
-    { name: "Withdraw",         icon: ArrowUpFromLine, path: "/withdraw",     iconColor: "#ef4444", bgColor: "#fef2f2", borderColor: "#fecaca" },
-    { name: "My Profile",       icon: UserCircle,      path: "/profile",      iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
-    { name: "View Account",     icon: BookUser,        path: "/balance",      iconColor: "#3b82f6", bgColor: "#eff6ff", borderColor: "#bfdbfe" },
-    { name: "KYC Verification", icon: CheckCircle,     path: "/kyc",          iconColor: "#8b5cf6", bgColor: "#faf5ff", borderColor: "#e9d5ff" },
-    { name: "Transactions",     icon: Receipt,         path: "/transactions", iconColor: "#06b6d4", bgColor: "#ecf9ff", borderColor: "#a5f3fc" },
-    { name: "Help & Support",   icon: Headset,         path: "/helpsupport",  iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
-    { name: "My Wallet",        icon: Wallet,          path: "/wallet",       iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
+    { name: "Account Money Transfer", icon: ArrowDownToLine, path: "/deposit", iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
+    { name: "My Profile", icon: UserCircle, path: "/profile", iconColor: "#f59e0b", bgColor: "#fffbeb", borderColor: "#fde68a" },
+    { name: "Account Details", icon: BookUser, path: "/details", iconColor: "#3b82f6", bgColor: "#eff6ff", borderColor: "#bfdbfe" },
+    { name: "KYC Verification", icon: CheckCircle, path: "/kyc", iconColor: "#8b5cf6", bgColor: "#faf5ff", borderColor: "#e9d5ff" },
+    { name: "Transactions", icon: Receipt, path: "/transactions", iconColor: "#06b6d4", bgColor: "#ecf9ff", borderColor: "#a5f3fc" },
+    { name: "Help & Support", icon: Headset, path: "/helpsupport", iconColor: "#10b981", bgColor: "#f0fdf4", borderColor: "#bbf7d0" },
   ];
 
   return (
@@ -162,76 +160,75 @@ export default function DashboardHome() {
               </div>
 
               {/* Top row */}
-              <div className="flex justify-between items-start mb-4 sm:mb-7">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="logo-icon w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] flex items-center justify-center shrink-0">
-                    <Wallet size={14} strokeWidth={2} color="#fff" />
+              <div className="flex justify-between items-start mb-6 sm:mb-8">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="logo-icon w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
+                    <Wallet size={18} strokeWidth={2.5} color="#fff" />
                   </div>
                   <div>
-                    <p className="m-0 text-[11px] sm:text-[13px] font-bold text-white tracking-wide">PayZen</p>
-                    <p className="m-0 text-[7px] sm:text-[9px] text-white/40 tracking-[.14em] uppercase">Premium Banking</p>
+                    <h1 className="m-0 text-xs sm:text-[15px] font-black text-white tracking-[0.1em] uppercase">PayZen</h1>
+                    <p className="m-0 text-[8px] sm:text-[10px] text-white/40 font-bold tracking-[0.2em] uppercase mt-0.5">Premium</p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="opacity-60 sm:w-[26px] sm:h-[26px]">
-                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".6" />
-                    <path d="M7 12.5C7 10.57 8.57 9 10.5 9" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity=".85" />
-                    <circle cx="10.5" cy="12.5" r="1.5" fill="white" />
+                <div className="flex flex-col items-end gap-1.5 grayscale opacity-50">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-8 sm:h-8">
+                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5" stroke="white" strokeWidth="2" strokeLinecap="round" opacity=".5" />
+                    <circle cx="10.5" cy="12.5" r="2" fill="white" />
                   </svg>
-                  <span className="text-[7px] sm:text-[9px] text-white/35 tracking-[.20em] uppercase font-semibold">Savings</span>
+                  <span className="text-[7px] sm:text-[9px] text-white/40 tracking-[0.25em] font-black uppercase">Savings</span>
                 </div>
               </div>
 
               {/* Chip + Card number */}
-              <div className="flex items-center gap-2 sm:gap-5 mb-4 sm:mb-6">
-                <div className="chip-body anim-chip relative w-9 h-7 sm:w-[46px] sm:h-[36px] rounded-lg overflow-hidden shrink-0">
-                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1">
-                    {[...Array(9)].map((_, i) => <div key={i} className="chip-cell rounded-[1px]" />)}
+              <div className="flex items-center gap-3 sm:gap-6 mb-8 sm:mb-10">
+                <div className="chip-body anim-chip relative w-10 sm:w-[50px] h-7.5 sm:h-[40px] rounded-lg overflow-hidden shrink-0">
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1.5">
+                    {[...Array(9)].map((_, i) => <div key={i} className="chip-cell rounded-sm" />)}
                   </div>
                   <div className="chip-contact absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                                  w-4 h-3 sm:w-[22px] sm:h-[16px] rounded-[3px] border-[1.5px]" />
+                                  w-5 h-3.5 sm:w-[24px] sm:h-[18px] rounded-[4px] border-2" />
                 </div>
                 <span
-                  className="text-[11px] sm:text-[15px] font-semibold tracking-[.18em] sm:tracking-[.22em]"
+                  className="text-[14px] sm:text-[19px] font-black tracking-[0.15em] sm:tracking-[0.25em]"
                   style={{
                     fontFamily: "'JetBrains Mono',monospace",
-                    color: showDetails ? "rgba(255,255,255,.92)" : "rgba(255,255,255,.70)",
-                    textShadow: "0 1px 8px rgba(0,0,0,.4)",
+                    color: showDetails ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.75)",
+                    textShadow: "0 2px 10px rgba(0,0,0,0.5)",
                   }}
                 >
                   {showDetails
-                    ? accountData.account_number || "••••  ••••  ••••  ••••"
-                    : `••••  ••••  ••••  ${(accountData.account_number || "").slice(-4)}`}
+                    ? (accountData.account_number || "").match(/.{1,4}/g)?.join(" ") || "•••• •••• •••• ••••"
+                    : `•••• •••• •••• ${(accountData.account_number || "").slice(-4)}`}
                 </span>
               </div>
 
               {/* Bottom row */}
-              <div className="flex items-end justify-between gap-2 sm:gap-5 flex-wrap">
-                <div className="flex gap-4 sm:gap-10 items-end flex-wrap">
-                  <div>
-                    <p className="m-0 text-[7px] sm:text-[9px] text-white/40 tracking-[.16em] uppercase mb-0.5 sm:mb-1">Account Holder</p>
-                    <p className="m-0 text-[11px] sm:text-[15px] font-extrabold text-white tracking-widest uppercase"
-                      style={{ textShadow: "0 1px 12px rgba(255,255,255,.25)" }}>
+              <div className="flex items-end justify-between gap-1 sm:gap-5">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-12 items-start sm:items-end min-w-0">
+                  <div className="min-w-0">
+                    <p className="m-0 text-[8px] sm:text-[11px] text-white/40 font-black uppercase tracking-[0.2em] mb-1 sm:mb-1.5">Account Holder</p>
+                    <p className="m-0 text-xs sm:text-[17px] font-black text-white tracking-[0.12em] uppercase border-b-2 border-white/10 pb-0.5 truncate"
+                      style={{ textShadow: "0 2px 15px rgba(255,255,255,0.3)" }}>
                       {userName}
                     </p>
                   </div>
                   <div className="hidden sm:block">
-                    <p className="m-0 text-[9px] text-white/40 tracking-[.16em] uppercase mb-1">Account Balance</p>
-                    <p className="balance-text m-0 text-[28px] sm:text-[30px] font-extrabold text-white tracking-tight whitespace-nowrap">
+                    <p className="m-0 text-[11px] text-white/40 font-black uppercase tracking-[0.15em] mb-1.5">Balance</p>
+                    <p className="balance-text m-0 text-4xl font-black text-white tracking-tighter whitespace-nowrap">
                       {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
                     </p>
                   </div>
                   {/* Balance visible on mobile below name */}
                   <div className="sm:hidden">
-                    <p className="m-0 text-[7px] text-white/40 tracking-[.16em] uppercase mb-0.5">Balance</p>
-                    <p className="balance-text m-0 text-[16px] font-extrabold text-white tracking-tight">
+                    <p className="m-0 text-[8px] text-white/40 font-black uppercase tracking-[0.15em] mb-0.5">Balance</p>
+                    <p className="balance-text m-0 text-[17px] font-black text-white tracking-widest leading-none">
                       {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-2 sm:gap-3">
+                <div className="flex flex-col items-end gap-2 sm:gap-3 shrink-0">
                   <div className="flex">
                     <div className="mc-red    w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full" />
                     <div className="mc-orange  w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full -ml-2 sm:-ml-3" />
@@ -262,32 +259,13 @@ export default function DashboardHome() {
             </button>
           </div>
 
-          {/* 2 rows × 4 cols on lg, 2 cols on mobile/tablet */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-2 sm:mb-3">
-            {quickActions.slice(0, 4).map((item, i) => {
+          {/* 2 cols on mobile/tablet, 3 cols on desktop/laptop */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-5 sm:mb-7">
+            {quickActions.map((item, i) => {
               const Icon = item.icon;
               return (
                 <div
                   key={`q-${i}`}
-                  className="action-tile flex flex-col items-center text-center py-4 sm:py-5 px-2 sm:px-4 rounded-[16px] sm:rounded-[18px] cursor-pointer border backdrop-blur-[18px]"
-                  style={{ background: item.bgColor, borderColor: item.borderColor }}
-                  onClick={() => navigate(item.path)}
-                >
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-[14px] sm:rounded-[18px] flex items-center justify-center mb-2 shadow-sm"
-                    style={{ background: item.bgColor }}>
-                    <Icon size={20} style={{ color: item.iconColor }} strokeWidth={2.4} />
-                  </div>
-                  <p className="text-[10px] sm:text-[12px] font-extrabold text-slate-900 leading-snug uppercase tracking-tight">{item.name}</p>
-                </div>
-              );
-            })}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-            {quickActions.slice(4, 8).map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={`q-${i + 4}`}
                   className="action-tile flex flex-col items-center text-center py-4 sm:py-5 px-2 sm:px-4 rounded-[16px] sm:rounded-[18px] cursor-pointer border backdrop-blur-[18px]"
                   style={{ background: item.bgColor, borderColor: item.borderColor }}
                   onClick={() => navigate(item.path)}
@@ -319,7 +297,8 @@ export default function DashboardHome() {
               </button>
             </div>
 
-            <div className="overflow-x-auto overflow-y-auto max-h-[320px] sm:max-h-[340px]">
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto overflow-y-auto max-h-[320px] sm:max-h-[340px]">
               <table className="w-full text-center text-sm min-w-[340px]">
                 <thead className="sticky top-0 z-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-950">
                   <tr>
@@ -381,6 +360,42 @@ export default function DashboardHome() {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="sm:hidden flex flex-col gap-3 p-3 max-h-[400px] overflow-y-auto">
+              {accountData.recentTxns.length === 0 ? (
+                <div className="py-8 text-center text-slate-400 italic text-sm">No transactions found</div>
+              ) : (
+                accountData.recentTxns.map((txn, i) => {
+                  const isCredit = txn.type === "Deposit";
+                  const Icon = getTransactionIcon(txn.note, txn.type);
+                  return (
+                    <div key={i} className="bg-white/60 hover:bg-white transition-colors border border-slate-100 rounded-[20px] p-4 flex items-center justify-between shadow-sm">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm
+                          ${isCredit ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
+                          <Icon size={20} className={isCredit ? "text-emerald-600" : "text-rose-600"} strokeWidth={2.5} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[14px] font-black text-slate-800 line-clamp-1">
+                            {txn.note || (isCredit ? "Credit" : "Debit")}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">
+                            {txn.date} · {txn.type}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className={`text-[16px] font-black ${isCredit ? "text-emerald-600" : "text-rose-600"}`}>
+                          {isCredit ? "+" : "−"}₹{txn.amount.toLocaleString()}
+                        </span>
+                        <span className="text-[9px] font-black text-emerald-500 uppercase tracking-tighter">Success</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
 
             <div

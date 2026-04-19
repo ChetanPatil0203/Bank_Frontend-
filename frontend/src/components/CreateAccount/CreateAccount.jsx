@@ -39,12 +39,12 @@ export default function CreateAccount({ sidebarOpen = true }) {
   return (
     <div
       className={`flex justify-center mt-12 px-4 transition-all duration-300 ${
-        sidebarOpen ? "ml-64" : "ml-20"
+        sidebarOpen ? "md:ml-64" : "md:ml-20"
       }`}
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-white/80 backdrop-blur-lg border border-blue-200 shadow-2xl rounded-2xl p-10 w-full max-w-4xl space-y-6 transition-all duration-300"
+        className="bg-white/80 backdrop-blur-lg border border-blue-200 shadow-2xl rounded-2xl p-6 sm:p-10 w-full max-w-4xl space-y-4 sm:space-y-6 transition-all duration-300"
       >
         {/* Header */}
         <h2 className="text-3xl font-bold text-blue-900 text-center mb-6">

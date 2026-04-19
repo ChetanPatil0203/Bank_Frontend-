@@ -11,12 +11,14 @@ import { messaging, getToken } from "../../firebase";
 /* ── Step Dot ── */
 function StepDot({ number, label, active, done }) {
   return (
-    <div className="flex items-center gap-1.5">
-      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all
-        ${active || done ? "bg-blue-900 text-white shadow-md" : "bg-gray-100 text-gray-400"}`}>
+    <div className="flex flex-col items-center gap-1 group">
+      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-black transition-all duration-300
+        ${active ? "bg-blue-900 text-white shadow-lg scale-110 ring-4 ring-blue-50" : 
+          done ? "bg-emerald-500 text-white shadow-md" : "bg-gray-100 text-gray-400"}`}>
         {done ? "✓" : number}
       </div>
-      <span className={`text-xs font-semibold hidden sm:block ${active ? "text-blue-900" : "text-gray-400"}`}>
+      <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-tighter whitespace-nowrap
+        ${active ? "text-blue-900" : done ? "text-emerald-600" : "text-gray-400"}`}>
         {label}
       </span>
     </div>

@@ -19,54 +19,51 @@ function SuccessPopup({ data }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
+      background: "rgba(10,20,50,0.8)", backdropFilter: "blur(12px)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "16px",
+      padding: "20px",
     }}>
       <div style={{
-        background: "#fff", borderRadius: 20, overflow: "hidden",
+        background: "#fff", borderRadius: 24, overflow: "hidden",
         maxWidth: 440, width: "100%",
-        boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
-        animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
-        margin: "0 12px",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.4)",
+        animation: "popIn 0.5s cubic-bezier(.22,1,.36,1)",
       }}>
         <div style={{
-          background: "linear-gradient(135deg, #0d1b3e 0%, #1a2f5e 50%, #0f2460 100%)",
-          padding: "32px 20px 28px", textAlign: "center", position: "relative", overflow: "hidden",
+          background: "linear-gradient(135deg, #0d1b3e 0%, #1a2f5e 100%)",
+          padding: "40px 24px 32px", textAlign: "center", position: "relative",
         }}>
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
-          <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.03)" }}/>
-          <div style={{ display:"flex", justifyContent:"center", marginBottom: 16, position:"relative", zIndex:1 }}>
-            <CheckCircle size={48} color="#4ade80" strokeWidth={1.8} style={{ filter: "drop-shadow(0 0 12px rgba(74,222,128,0.4))" }}/>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom: 20 }}>
+            <div style={{ width: 80, height: 80, background: "rgba(74,222,128,0.15)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <CheckCircle size={44} color="#4ade80" strokeWidth={2.5} />
+            </div>
           </div>
-          <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8, position:"relative", zIndex:1 }}>
-            Account Opened Successfully
-          </p>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: "#fff", margin: 0, position:"relative", zIndex:1 }}>
+          <h2 style={{ fontSize: "clamp(20px, 5vw, 24px)", fontWeight: 800, color: "#fff", margin: 0 }}>
             Welcome, {data.bank_holder_name}
           </h2>
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 8, position:"relative", zIndex:1 }}>
-            Your bank account is now active and ready to use.
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", marginTop: 10 }}>
+            Your bank account is now active.
           </p>
         </div>
-        <div style={{ padding: "18px 16px", background: "#f8f9fc" }}>
-          <div style={{ background: "#fff", border: "1.5px solid #e2e8f0", borderRadius: 14, padding: "12px 14px", marginBottom: 10 }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Account Number</p>
-            <p style={{ fontSize: 18, fontWeight: 700, color: "#0d1b3e", fontFamily: "monospace", letterSpacing: 2, wordBreak: "break-all" }}>{data.account_number}</p>
+        <div style={{ padding: "24px 20px", background: "#f8f9fc" }}>
+          <div style={{ background: "#fff", border: "2px solid #e2e8f0", borderRadius: 20, padding: "16px 20px", marginBottom: 16 }}>
+            <p style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 8 }}>Account Number</p>
+            <p style={{ fontSize: "clamp(18px, 6vw, 22px)", fontWeight: 900, color: "#0d1b3e", fontFamily: "monospace", letterSpacing: 2, wordBreak: "break-all" }}>{data.account_number}</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-            <div style={{ background:"#fff", border:"1.5px solid #e2e8f0", borderRadius:12, padding:"10px 10px" }}>
-              <p style={{ fontSize:10, fontWeight:600, color:"#94a3b8", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:4 }}>IFSC Code</p>
-              <p style={{ fontSize:12, fontWeight:600, color:"#1e293b", fontFamily:"monospace", wordBreak:"break-all" }}>{data.ifsc}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div style={{ background:"#fff", border:"2px solid #e2e8f0", borderRadius:16, padding:"12px 14px" }}>
+              <p style={{ fontSize:10, fontWeight:800, color:"#94a3b8", letterSpacing:"0.15em", textTransform:"uppercase", marginBottom:6 }}>IFSC</p>
+              <p style={{ fontSize:13, fontWeight:800, color:"#1e293b", fontFamily:"monospace" }}>{data.ifsc}</p>
             </div>
-            <div style={{ background:"#fff", border:"1.5px solid #e2e8f0", borderRadius:12, padding:"10px 10px" }}>
-              <p style={{ fontSize:10, fontWeight:600, color:"#94a3b8", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:4 }}>Account Type</p>
-              <p style={{ fontSize:12, fontWeight:600, color:"#1e293b" }}>{data.account_type}</p>
+            <div style={{ background:"#fff", border:"2px solid #e2e8f0", borderRadius:16, padding:"12px 14px" }}>
+              <p style={{ fontSize:10, fontWeight:800, color:"#94a3b8", letterSpacing:"0.15em", textTransform:"uppercase", marginBottom:6 }}>Type</p>
+              <p style={{ fontSize:13, fontWeight:800, color:"#1e293b" }}>{data.account_type}</p>
             </div>
           </div>
         </div>
       </div>
-      <style>{`@keyframes popIn { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }`}</style>
+      <style>{`@keyframes popIn { from{opacity:0;transform:scale(0.9) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }`}</style>
     </div>
   );
 }
@@ -78,128 +75,67 @@ function PendingPopup({ name, onClose }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(10,20,50,0.75)", backdropFilter: "blur(8px)",
+      background: "rgba(10,20,50,0.8)", backdropFilter: "blur(12px)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "16px",
-      overflowY: "auto",
+      padding: "20px",
     }}>
       <div style={{
-        background: "#fff", borderRadius: 24, overflow: "hidden",
+        background: "#fff", borderRadius: 28, overflow: "hidden",
         maxWidth: 420, width: "100%",
-        boxShadow: "0 32px 80px rgba(0,0,0,0.3)",
-        animation: "popIn 0.45s cubic-bezier(.22,1,.36,1)",
-        margin: "auto",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.4)",
+        animation: "popIn 0.5s cubic-bezier(.22,1,.36,1)",
       }}>
         <div style={{
           background: "linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)",
-          padding: "28px 20px 22px", textAlign: "center",
-          position: "relative", overflow: "hidden",
+          padding: "36px 24px 28px", textAlign: "center", position: "relative",
         }}>
           <div style={{ position:"absolute", top:-40, right:-40, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.05)" }}/>
-          <div style={{ position:"absolute", bottom:-30, left:-30, width:120, height:120, borderRadius:"50%", background:"rgba(255,255,255,0.04)" }}/>
-          <div style={{ display:"flex", justifyContent:"center", marginBottom: 14, position:"relative", zIndex:1 }}>
-            <div style={{
-              width: 62, height: 62, borderRadius: "50%",
-              background: "rgba(255,255,255,0.12)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 0 0 8px rgba(255,255,255,0.06)",
-              animation: "pulseRing 2s ease-in-out infinite",
-            }}>
-              <Clock size={30} color="#fbbf24" strokeWidth={1.8}
-                style={{ filter: "drop-shadow(0 0 8px rgba(251,191,36,0.5))" }}/>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom: 20 }}>
+            <div style={{ width: 70, height: 70, background: "rgba(251,191,36,0.15)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Clock size={36} color="#fbbf24" strokeWidth={2.5} />
             </div>
           </div>
-          <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.55)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6, position:"relative", zIndex:1 }}>
-            Request Submitted
-          </p>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: "#fff", margin: 0, position:"relative", zIndex:1, lineHeight: 1.3 }}>
-            Pending Admin Approval
+          <h2 style={{ fontSize: "clamp(18px, 5vw, 22px)", fontWeight: 800, color: "#fff", margin: 0 }}>
+            Pending Approval
           </h2>
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 8, position:"relative", zIndex:1 }}>
-            Your account opening request has been sent to the admin for review.
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginTop: 10 }}>
+            Submission received. Admin review in progress.
           </p>
         </div>
-        <div style={{ padding: "18px 16px 22px", background: "#f8faff" }}>
+        <div style={{ padding: "24px 20px", background: "#f8faff" }}>
           <div style={{
-            background: "#fff", border: "1.5px solid #dbeafe", borderRadius: 16,
-            padding: "12px 14px", marginBottom: 14,
-            display: "flex", alignItems: "center", gap: 10,
+            background: "#fff", border: "2px solid #dbeafe", borderRadius: 20,
+            padding: "16px", marginBottom: 20,
+            display: "flex", alignItems: "center", gap: 12,
           }}>
-            <div style={{
-              width: 38, height: 38, borderRadius: 10,
-              background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
-              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-            }}>
-              <User size={17} color="#2563eb"/>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: "linear-gradient(135deg, #eff6ff, #dbeafe)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <User size={20} color="#2563eb"/>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 2 }}>Applicant</p>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#1e293b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
+              <p style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Applicant</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#1e293b" }}>{name}</p>
             </div>
-            <div style={{
-              background: "#fef9c3", border: "1px solid #fde047",
-              borderRadius: 20, padding: "4px 10px",
-              fontSize: 9, fontWeight: 700, color: "#854d0e",
-              display: "flex", alignItems: "center", gap: 4, flexShrink: 0,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#f59e0b", display: "inline-block", animation: "blink 1.2s ease-in-out infinite" }}/>
-              PENDING
+            <div style={{ background: "#fef9c3", border: "1px solid #fde047", borderRadius: 20, padding: "4px 12px", fontSize: 10, fontWeight: 800, color: "#854d0e" }}>
+               PENDING
             </div>
           </div>
-          <div style={{ marginBottom: 16 }}>
-            {[
-              { label: "Application Submitted", done: true },
-              { label: "Admin Review", done: false, active: true },
-              { label: "Account Activation", done: false },
-            ].map((s, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: i < 2 ? 10 : 0 }}>
-                <div style={{
-                  width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
-                  background: s.done ? "#22c55e" : s.active ? "#2563eb" : "#e2e8f0",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: s.active ? "0 0 0 4px rgba(37,99,235,0.15)" : "none",
-                  animation: s.active ? "pulseRing 2s ease-in-out infinite" : "none",
-                }}>
-                  {s.done
-                    ? <CheckCircle size={13} color="#fff" strokeWidth={2.5}/>
-                    : s.active
-                      ? <Clock size={12} color="#fff" strokeWidth={2.5}/>
-                      : <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#94a3b8", display: "block" }}/>
-                  }
-                </div>
-                <span style={{
-                  fontSize: 13, fontWeight: s.active ? 600 : 500,
-                  color: s.done ? "#16a34a" : s.active ? "#1d4ed8" : "#94a3b8",
-                }}>
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontSize: 12, color: "#64748b", textAlign: "center", marginBottom: 14, lineHeight: 1.6 }}>
-            The admin will review your application shortly. You will be notified once your account is activated.
-          </p>
           <button
             onClick={onClose}
             style={{
-              width: "100%", padding: "13px 0",
+              width: "100%", padding: "16px 0",
               background: "linear-gradient(135deg, #1e3a5f, #2563eb)",
-              color: "#fff", fontWeight: 700, fontSize: 14,
-              border: "none", borderRadius: 12, cursor: "pointer",
-              boxShadow: "0 4px 16px rgba(37,99,235,0.3)",
-              transition: "opacity 0.2s",
+              color: "#fff", fontWeight: 800, fontSize: 15,
+              border: "none", borderRadius: 16, cursor: "pointer",
+              boxShadow: "0 10px 25px rgba(37,99,235,0.25)",
+              transition: "transform 0.2s active:scale-95",
             }}
-            onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
-            onMouseLeave={e => e.currentTarget.style.opacity = "1"}
           >
-            Okay, Got it!
+            Okay, Understood
           </button>
         </div>
       </div>
       <style>{`
-        @keyframes popIn    { from{opacity:0;transform:scale(0.88) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes pulseRing{ 0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.25)} 50%{box-shadow:0 0 0 8px rgba(37,99,235,0)} }
-        @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes popIn { from{opacity:0;transform:scale(0.9) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
       `}</style>
     </div>
   );
@@ -895,17 +831,17 @@ export default function OpenAccountPage() {
 
 function Section({ title, children }) {
   return (
-    <div className="rounded-lg p-3 bg-gray-50">
-      <h3 className="text-xs sm:text-sm font-semibold text-blue-900 mb-2.5">{title}</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">{children}</div>
+    <div className="rounded-2xl p-4 sm:p-5 bg-slate-50/50 border border-slate-100">
+      <h3 className="text-[11px] sm:text-xs font-black text-blue-900/50 uppercase tracking-[0.2em] mb-4">{title}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">{children}</div>
     </div>
   );
 }
 
 function Field({ label, children }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-gray-700">
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">
         {label} <span className="text-red-500">*</span>
       </label>
       {children}
@@ -915,17 +851,17 @@ function Field({ label, children }) {
 
 function IconInput({ icon, children }) {
   return (
-    <div className="relative flex items-center">
-      <span className="absolute left-2.5 text-gray-400 pointer-events-none text-sm z-10">{icon}</span>
+    <div className="relative flex items-center group">
+      <span className="absolute left-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors pointer-events-none text-base z-10">{icon}</span>
       <div className="w-full
-        [&>input]:rounded-lg [&>input]:pl-7 [&>input]:pr-2.5 [&>input]:py-2
-        [&>input]:bg-white [&>input]:border [&>input]:w-full
-        [&>input]:focus:ring-2 [&>input]:focus:ring-blue-500
-        [&>input]:outline-none [&>input]:text-xs
-        [&>select]:rounded-lg [&>select]:pl-7 [&>select]:pr-2.5 [&>select]:py-2
-        [&>select]:bg-white [&>select]:border [&>select]:w-full
-        [&>select]:focus:ring-2 [&>select]:focus:ring-blue-500
-        [&>select]:outline-none [&>select]:text-xs [&>select]:appearance-none">
+        [&>input]:rounded-2xl [&>input]:pl-10 [&>input]:pr-4 [&>input]:py-3.5
+        [&>input]:bg-white [&>input]:border-2 [&>input]:border-slate-100 [&>input]:w-full
+        [&>input]:focus:ring-4 [&>input]:focus:ring-blue-500/10 [&>input]:focus:border-blue-500
+        [&>input]:outline-none [&>input]:text-sm [&>input]:font-medium [&>input]:transition-all
+        [&>select]:rounded-2xl [&>select]:pl-10 [&>select]:pr-4 [&>select]:py-3.5
+        [&>select]:bg-white [&>select]:border-2 [&>select]:border-slate-100 [&>select]:w-full
+        [&>select]:focus:ring-4 [&>select]:focus:ring-blue-500/10 [&>select]:focus:border-blue-500
+        [&>select]:outline-none [&>select]:text-sm [&>select]:font-medium [&>select]:appearance-none [&>select]:transition-all">
         {children}
       </div>
     </div>

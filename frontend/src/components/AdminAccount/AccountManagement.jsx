@@ -58,6 +58,45 @@ const RESPONSIVE_STYLES = `
   .modal-content { max-width: 95% !important; border-radius: 16px !important; }
   .accounts-table { width: 100%; overflow-x: auto; display: block; }
   .form-grid-2 { grid-template-columns: 1fr !important; }
+  
+  /* Mobile Account Card Styling */
+  .mobile-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobile-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mobile-card-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .mobile-card-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f1f4b;
+  }
+  .mobile-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+  }
+
   @media (max-width: 480px) {
     .stat-card-wrap { flex: 1 1 100% !important; }
   }
@@ -865,149 +904,265 @@ export default function AccountsView() {
         </div>
       </div>
 
-      {/* ── TAB 1: ALL ACCOUNTS ── ALWAYS VISIBLE TABLE */}
+      {/* ── TAB 1: ALL ACCOUNTS ── */}
       {tab === "all" && (
-        <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
-          <div className="accounts-table">
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
-              <thead>
-                <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
-                  {["#", "Account Holder", "Account No.", "Type", "Balance", "Branch", "Opened", "Status", "Actions"].map(h => (
-                    <TH key={h}>{h}</TH>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Desktop Table View */}
+          <div className="hidden sm:block" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+            <div className="accounts-table">
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
+                <thead>
+                  <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                    {["#", "Account Holder", "Account No.", "Type", "Balance", "Branch", "Opened", "Status", "Actions"].map(h => (
+                      <TH key={h}>{h}</TH>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} style={{ padding: "60px 20px", textAlign: "center", color: C.muted, fontSize: 14 }}>
+                        <CreditCard size={36} style={{ marginBottom: 12, opacity: 0.3, display: "block", margin: "0 auto 12px" }} />
+                        <p style={{ margin: 0, fontWeight: 600 }}>No accounts found</p>
+                      </td>
+                    </tr>
+                  ) : filtered.map((a, i) => (
+                    <tr key={a.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
+                      <TD><span style={{ color: C.muted, fontWeight: 600 }}>{i + 1}</span></TD>
+                      <TD><span style={{ fontWeight: 700 }}>{a.holder}</span></TD>
+                      <TD><span style={{ fontFamily: "monospace", fontSize: 12, color: C.accent, fontWeight: 600 }}>{a.account}</span></TD>
+                      <TD>{a.type}</TD>
+                      <TD><span style={{ fontWeight: 700, color: C.green }}>{a.balance}</span></TD>
+                      <TD><span style={{ color: C.muted }}>{a.branch}</span></TD>
+                      <TD><span style={{ color: C.muted }}>{a.opened}</span></TD>
+                      <TD><Badge status={a.status} /></TD>
+                      <TD center>
+                        <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                          <button onClick={() => { setSelected(a); setModal("details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                            <Eye size={12} /> View
+                          </button>
+                          {a.status !== "Closed" && (
+                            <button onClick={() => { setSelected(a); setModal("toggle"); }} style={{ background: a.status === "Active" ? "#fef9c3" : "#dcfce7", color: a.status === "Active" ? "#854d0e" : "#15803d", border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                              {a.status === "Active" ? <><XCircle size={12} /> Deactivate</> : <><CheckCircle size={12} /> Activate</>}
+                            </button>
+                          )}
+                          {a.status !== "Closed" && (
+                            <button onClick={() => { setSelected(a); setModal("close"); }} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                              <Trash2 size={12} /> Close
+                            </button>
+                          )}
+                        </div>
+                      </TD>
+                    </tr>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} style={{ padding: "60px 20px", textAlign: "center", color: C.muted, fontSize: 14 }}>
-                      <CreditCard size={36} style={{ marginBottom: 12, opacity: 0.3, display: "block", margin: "0 auto 12px" }} />
-                      <p style={{ margin: 0, fontWeight: 600 }}>No accounts found</p>
-                    </td>
-                  </tr>
-                ) : filtered.map((a, i) => (
-                  <tr key={a.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
-                    <TD><span style={{ color: C.muted, fontWeight: 600 }}>{i + 1}</span></TD>
-                    <TD><span style={{ fontWeight: 700 }}>{a.holder}</span></TD>
-                    <TD><span style={{ fontFamily: "monospace", fontSize: 12, color: C.accent, fontWeight: 600 }}>{a.account}</span></TD>
-                    <TD>{a.type}</TD>
-                    <TD><span style={{ fontWeight: 700, color: C.green }}>{a.balance}</span></TD>
-                    <TD><span style={{ color: C.muted }}>{a.branch}</span></TD>
-                    <TD><span style={{ color: C.muted }}>{a.opened}</span></TD>
-                    <TD><Badge status={a.status} /></TD>
-                    <TD center>
-                      <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                        <button onClick={() => { setSelected(a); setModal("details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                          <Eye size={12} /> View
-                        </button>
-                        {a.status !== "Closed" && (
-                          <button onClick={() => { setSelected(a); setModal("toggle"); }} style={{ background: a.status === "Active" ? "#fef9c3" : "#dcfce7", color: a.status === "Active" ? "#854d0e" : "#15803d", border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            {a.status === "Active" ? <><XCircle size={12} /> Deactivate</> : <><CheckCircle size={12} /> Activate</>}
-                          </button>
-                        )}
-                        {a.status !== "Closed" && (
-                          <button onClick={() => { setSelected(a); setModal("close"); }} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            <Trash2 size={12} /> Close
-                          </button>
-                        )}
-                      </div>
-                    </TD>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {filtered.length === 0 ? (
+              <div style={{ padding: 40, textAlign: "center", color: C.muted, background: C.card, borderRadius: 16 }}>
+                 <p>No accounts found</p>
+              </div>
+            ) : filtered.map((a) => (
+              <div key={a.id} className="mobile-card">
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-value" style={{ fontSize: 15 }}>{a.holder}</span>
+                    <Badge status={a.status} />
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Account No</span>
+                    <span className="mobile-card-value" style={{ fontFamily: "monospace", color: C.accent }}>{a.account}</span>
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Type & Balance</span>
+                    <div style={{ textAlign: "right" }}>
+                       <div className="mobile-card-value text-[11px]">{a.type}</div>
+                       <div className="mobile-card-value" style={{ color: C.green }}>{a.balance}</div>
+                    </div>
+                 </div>
+                 <div className="mobile-card-actions">
+                    <button onClick={() => { setSelected(a); setModal("details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Eye size={12} /> View
+                    </button>
+                    {a.status !== "Closed" && (
+                      <button onClick={() => { setSelected(a); setModal("toggle"); }} style={{ background: a.status === "Active" ? "#fef9c3" : "#dcfce7", color: a.status === "Active" ? "#854d0e" : "#15803d", border: "none", borderRadius: 7, padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                        {a.status === "Active" ? "Deactivate" : "Activate"}
+                      </button>
+                    )}
+                    {a.status !== "Closed" && (
+                      <button onClick={() => { setSelected(a); setModal("close"); }} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                        <Trash2 size={12} /> Close
+                      </button>
+                    )}
+                 </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
       {/* ── TAB 2: NEW ACCOUNT REQUESTS ── */}
       {tab === "new" && (
-        <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
-          {filteredNar.length === 0 ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
-              <UserPlus size={36} style={{ marginBottom: 12, opacity: 0.3 }} />
-              <p style={{ margin: 0, fontWeight: 600 }}>No new account requests</p>
-            </div>
-          ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
-                <thead>
-                  <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
-                    {["#", "Name", "Email", "Phone", "Account Type", "Reason", "Applied On", "KYC Status", "Actions"].map(h => (
-                      <TH key={h}>{h}</TH>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredNar.map((r, i) => (
-                    <tr key={r.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
-                      <TD>{i + 1}</TD>
-                      <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
-                      <TD>{r.email}</TD>
-                      <TD>{r.phone}</TD>
-                      <TD>{r.account_type}</TD>
-                      <TD>{r.reason || "—"}</TD>
-                      <TD>{r.applied}</TD>
-                      <TD><Badge status={r.kyc} /></TD>
-                      <TD center>
-                        <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                          <button onClick={() => { setSelectedNar(r); setModal("nar-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            <Eye size={12} /> View
-                          </button>
-                          <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
-                          <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
-                        </div>
-                      </TD>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Desktop Table View */}
+          <div className="hidden sm:block" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+            {filteredNar.length === 0 ? (
+              <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
+                <UserPlus size={36} style={{ marginBottom: 12, opacity: 0.3 }} />
+                <p style={{ margin: 0, fontWeight: 600 }}>No new account requests</p>
+              </div>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
+                  <thead>
+                    <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                      {["#", "Name", "Email", "Phone", "Account Type", "Reason", "Applied On", "KYC Status", "Actions"].map(h => (
+                        <TH key={h}>{h}</TH>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {filteredNar.map((r, i) => (
+                      <tr key={r.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
+                        <TD>{i + 1}</TD>
+                        <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
+                        <TD>{r.email}</TD>
+                        <TD>{r.phone}</TD>
+                        <TD>{r.account_type}</TD>
+                        <TD>{r.reason || "—"}</TD>
+                        <TD>{r.applied}</TD>
+                        <TD><Badge status={r.kyc} /></TD>
+                        <TD center>
+                          <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                            <button onClick={() => { setSelectedNar(r); setModal("nar-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                              <Eye size={12} /> View
+                            </button>
+                            <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                            <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
+                          </div>
+                        </TD>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {filteredNar.length === 0 ? (
+              <div style={{ padding: 40, textAlign: "center", color: C.muted, background: C.card, borderRadius: 16 }}>
+                 <p>No new requests</p>
+              </div>
+            ) : filteredNar.map((r) => (
+              <div key={r.id} className="mobile-card">
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-value">{r.name}</span>
+                    <Badge status={r.kyc} />
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Contact</span>
+                    <div style={{ textAlign: "right", fontSize: 11 }}>
+                       <div>{r.email}</div>
+                       <div>{r.phone}</div>
+                    </div>
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Account Type</span>
+                    <span className="mobile-card-value">{r.account_type}</span>
+                 </div>
+                 <div className="mobile-card-actions">
+                    <button onClick={() => { setSelectedNar(r); setModal("nar-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Eye size={12} /> View
+                    </button>
+                    <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                    <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
+                 </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {/* ── TAB 3: PENDING REQUESTS ── */}
       {tab === "pending" && (
-        <div style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
-          {requests.length === 0 ? (
-            <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
-              <Clock size={36} style={{ marginBottom: 12, opacity: 0.3 }} />
-              <p style={{ margin: 0, fontWeight: 600 }}>No pending requests</p>
-            </div>
-          ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
-                <thead>
-                  <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
-                    {["#", "Name", "Email", "Account Type", "Applied On", "Actions"].map(h => (
-                      <TH key={h}>{h}</TH>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {requests.map((r, i) => (
-                    <tr key={r.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
-                      <TD>{i + 1}</TD>
-                      <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
-                      <TD>{r.email}</TD>
-                      <TD>{r.account_type}</TD>
-                      <TD>{r.applied}</TD>
-                      <TD center>
-                        <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-                          <button onClick={() => { setSelectedPending(r); setModal("pending-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-                            <Eye size={12} /> View
-                          </button>
-                          <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
-                          <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
-                        </div>
-                      </TD>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Desktop Table View */}
+          <div className="hidden sm:block" style={{ background: C.card, borderRadius: 16, boxShadow: "0 2px 12px rgba(15,31,75,0.07)", border: `1px solid ${C.border}`, overflow: "hidden" }}>
+            {requests.length === 0 ? (
+              <div style={{ padding: 60, textAlign: "center", color: C.muted, fontSize: 14 }}>
+                <Clock size={36} style={{ marginBottom: 12, opacity: 0.3 }} />
+                <p style={{ margin: 0, fontWeight: 600 }}>No pending requests</p>
+              </div>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
+                  <thead>
+                    <tr style={{ background: "linear-gradient(to right, #1e3a8a, #153e75, #0f172a)" }}>
+                      {["#", "Name", "Email", "Account Type", "Applied On", "Actions"].map(h => (
+                        <TH key={h}>{h}</TH>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {requests.map((r, i) => (
+                      <tr key={r.id} onMouseEnter={e => e.currentTarget.style.background = "#f8faff"} onMouseLeave={e => e.currentTarget.style.background = ""}>
+                        <TD>{i + 1}</TD>
+                        <TD><span style={{ fontWeight: 700 }}>{r.name}</span></TD>
+                        <TD>{r.email}</TD>
+                        <TD>{r.account_type}</TD>
+                        <TD>{r.applied}</TD>
+                        <TD center>
+                          <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                            <button onClick={() => { setSelectedPending(r); setModal("pending-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "5px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                              <Eye size={12} /> View
+                            </button>
+                            <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                            <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
+                          </div>
+                        </TD>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="sm:hidden">
+            {requests.length === 0 ? (
+              <div style={{ padding: 40, textAlign: "center", color: C.muted, background: C.card, borderRadius: 16 }}>
+                 <p>No pending requests</p>
+              </div>
+            ) : requests.map((r) => (
+              <div key={r.id} className="mobile-card">
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-value" style={{ fontSize: 14 }}>{r.name}</span>
+                    <span className="text-[10px] text-slate-400 font-bold">{r.applied}</span>
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Email</span>
+                    <span className="mobile-card-value text-[11px] truncate" style={{ maxWidth: '180px' }}>{r.email}</span>
+                 </div>
+                 <div className="mobile-card-row">
+                    <span className="mobile-card-label">Account Type</span>
+                    <span className="mobile-card-value">{r.account_type}</span>
+                 </div>
+                 <div className="mobile-card-actions">
+                    <button onClick={() => { setSelectedPending(r); setModal("pending-details"); }} style={{ background: "#eff6ff", color: C.accent, border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Eye size={12} /> View
+                    </button>
+                    <button onClick={() => handleApprove(r)} style={{ background: "#dcfce7", color: "#15803d", border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Approve</button>
+                    <button onClick={() => handleReject(r)} style={{ background: "#fee2e2", color: C.red, border: "none", borderRadius: 7, padding: "6px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Reject</button>
+                 </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

@@ -322,19 +322,19 @@ export default function HelpSupport() {
       <style>{animCSS}</style>
 
       {/* TAB SWITCHER */}
-      <div className="flex justify-center mb-6">
-        <div className="bg-slate-100 p-1 rounded-xl flex gap-1 shadow-inner border border-slate-200">
+      <div className="flex justify-center mb-6 px-1">
+        <div className="bg-slate-100 p-1.5 rounded-2xl flex w-full max-w-sm gap-1 shadow-inner border border-slate-200">
             <button 
                 onClick={() => { setActiveTab("new"); setSelectedTicket(null); }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'new' ? 'bg-white text-blue-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all duration-300 ${activeTab === 'new' ? 'bg-white text-blue-900 shadow-md scale-[1.02]' : 'text-slate-500 hover:text-slate-800'}`}
             >
-                <Headphones size={14} /> New Request
+                <Headphones size={15} /> NEW REQUEST
             </button>
             <button 
                 onClick={() => { setActiveTab("history"); setSelectedTicket(null); }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'history' ? 'bg-white text-blue-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all duration-300 ${activeTab === 'history' ? 'bg-white text-blue-900 shadow-md scale-[1.02]' : 'text-slate-500 hover:text-slate-800'}`}
             >
-                <History size={14} /> My History
+                <History size={15} /> MY HISTORY
             </button>
         </div>
       </div>
@@ -346,19 +346,15 @@ export default function HelpSupport() {
         ) : (
             <>
                 {/* HEADER */}
-                <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#0f1f4b] to-[#1e40af] flex-shrink-0 shadow-lg shadow-blue-100">
-                            <Headphones size={22} color="white" />
+                <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#0f1f4b] via-[#1e3a7b] to-[#2563eb] flex-shrink-0 shadow-xl shadow-blue-200/50">
+                            <Headphones size={26} color="white" strokeWidth={2.5} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-blue-950 leading-tight">Help & Support</h2>
-                            <p className="text-xs text-gray-500">Customer Assistance & Issue Resolution</p>
+                            <h2 className="text-xl sm:text-2xl font-black text-blue-950 leading-tight tracking-tight">Help & Support</h2>
+                            <p className="text-[11px] font-medium text-gray-500 uppercase tracking-widest mt-0.5">Assistance Portal</p>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-full px-3 py-1">
-                        <span className="liveDot w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
-                        <span className="text-[10px] font-bold text-green-700 uppercase tracking-wider">Live Support</span>
                     </div>
                 </div>
 
@@ -493,15 +489,15 @@ export default function HelpSupport() {
 /* ── SECTION COMPONENT ── */
 function Section({ title, Icon, step, children }) {
   return (
-    <div className="rounded-2xl p-4 sm:p-5 bg-slate-50 border border-slate-100">
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-6 h-6 rounded-full bg-[#0f1f4b] flex items-center justify-center flex-shrink-0 shadow-md">
-          <span className="text-white font-black" style={{ fontSize: 11 }}>{step}</span>
+    <div className="rounded-3xl p-5 sm:p-6 bg-slate-50/50 border border-slate-100 shadow-sm">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-7 h-7 rounded-full bg-[#0f1f4b] flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-950/20">
+          <span className="text-white font-black text-[10px]">{step}</span>
         </div>
-        <Icon size={16} className="text-blue-900" />
-        <h3 className="text-sm font-extrabold text-blue-900 uppercase tracking-tight">{title}</h3>
+        <Icon size={18} className="text-blue-900" />
+        <h3 className="text-[11px] font-black text-blue-900/40 uppercase tracking-[0.2em]">{title}</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {children}
       </div>
     </div>
@@ -511,15 +507,15 @@ function Section({ title, Icon, step, children }) {
 /* ── INPUT FIELD COMPONENT ── */
 function Field({ label, name, placeholder, value, onChange, onBlur, error, required, Icon, maxLength }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       {label && (
-        <label className="text-xs font-bold text-slate-700 px-0.5">
+        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
       <div className="relative group">
         {Icon && (
-          <Icon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors pointer-events-none" />
+          <Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-all duration-300 pointer-events-none" />
         )}
         <input
           name={name}
@@ -528,16 +524,16 @@ function Field({ label, name, placeholder, value, onChange, onBlur, error, requi
           onChange={onChange}
           onBlur={() => onBlur && onBlur()}
           maxLength={maxLength}
-          className={`border rounded-xl p-3 bg-white text-xs w-full outline-none transition-all shadow-sm
-            ${Icon ? "pl-10" : "pl-3.5"}
+          className={`border-2 rounded-2xl p-3.5 bg-white text-sm font-medium w-full outline-none transition-all duration-300
+            ${Icon ? "pl-11" : "pl-4"}
             ${error
-              ? "border-red-400 focus:ring-2 focus:ring-red-100 bg-red-50/10"
-              : "border-gray-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400"}`}
+              ? "border-red-400 focus:ring-4 focus:ring-red-500/10 bg-red-50/20"
+              : "border-slate-100 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500"}`}
         />
       </div>
       {error && (
-        <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 px-1">
-          <AlertTriangle size={10} /> {error}
+        <p className="text-[10px] text-red-500 font-black flex items-center gap-1.5 px-2">
+          <AlertTriangle size={12} /> {error}
         </p>
       )}
     </div>
