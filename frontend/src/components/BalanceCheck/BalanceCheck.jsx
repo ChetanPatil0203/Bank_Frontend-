@@ -137,21 +137,7 @@ export default function BalanceCheck() {
   );
 }
 
-/* ---------- Section ---------- */
 
-function Section({ title, children }) {
-  return (
-    <div className="p-6 mb-6">
-      <h3 className="text-xl font-semibold text-blue-900 mb-5">
-        {title}
-      </h3>
-
-      <div className="grid md:grid-cols-2 gap-5">
-        {children}
-      </div>
-    </div>
-  );
-}
 
 /* ---------- Input ---------- */
 

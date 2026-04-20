@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Search, Filter, User,
+  Search, User,
   Send, ArrowLeft,
   ChevronRight, RefreshCw
 } from "lucide-react";
@@ -57,6 +57,7 @@ export default function AdminSupport() {
 
   useEffect(() => {
     fetchTickets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const handleStatusChange = async (id, status) => {

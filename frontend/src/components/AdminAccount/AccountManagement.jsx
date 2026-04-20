@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import {
   Eye, CheckCircle, XCircle, Trash2, Clock, Plus, Search, UserPlus,
-  CreditCard, CheckCircle2, PauseCircle, Ban, X, User, Phone, Mail,
-  MapPin, Shield, Building2, Users, FileText, Calendar, Hash, Upload,
+  CreditCard, CheckCircle2, PauseCircle, Ban, X, User, Phone,
+  Shield, Building2, Users, FileText, Upload,
   PenLine
 } from "lucide-react";
 
