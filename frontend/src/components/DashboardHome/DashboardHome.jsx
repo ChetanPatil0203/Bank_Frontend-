@@ -87,6 +87,7 @@ export default function DashboardHome() {
     document.head.appendChild(el);
     fetchDashboardData();
     return () => document.head.removeChild(el);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchDashboardData = async () => {

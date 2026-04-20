@@ -1,5 +1,5 @@
 import {
-  ArrowDownToLineIcon, CreditCard, User, Phone, Mail,
+  ArrowDownToLineIcon, CreditCard, User, Phone,
   MapPin, Shield, Users, Copy, CheckCheck,
   BadgeCheck, AlertCircle
 } from "lucide-react";

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import {
-  Search, Filter, MessageSquare, Clock, User,
-  CheckCircle2, AlertCircle, Send, ArrowLeft,
-  ChevronRight, MoreVertical, RefreshCw
+  Search, Filter, User,
+  Send, ArrowLeft,
+  ChevronRight, RefreshCw
 } from "lucide-react";
 import { adminGetTickets, getTicketDetails, addTicketMessage, adminUpdateTicketStatus } from "../../utils/apiServices";
 
@@ -25,9 +25,8 @@ export default function AdminSupport() {
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [ticketDetails, setTicketDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [detailsLoading, setDetailsLoading] = useState(false);
   const [replyMessage, setReplyMessage] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filter] = useState("");
 
   const fetchTickets = async () => {
     setLoading(true);
@@ -39,13 +38,11 @@ export default function AdminSupport() {
   };
 
   const fetchDetails = async (id) => {
-    setDetailsLoading(true);
     const res = await getTicketDetails(id);
     if (res.ok) {
       setTicketDetails(res.data.data);
       setSelectedTicketId(id);
     }
-    setDetailsLoading(false);
   };
 
   const handleSendReply = async () => {
