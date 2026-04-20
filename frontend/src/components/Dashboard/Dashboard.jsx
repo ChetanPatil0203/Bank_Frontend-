@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   UserCheck,
-  Wallet,
   LogOut,
   CircleUserRound,
   ArrowLeftRight,

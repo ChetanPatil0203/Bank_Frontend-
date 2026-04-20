@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import {
   User, Phone, Lock, Send, AlertTriangle, Landmark,
-  ShieldCheck, Headphones, CheckCircle2, RefreshCw,
-  Clock, LifeBuoy, Info, LogIn, DollarSign,
+  Headphones, CheckCircle2, RefreshCw,
+  LifeBuoy, Info, LogIn, DollarSign,
   PiggyBank, Settings, Zap, History, ChevronRight,
   ArrowLeft, MessageSquare
 } from "lucide-react";
