@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, Building2, UserCircle, Hash, ShieldCheck, AlertCircle, CheckCircle2, ChevronRight, Wallet } from 'lucide-react';
+import { Send, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { performTransfer } from '../../utils/apiServices';
 
 export default function MoneyTransfer() {

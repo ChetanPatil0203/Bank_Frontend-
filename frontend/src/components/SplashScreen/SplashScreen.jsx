@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SplashScreen() {
@@ -6,7 +6,6 @@ export default function SplashScreen() {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const speechRef = useRef(null);
 
   /* SCREEN SIZE DETECT */
   useEffect(() => {

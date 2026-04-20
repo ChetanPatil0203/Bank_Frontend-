@@ -11,9 +11,8 @@ import {
   Settings,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Menu } from "lucide-react";
-import { useEffect } from "react";
 
 /* ═══════════════════════════════════════════════════════════
    PAYZEN LOGO — inline flow (same as before)

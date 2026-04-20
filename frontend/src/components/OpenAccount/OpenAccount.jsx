@@ -412,7 +412,7 @@ export default function OpenAccountPage() {
     reason: "", agree: false,
   });
 
-  const [successData, setSuccessData]   = useState(null);
+  const [successData]   = useState(null);
   const [showPending, setShowPending]   = useState(false);
 
   const [photo, setPhoto]               = useState(null);

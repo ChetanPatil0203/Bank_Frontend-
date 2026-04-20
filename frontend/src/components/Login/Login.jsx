@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, ShieldAlert, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, XCircle, X, Lock, Mail, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../utils/apiServices";
 

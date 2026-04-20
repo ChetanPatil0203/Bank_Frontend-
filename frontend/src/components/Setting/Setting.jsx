@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getProfile, updateProfile, getPreferences, updatePreferences, changePassword, getLoginActivity } from "../../utils/apiServices";
 
-import { User, Shield, Bell, Key, Mail, Phone, MapPin, CheckCircle, Smartphone, CreditCard, Gift, ChevronRight, Lock, Calendar, ClipboardCheck } from "lucide-react";
+import { User, Shield, Bell, Key, Mail, Phone, MapPin, CheckCircle, Smartphone, CreditCard, Gift, Lock, Calendar } from "lucide-react";
 
 function Ico({ icon: Icon, size = 16, className = "" }) {
   if (!Icon) return null;

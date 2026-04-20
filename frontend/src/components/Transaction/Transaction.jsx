@@ -58,7 +58,7 @@ export default function TransactionHistory() {
   // बॅकएंड डेटासाठी नवीन स्टेट्स
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance]           = useState(0);
-  const [loading, setLoading]           = useState(true);
+
 
   useEffect(() => {
     const el = document.createElement("style");
@@ -80,8 +80,6 @@ export default function TransactionHistory() {
       }
     } catch (error) {
       console.error("Error fetching transactions:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
