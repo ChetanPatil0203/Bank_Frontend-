@@ -207,11 +207,17 @@ export default function LoginPage() {
     if (loginError) setLoginError(""); // ← Clear error on input change
   };
 
+  const [slowConnection, setSlowConnection] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setLoginError(""); // ← Clear previous error
+    setLoginError("");
+    setSlowConnection(false);
     
+    // Show "server starting" message after 5 seconds
+    const slowTimer = setTimeout(() => setSlowConnection(true), 5000);
+
     let fcmToken = null;
     try {
       const { requestFcmToken } = await import("../../utils/fcmHelper");
@@ -221,9 +227,11 @@ export default function LoginPage() {
     }
 
     const result = await loginUser(formData.email, formData.password, fcmToken);
+    clearTimeout(slowTimer);
+    setSlowConnection(false);
     if (!result.ok) {
       const msg = result.data?.message || "Invalid Credentials!";
-      setLoginError(msg); // ← Set inline error instead of toast
+      setLoginError(msg);
       setLoading(false);
       return;
     }
@@ -417,9 +425,16 @@ export default function LoginPage() {
                   )}
 
                   {loading && (
-                    <p style={{ textAlign: "center", fontSize: 11, color: "rgba(148,163,184,0.4)", margin: 0, animation: "scanPulse 1.5s ease-in-out infinite" }}>
-                      Verifying Secure Access...
-                    </p>
+                    <div style={{ textAlign: "center", margin: 0 }}>
+                      <p style={{ fontSize: 11, color: "rgba(148,163,184,0.4)", margin: 0, animation: "scanPulse 1.5s ease-in-out infinite" }}>
+                        Verifying Secure Access...
+                      </p>
+                      {slowConnection && (
+                        <p style={{ fontSize: 10, color: "#fbbf24", margin: "8px 0 0", animation: "fadeUp .4s ease both" }}>
+                          ⏳ Server is waking up (free tier)... Please wait ~30-50 seconds
+                        </p>
+                      )}
+                    </div>
                   )}
 
                 </div>

@@ -7,15 +7,24 @@ async function request(endpoint, method = "GET", body = null, auth = false) {
     const token = localStorage.getItem("payzen_token");
     if (token) headers["Authorization"] = `Bearer ${token}`;
   }
+  // 90s timeout to handle Render free-tier cold starts (~50s)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 90000);
   try {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     const data = await res.json();
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === "AbortError") {
+      return { ok: false, status: 0, data: { message: "Server is taking too long. Please try again." } };
+    }
     return { ok: false, status: 0, data: { message: "Network error. Please try again." } };
   }
 }
