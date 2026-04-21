@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:5000/api/v1";
+export const BASE_URL = "https://bank-backend-3-6b2x.onrender.com/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 async function request(endpoint, method = "GET", body = null, auth = false) {
