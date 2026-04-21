@@ -1,4 +1,4 @@
-export const BASE_URL = "https://bank-backend-3-6b2x.onrender.com/api/v1";
+export const BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 async function request(endpoint, method = "GET", body = null, auth = false) {
@@ -127,29 +127,15 @@ export const adminUpdateKycStatus = (customId, status, rejectReason = "") =>
   request(`/kyc/${customId}/status`, "PUT", { status, rejectReason }, false);
 
 // ─── TRANSACTION MANAGE (ADMIN) ───────────────────────────────────────────────
-export const getAdminAccounts = (search = "") => 
-    fetch(`${BASE_URL}/admin/txn-accounts?search=${search}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("payzen_token")}`
-        }
-    }).then(res => res.json());
+export const getAdminAccounts = (search = "") =>
+  request(`/admin/txn-accounts${search ? `?search=${search}` : ""}`, "GET", null, true);
 
-export const processTransaction = (data) => 
-    fetch(`${BASE_URL}/admin/transactions`, {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` 
-        },
-        body: JSON.stringify(data)
-    }).then(res => res.json());
+export const processTransaction = (data) =>
+  request("/admin/transactions", "POST", data, true);
 
 // ─── TRANSACTION HISTORY (USER) ───────────────────────────────────────────────
-export const getMyTransactions = () => 
-    fetch(`${BASE_URL}/auth/transactions`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem("payzen_token")}` }
-    }).then(res => res.json());
+export const getMyTransactions = () =>
+  request("/auth/transactions", "GET", null, true);
 
 // ─── SUPPORT SYSTEM ──────────────────────────────────────────────────────────
 export const createSupportTicket = (body) => request("/support/tickets", "POST", body, true);
@@ -164,15 +150,7 @@ export const adminUpdateTicketStatus = (id, status) =>
   request(`/support/admin/tickets/${id}/status`, "PATCH", { status }, true);
 
 // admin login
-export const adminLogin = (data) => {
-    return fetch(`${BASE_URL}/auth/admin/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(res => res.json());
-};
+export const adminLogin = (data) => request("/auth/admin/login", "POST", data);
 
 // ─── AI CHAT ──────────────────────────────────────────────────────────────────
 export const sendAIChatMessage = (text, history) => request("/ai/chat", "POST", { message: text, history });

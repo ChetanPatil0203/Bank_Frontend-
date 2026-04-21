@@ -5,6 +5,8 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getMyTransactions } from "../../utils/apiServices";
+
 
 /* ── Only animations Tailwind cannot generate ── */
 const STYLES = `
@@ -92,15 +94,12 @@ export default function DashboardHome() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/auth/transactions", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const result = await response.json();
-      if (result.success) {
+      const result = await getMyTransactions();
+      if (result.ok && result.data.success) {
         setAccountData({
-          balance: result.data.balance,
-          account_number: result.data.account_number,
-          recentTxns: result.data.transactions || [],
+          balance: result.data.data.balance,
+          account_number: result.data.data.account_number,
+          recentTxns: result.data.data.transactions || [],
         });
       }
     } catch (err) {

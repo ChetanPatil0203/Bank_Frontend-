@@ -13,7 +13,7 @@ import AdminKYC from "../AdminKYC/kyc.jsx";
 import AdminSettings from "../AdminSetting/setting.jsx";
 import AdminSupport from "../AdminSupport/AdminSupport.jsx";
 
-const API_BASE_URL = "http://localhost:5000/api/v1";
+const API_BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1";
 
 /* ── Mapping Icons to Stat Labels ── */
 const STAT_CONFIG = {

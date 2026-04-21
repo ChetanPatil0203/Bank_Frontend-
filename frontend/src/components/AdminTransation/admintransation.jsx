@@ -104,8 +104,8 @@ export default function AdminTransactionManager() {
     setLoading(true);
     try {
       const res = await getAdminAccounts(query);
-      if (res.success) {
-        setResults(res.data);
+      if (res.ok && res.data.success) {
+        setResults(res.data.data);
       } else {
         setResults([]);
       }
@@ -144,7 +144,6 @@ export default function AdminTransactionManager() {
     
     setLoading(true);
     setError("");
-
     try {
       const res = await processTransaction({
         account_number: selected.account_number,
@@ -153,24 +152,19 @@ export default function AdminTransactionManager() {
         note: note
       });
 
-      if (res.success) {
+      if (res.ok && res.data.success) {
         // Success: Update UI
         setLastTxn({
           ...res.data.transaction,
-          holder: selected.bank_holder_name, // display constant info
+          holder: selected.bank_holder_name,
           prevBalance: selected.balance,
           newBalance: res.data.account.balance
         });
-        
-        // Update the selected account locally so balance reflects instantly
         setSelected(res.data.account);
-        
-        // Also update the result list so balance is updated there too
         setResults(prev => prev.map(a => a.id === res.data.account.id ? res.data.account : a));
-        
         setModal("success");
       } else {
-        setError(res.message || "Transaction failed.");
+        setError(res.data?.message || "Transaction failed.");
       }
     } catch (err) {
       setError("Server error आला. परत प्रयत्न करा.");

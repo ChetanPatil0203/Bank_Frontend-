@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, KeyRound, ShieldCheck, ArrowRight } from "lucide-react";
+import { sendOtp, verifyOtp, resetPassword } from "../../utils/apiServices";
 
 function GridBackground() {
   return (
@@ -147,38 +148,64 @@ export default function ForgotPassword() {
     }
   };
 
-  const sendOtp = async () => {
+  const handleSendOtp = async () => {
     if (!email.trim()) { setErr("Email required ⚠️"); return; }
     if (!email.includes("@")) { setErr("Valid email enter करा ⚠️"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
-      const r = await (await fetch("http://localhost:5000/api/v1/auth/send-otp", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ email:email.trim().toLowerCase() }) })).json();
-      if (r.success) { setSuc("OTP पाठवला ✅"); setTimeout(() => { setSuc(""); setStep(2); }, 1500); }
-      else setErr(r.message || "Account सापडला नाही ❌");
-    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
+      const res = await sendOtp({ email: email.trim().toLowerCase() });
+      if (res.ok && res.data.success) {
+        setSuc("OTP पाठवला ✅");
+        setTimeout(() => { setSuc(""); setStep(2); }, 1500);
+      } else {
+        setErr(res.data?.message || "Account सापडला नाही ❌");
+      }
+    } catch {
+      setErr("❌ Server connect नाही झाला.");
+    } finally {
+      setLoad(false);
+    }
   };
 
-  const verOtp = async () => {
+  const handleVerOtp = async () => {
     const code = otp.join("");
     if (code.length < 6) { setErr("6-digit OTP enter करा ⚠️"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
-      const r = await (await fetch("http://localhost:5000/api/v1/auth/verify-otp", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ email:email.trim().toLowerCase(), otp:code }) })).json();
-      if (r.success) { setSuc("OTP Verified ✅"); setTimeout(() => { setSuc(""); setStep(3); }, 1000); }
-      else { setErr(r.message || "Invalid OTP ❌"); setOtp(["","","","","",""]); refs[0].current.focus(); }
-    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
+      const res = await verifyOtp({ email: email.trim().toLowerCase(), otp: code });
+      if (res.ok && res.data.success) {
+        setSuc("OTP Verified ✅");
+        setTimeout(() => { setSuc(""); setStep(3); }, 1000);
+      } else {
+        setErr(res.data?.message || "Invalid OTP ❌");
+        setOtp(["","","","","",""]);
+        refs[0].current.focus();
+      }
+    } catch {
+      setErr("❌ Server connect नाही झाला.");
+    } finally {
+      setLoad(false);
+    }
   };
 
-  const reset = async () => {
+  const handleReset = async () => {
     if (!newP || !conP) { setErr("सगळे fields भरा ⚠️"); return; }
     if (newP.length < 6) { setErr("Password कमीत कमी 6 characters असावा ⚠️"); return; }
     if (newP !== conP) { setErr("Passwords match नाही ❌"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
-      const r = await (await fetch("http://localhost:5000/api/v1/auth/reset-password", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ email:email.trim().toLowerCase(), newPass:newP, confirmPass:conP }) })).json();
-      if (r.success) { setSuc("Password Reset Successful ✅"); setTimeout(() => navigate("/login"), 2000); }
-      else setErr(r.message || "काहीतरी चूक झाली ❌");
-    } catch { setErr("❌ Server connect नाही झाला."); } finally { setLoad(false); }
+      const res = await resetPassword({ email: email.trim().toLowerCase(), newPass: newP, confirmPass: conP });
+      if (res.ok && res.data.success) {
+        setSuc("Password Reset Successful ✅");
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        setErr(res.data?.message || "काहीतरी चूक झाली ❌");
+      }
+    } catch {
+      setErr("❌ Server connect नाही झाला.");
+    } finally {
+      setLoad(false);
+    }
   };
 
   const Spinner = () => (
@@ -258,12 +285,12 @@ export default function ForgotPassword() {
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 flex pointer-events-none" style={{ color:"rgba(99,102,241,0.6)" }}><Mail size={14} /></span>
                       <input type="email" placeholder="you@email.com"
                         value={email} onChange={e => { setEmail(e.target.value); setErr(""); }}
-                        onKeyDown={e => e.key==="Enter" && sendOtp()}
+                        onKeyDown={e => e.key==="Enter" && handleSendOtp()}
                         onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
                         style={inputStyle("email")} />
                     </div>
                   </div>
-                  <button onClick={sendOtp} disabled={load} style={btnStyle()}>
+                  <button onClick={handleSendOtp} disabled={load} style={btnStyle()}>
                     {load ? <><Spinner /> Sending OTP...</> : <><Mail size={16} /> Send OTP</>}
                   </button>
                 </div>
@@ -301,7 +328,7 @@ export default function ForgotPassword() {
                       OTP नाही आला? Resend करा ↩
                     </button>
                   </p>
-                  <button onClick={verOtp} disabled={load||filled<6} style={btnStyle(filled===6)}>
+                  <button onClick={handleVerOtp} disabled={load||filled<6} style={btnStyle(filled===6)}>
                     {load ? <><Spinner /> Verifying...</> : <><ShieldCheck size={16} /> Verify OTP <ArrowRight size={14} style={{ opacity:0.7 }} /></>}
                   </button>
                 </div>
@@ -343,7 +370,7 @@ export default function ForgotPassword() {
                         </div>
                       )}
                     </div>
-                    <button onClick={reset} disabled={load} style={btnStyle()}>
+                    <button onClick={handleReset} disabled={load} style={btnStyle()}>
                       {load ? <><Spinner /> Resetting...</> : <><ShieldCheck size={16} /> Reset Password <ArrowRight size={14} style={{ opacity:0.7 }} /></>}
                     </button>
                   </div>

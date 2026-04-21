@@ -13,7 +13,7 @@ const C = {
   gold: "#f59e0b", purple: "#8b5cf6",
 };
 
-const BASE_URL = "http://localhost:5000/api/v1/admin";
+const BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1/admin";
 
 const RESPONSIVE_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
@@ -176,7 +176,7 @@ function DetailRow({ label, value, mono, badge, full }) {
 }
 
 function DocChip({ label, uploaded, url }) {
-  const fullUrl = url ? `http://localhost:5000${url}` : null;
+  const fullUrl = url ? `https://bank-backend-3-b5li.onrender.com${url}` : null;
   return (
     <div
       onClick={() => fullUrl && window.open(fullUrl, '_blank')}

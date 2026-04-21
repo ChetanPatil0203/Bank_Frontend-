@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, CheckCircle, XCircle, X, User, Mail, Phone, Users, Lock, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../utils/apiServices";
+
 
 function Toast({ message, type, onClose }) {
   useEffect(() => { const t = setTimeout(onClose, 3000); return () => clearTimeout(t); }, [onClose]);
@@ -169,10 +171,14 @@ export default function RegistrationPage() {
     if (formData.password !== formData.confirmPassword) { showToast("Passwords match नाही ❌", "error"); return; }
     setLoading(true);
     try {
-      const res = await fetch("https://bank-backend-3-6b2x.onrender.com/api/v1/auth/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
-      const result = await res.json();
-      if (result.success) { showToast(result.message + " ✅", "success"); setTimeout(() => navigate("/login"), 1800); }
-      else showToast(result.message || "Something went wrong ❌", "error");
+      const result = await registerUser(formData);
+      if (result.ok) { 
+        showToast(result.data.message + " ✅", "success"); 
+        setTimeout(() => navigate("/login"), 1800); 
+      }
+      else {
+        showToast(result.data.message || "Something went wrong ❌", "error");
+      }
     } catch { showToast("❌ Server connect नाही झाला.", "error"); }
     finally { setLoading(false); }
   };

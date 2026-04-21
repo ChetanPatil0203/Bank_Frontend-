@@ -244,14 +244,14 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       const res = await adminLogin(formData);
-      if (res.success) {
-        localStorage.setItem("payzen_token", res.token);
-        localStorage.setItem("payzen_user", JSON.stringify(res.user));
-        showToast(res.message || "Admin Login Successful! 🎉", "success");
+      if (res.ok && res.data.success) {
+        localStorage.setItem("payzen_token", res.data.token);
+        localStorage.setItem("payzen_user", JSON.stringify(res.data.user));
+        showToast(res.data.message || "Admin Login Successful! 🎉", "success");
         setTimeout(() => navigate("/admindashboard/dashboard"), 1000);
       } else {
         triggerRedAlert();
-        showToast(res.message || "Invalid Credentials!", "error");
+        showToast(res.data?.message || "Invalid Credentials!", "error");
       }
     } catch (err) {
       triggerRedAlert();

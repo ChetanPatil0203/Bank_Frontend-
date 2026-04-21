@@ -603,7 +603,7 @@ export default function AdminKYC() {
                     <div key={k} className="flex justify-between items-center py-2.5">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">{k}</span>
                       {v ? (
-                        <a href={`http://localhost:5000/static/uploads/${v}`} target="_blank" rel="noreferrer"
+                        <a href={`https://bank-backend-3-b5li.onrender.com/static/uploads/${v}`} target="_blank" rel="noreferrer"
                           className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors">
                           📄 {v}
                         </a>
