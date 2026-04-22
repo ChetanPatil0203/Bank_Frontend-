@@ -238,7 +238,7 @@ export default function AdminLogin() {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       triggerRedAlert();
-      showToast("Email aani Password bharaa!", "error");
+      showToast("Please enter Email and Password!", "error");
       return;
     }
     setLoading(true);

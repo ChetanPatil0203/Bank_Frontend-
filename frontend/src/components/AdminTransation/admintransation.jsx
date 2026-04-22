@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Search, TrendingUp, TrendingDown, User,
 } from "lucide-react";
-// apiServices मधून हे फंक्शन्स इम्पोर्ट करा
+// Import these functions from apiServices
 import { getAdminAccounts, processTransaction } from "../../utils/apiServices";
 
 const C = {
@@ -138,7 +138,7 @@ export default function AdminTransactionManager() {
   // ── Submit Transaction API Call ──
   async function handleSubmit() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      setError("कृपया valid amount टाका.");
+      setError("Please enter a valid amount.");
       return;
     }
     
@@ -167,7 +167,7 @@ export default function AdminTransactionManager() {
         setError(res.data?.message || "Transaction failed.");
       }
     } catch (err) {
-      setError("Server error आला. परत प्रयत्न करा.");
+      setError("Server error occurred. Please try again.");
     }
     setLoading(false);
   }
@@ -179,7 +179,7 @@ export default function AdminTransactionManager() {
       {/* Header */}
       <div className="mb-3">
         <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0 }}>Transaction Manager</h2>
-        <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0" }}>Account search करा आणि Deposit / Withdraw करा</p>
+        <p style={{ fontSize: 12, color: C.muted, margin: "2px 0 0" }}>Search for account and perform Deposit / Withdraw</p>
       </div>
 
       {/* ── Search Box ── */}
@@ -192,7 +192,7 @@ export default function AdminTransactionManager() {
               value={query}
               onChange={e => { setQuery(e.target.value); setSearched(false); }}
               onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="Account number किंवा Account holder name..."
+              placeholder="Account number or Account holder name..."
               style={{ width: "100%", boxSizing: "border-box", paddingLeft: 36, paddingRight: 14, paddingTop: 11, paddingBottom: 11, border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text, outline: "none", background: "#f8faff", fontFamily: "inherit" }}
             />
           </div>
@@ -212,13 +212,13 @@ export default function AdminTransactionManager() {
           {results.length === 0 ? (
             <div style={{ background: C.card, borderRadius: 16, padding: 48, textAlign: "center", border: `1px solid ${C.border}` }}>
               <User size={36} style={{ color: C.muted, opacity: 0.3, marginBottom: 12 }} />
-              <p style={{ color: C.muted, fontWeight: 600, margin: 0 }}>कोणताही account सापडला नाही</p>
-              <p style={{ color: C.muted, fontSize: 12, margin: "4px 0 0" }}>वेगळा name किंवा account number try करा</p>
+              <p style={{ color: C.muted, fontWeight: 600, margin: 0 }}>No account found</p>
+              <p style={{ color: C.muted, fontSize: 12, margin: "4px 0 0" }}>Try a different name or account number</p>
             </div>
           ) : (
             <div>
               <p style={{ fontSize: 11, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
-                {results.length} Result{results.length > 1 ? "s" : ""} Found — Account वर Click करा
+                {results.length} Result{results.length > 1 ? "s" : ""} Found — Click on an account
               </p>
               <div className="txn-results-grid" style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
                 {results.map(acc => (
@@ -263,7 +263,7 @@ export default function AdminTransactionManager() {
           MODAL 1 — OPTIONS
       ════════════════════════ */}
       {modal === "options" && selected && (
-        <Modal title="Transaction करा" onClose={() => setModal(null)}>
+        <Modal title="Perform Transaction" onClose={() => setModal(null)}>
           <div style={{ background: "#f8faff", borderRadius: 12, padding: 16, marginBottom: 20, border: `1px solid ${C.border}` }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
               <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg,#1e3a7b,#3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: "#fff" }}>
@@ -279,7 +279,7 @@ export default function AdminTransactionManager() {
               <span style={{ fontSize: 22, fontWeight: 800, color: C.green }}>{formatINR(selected.balance)}</span>
             </div>
           </div>
-          <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Transaction Type निवडा</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 12px" }}>Select Transaction Type</p>
           <div className="options-btn-row" style={{ display: "flex", gap: 12 }}>
             <button
               onClick={() => openForm("deposit")}
@@ -333,7 +333,7 @@ export default function AdminTransactionManager() {
               {lastTxn.type === "Deposit" ? <TrendingUp size={28} color={C.green} /> : <TrendingDown size={28} color={C.red} />}
             </div>
             <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text }}>Success!</h3>
-            <p style={{ fontSize: 13, color: C.muted }}>Transaction यशस्वीरीत्या पूर्ण झाले.</p>
+            <p style={{ fontSize: 13, color: C.muted }}>Transaction completed successfully.</p>
           </div>
           <div style={{ background: "#f8faff", borderRadius: 12, padding: 16, marginBottom: 20, border: `1px solid ${C.border}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${C.border}` }}>

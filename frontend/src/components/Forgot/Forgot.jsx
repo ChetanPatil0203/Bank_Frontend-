@@ -150,18 +150,18 @@ export default function ForgotPassword() {
 
   const handleSendOtp = async () => {
     if (!email.trim()) { setErr("Email required ⚠️"); return; }
-    if (!email.includes("@")) { setErr("Valid email enter करा ⚠️"); return; }
+    if (!email.includes("@")) { setErr("Please enter a valid email ⚠️"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
       const res = await sendOtp({ email: email.trim().toLowerCase() });
       if (res.ok && res.data.success) {
-        setSuc("OTP पाठवला ✅");
+        setSuc("OTP sent successfully ✅");
         setTimeout(() => { setSuc(""); setStep(2); }, 1500);
       } else {
-        setErr(res.data?.message || "Account सापडला नाही ❌");
+        setErr(res.data?.message || "Account not found ❌");
       }
     } catch {
-      setErr("❌ Server connect नाही झाला.");
+      setErr("❌ Server connection failed.");
     } finally {
       setLoad(false);
     }
@@ -169,7 +169,7 @@ export default function ForgotPassword() {
 
   const handleVerOtp = async () => {
     const code = otp.join("");
-    if (code.length < 6) { setErr("6-digit OTP enter करा ⚠️"); return; }
+    if (code.length < 6) { setErr("Please enter a 6-digit OTP ⚠️"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
       const res = await verifyOtp({ email: email.trim().toLowerCase(), otp: code });
@@ -182,16 +182,16 @@ export default function ForgotPassword() {
         refs[0].current.focus();
       }
     } catch {
-      setErr("❌ Server connect नाही झाला.");
+      setErr("❌ Server connection failed.");
     } finally {
       setLoad(false);
     }
   };
 
   const handleReset = async () => {
-    if (!newP || !conP) { setErr("सगळे fields भरा ⚠️"); return; }
-    if (newP.length < 6) { setErr("Password कमीत कमी 6 characters असावा ⚠️"); return; }
-    if (newP !== conP) { setErr("Passwords match नाही ❌"); return; }
+    if (!newP || !conP) { setErr("Please fill all fields ⚠️"); return; }
+    if (newP.length < 6) { setErr("Password must be at least 6 characters ⚠️"); return; }
+    if (newP !== conP) { setErr("Passwords do not match ❌"); return; }
     setLoad(true); setErr(""); setSuc("");
     try {
       const res = await resetPassword({ email: email.trim().toLowerCase(), newPass: newP, confirmPass: conP });
@@ -199,10 +199,10 @@ export default function ForgotPassword() {
         setSuc("Password Reset Successful ✅");
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        setErr(res.data?.message || "काहीतरी चूक झाली ❌");
+        setErr(res.data?.message || "Something went wrong ❌");
       }
     } catch {
-      setErr("❌ Server connect नाही झाला.");
+      setErr("❌ Server connection failed.");
     } finally {
       setLoad(false);
     }
@@ -325,7 +325,7 @@ export default function ForgotPassword() {
                   </p>
                   <p className="text-center mb-3.5">
                     <button onClick={() => { setStep(1); setOtp(["","","","","",""]); setErr(""); }} className="bg-transparent border-none cursor-pointer text-[12px]" style={{ color:"#818cf8", fontFamily:"inherit" }}>
-                      OTP नाही आला? Resend करा ↩
+                      Didn't receive OTP? Resend now ↩
                     </button>
                   </p>
                   <button onClick={handleVerOtp} disabled={load||filled<6} style={btnStyle(filled===6)}>

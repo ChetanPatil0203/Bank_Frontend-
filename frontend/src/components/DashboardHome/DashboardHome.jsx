@@ -6,9 +6,9 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMyTransactions } from "../../utils/apiServices";
+import { CardSkeleton, TableRowSkeleton } from "../Skeleton";
 
-
-/* ── Only animations Tailwind cannot generate ── */
+/* ── Key Animations ── */
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
 
@@ -77,6 +77,7 @@ export default function DashboardHome() {
     account_number: "•••• •••• •••• ••••",
     recentTxns: [],
   });
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
@@ -93,6 +94,7 @@ export default function DashboardHome() {
   }, []);
 
   const fetchDashboardData = async () => {
+    setLoading(true);
     try {
       const result = await getMyTransactions();
       if (result.ok && result.data.success) {
@@ -104,6 +106,8 @@ export default function DashboardHome() {
       }
     } catch (err) {
       console.error("Dashboard Load Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,117 +141,115 @@ export default function DashboardHome() {
       {/* Page Content */}
       <div className="w-full px-3 sm:px-5 lg:px-8 py-4 sm:py-6 lg:py-9">
 
-        <h2 className="text-lg sm:text-2xl font-extrabold text-slate-800 tracking-[0.10em] uppercase mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-2xl font-extrabold text-slate-800 tracking-[0.10em] uppercase mb-4 sm:mb-6 animate-fade-in">
           Account Overview
         </h2>
 
         {/* ── BANK CARD ── */}
         <div className="anim-card-in mb-5 sm:mb-8">
-          <div className="bank-card-outer rounded-[18px] sm:rounded-[28px] p-[2px]">
-            <div className="bank-card-body relative rounded-[16px] sm:rounded-[26px] overflow-hidden min-h-[170px] sm:min-h-[220px] px-4 sm:px-10 pt-5 sm:pt-9 pb-5 sm:pb-8">
-
-              <div className="glow-tr absolute -top-20 -right-20 w-80 h-80 rounded-full pointer-events-none" />
-              <div className="glow-bl absolute -bottom-12 left-[25%] w-56 h-56 rounded-full pointer-events-none" />
-              <div className="absolute inset-0 overflow-hidden rounded-[16px] sm:rounded-[26px] pointer-events-none">
-                <div className="shimmer-sweep anim-shimmer absolute top-0 left-0 w-[40%] h-full" />
-              </div>
-
-              {/* Account type badge */}
-              <div className="badge-ac absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 whitespace-nowrap
-                              px-3 py-0.5 sm:py-1 rounded-full border border-white/[.12] backdrop-blur-sm
-                              text-[8px] sm:text-[9px] font-semibold tracking-[.22em] uppercase text-white/40">
-                My Saving A/C
-              </div>
-
-              {/* Top row */}
-              <div className="flex justify-between items-start mb-6 sm:mb-8">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="logo-icon w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
-                    <Wallet size={18} strokeWidth={2.5} color="#fff" />
-                  </div>
-                  <div>
-                    <h1 className="m-0 text-xs sm:text-[15px] font-black text-white tracking-[0.1em] uppercase">PayZen</h1>
-                    <p className="m-0 text-[8px] sm:text-[10px] text-white/40 font-bold tracking-[0.2em] uppercase mt-0.5">Premium</p>
-                  </div>
+          {loading ? (
+            <CardSkeleton />
+          ) : (
+            <div className="bank-card-outer rounded-[18px] sm:rounded-[28px] p-[2px] animate-zoom-in">
+              <div className="bank-card-body relative rounded-[16px] sm:rounded-[26px] overflow-hidden min-h-[170px] sm:min-h-[220px] px-4 sm:px-10 pt-5 sm:pt-9 pb-5 sm:pb-8">
+                {/* ... existing card content ... */}
+                <div className="glow-tr absolute -top-20 -right-20 w-80 h-80 rounded-full pointer-events-none" />
+                <div className="glow-bl absolute -bottom-12 left-[25%] w-56 h-56 rounded-full pointer-events-none" />
+                <div className="absolute inset-0 overflow-hidden rounded-[16px] sm:rounded-[26px] pointer-events-none">
+                  <div className="shimmer-sweep anim-shimmer absolute top-0 left-0 w-[40%] h-full" />
                 </div>
-                <div className="flex flex-col items-end gap-1.5 grayscale opacity-50">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-8 sm:h-8">
-                    <path d="M5 12.5C5 9.46 7.46 7 10.5 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                    <path d="M3 12.5C3 8.36 6.36 5 10.5 5" stroke="white" strokeWidth="2" strokeLinecap="round" opacity=".5" />
-                    <circle cx="10.5" cy="12.5" r="2" fill="white" />
-                  </svg>
-                  <span className="text-[7px] sm:text-[9px] text-white/40 tracking-[0.25em] font-black uppercase">Savings</span>
-                </div>
-              </div>
 
-              {/* Chip + Card number */}
-              <div className="flex items-center gap-3 sm:gap-6 mb-8 sm:mb-10">
-                <div className="chip-body anim-chip relative w-10 sm:w-[50px] h-7.5 sm:h-[40px] rounded-lg overflow-hidden shrink-0">
-                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1.5">
-                    {[...Array(9)].map((_, i) => <div key={i} className="chip-cell rounded-sm" />)}
-                  </div>
-                  <div className="chip-contact absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                                  w-5 h-3.5 sm:w-[24px] sm:h-[18px] rounded-[4px] border-2" />
+                <div className="badge-ac absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 whitespace-nowrap
+                                px-3 py-0.5 sm:py-1 rounded-full border border-white/[.12] backdrop-blur-sm
+                                text-[8px] sm:text-[9px] font-semibold tracking-[.22em] uppercase text-white/40">
+                  My Saving A/C
                 </div>
-                <span
-                  className="text-[14px] sm:text-[19px] font-black tracking-[0.15em] sm:tracking-[0.25em]"
-                  style={{
-                    fontFamily: "'JetBrains Mono',monospace",
-                    color: showDetails ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.75)",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.5)",
-                  }}
-                >
-                  {showDetails
-                    ? (accountData.account_number || "").match(/.{1,4}/g)?.join(" ") || "•••• •••• •••• ••••"
-                    : `•••• •••• •••• ${(accountData.account_number || "").slice(-4)}`}
-                </span>
-              </div>
 
-              {/* Bottom row */}
-              <div className="flex items-end justify-between gap-1 sm:gap-5">
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-12 items-start sm:items-end min-w-0">
-                  <div className="min-w-0">
-                    <p className="m-0 text-[8px] sm:text-[11px] text-white/40 font-black uppercase tracking-[0.2em] mb-1 sm:mb-1.5">Account Holder</p>
-                    <p className="m-0 text-xs sm:text-[17px] font-black text-white tracking-[0.12em] uppercase border-b-2 border-white/10 pb-0.5 truncate"
-                      style={{ textShadow: "0 2px 15px rgba(255,255,255,0.3)" }}>
-                      {userName}
-                    </p>
+                <div className="flex justify-between items-start mb-6 sm:mb-8">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="logo-icon w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-500/20">
+                      <Wallet size={18} strokeWidth={2.5} color="#fff" />
+                    </div>
+                    <div>
+                      <h1 className="m-0 text-xs sm:text-[15px] font-black text-white tracking-[0.1em] uppercase">PayZen</h1>
+                      <p className="m-0 text-[8px] sm:text-[10px] text-white/40 font-bold tracking-[0.2em] uppercase mt-0.5">Premium</p>
+                    </div>
                   </div>
-                  <div className="hidden sm:block">
-                    <p className="m-0 text-[11px] text-white/40 font-black uppercase tracking-[0.15em] mb-1.5">Balance</p>
-                    <p className="balance-text m-0 text-4xl font-black text-white tracking-tighter whitespace-nowrap">
-                      {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
-                    </p>
-                  </div>
-                  {/* Balance visible on mobile below name */}
-                  <div className="sm:hidden">
-                    <p className="m-0 text-[8px] text-white/40 font-black uppercase tracking-[0.15em] mb-0.5">Balance</p>
-                    <p className="balance-text m-0 text-[17px] font-black text-white tracking-widest leading-none">
-                      {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
-                    </p>
+                  <div className="flex flex-col items-end gap-1.5 grayscale opacity-50">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="sm:w-8 sm:h-8">
+                      <path d="M5 12.5C5 9.46 7.46 7 10.5 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M3 12.5C3 8.36 6.36 5 10.5 5" stroke="white" strokeWidth="2" strokeLinecap="round" opacity=".5" />
+                      <circle cx="10.5" cy="12.5" r="2" fill="white" />
+                    </svg>
+                    <span className="text-[7px] sm:text-[9px] text-white/40 tracking-[0.25em] font-black uppercase">Savings</span>
                   </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-2 sm:gap-3 shrink-0">
-                  <div className="flex">
-                    <div className="mc-red    w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full" />
-                    <div className="mc-orange  w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full -ml-2 sm:-ml-3" />
+                <div className="flex items-center gap-3 sm:gap-6 mb-8 sm:mb-10">
+                  <div className="chip-body anim-chip relative w-10 sm:w-[50px] h-7.5 sm:h-[40px] rounded-lg overflow-hidden shrink-0">
+                    <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-[2px] p-1.5">
+                      {[...Array(9)].map((_, i) => <div key={i} className="chip-cell rounded-sm" />)}
+                    </div>
+                    <div className="chip-contact absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                                    w-5 h-3.5 sm:w-[24px] sm:h-[18px] rounded-[4px] border-2" />
                   </div>
-                  <button
-                    onClick={() => setShowDetails(!showDetails)}
-                    className="show-btn flex items-center gap-1 sm:gap-2 px-2.5 sm:px-5 py-1 sm:py-[9px] rounded-[10px]
-                               text-[10px] sm:text-[12px] font-bold text-white/85 tracking-wide
-                               border border-white/[.22] backdrop-blur-md transition-all duration-200"
+                  <span
+                    className="text-[14px] sm:text-[19px] font-black tracking-[0.15em] sm:tracking-[0.25em]"
+                    style={{
+                      fontFamily: "'JetBrains Mono',monospace",
+                      color: showDetails ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.75)",
+                      textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                    }}
                   >
-                    {showDetails ? <EyeOff size={10} className="sm:w-[13px] sm:h-[13px]" /> : <Eye size={10} className="sm:w-[13px] sm:h-[13px]" />}
-                    <span className="hidden sm:inline">{showDetails ? "Hide Details" : "Show Details"}</span>
-                    <span className="sm:hidden">{showDetails ? "Hide" : "Show"}</span>
-                  </button>
+                    {showDetails
+                      ? (accountData.account_number || "").match(/.{1,4}/g)?.join(" ") || "•••• •••• •••• ••••"
+                      : `•••• •••• •••• ${(accountData.account_number || "").slice(-4)}`}
+                  </span>
+                </div>
+
+                <div className="flex items-end justify-between gap-1 sm:gap-5">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-12 items-start sm:items-end min-w-0">
+                    <div className="min-w-0">
+                      <p className="m-0 text-[8px] sm:text-[11px] text-white/40 font-black uppercase tracking-[0.2em] mb-1 sm:mb-1.5">Account Holder</p>
+                      <p className="m-0 text-xs sm:text-[17px] font-black text-white tracking-[0.12em] uppercase border-b-2 border-white/10 pb-0.5 truncate"
+                        style={{ textShadow: "0 2px 15px rgba(255,255,255,0.3)" }}>
+                        {userName}
+                      </p>
+                    </div>
+                    <div className="hidden sm:block">
+                      <p className="m-0 text-[11px] text-white/40 font-black uppercase tracking-[0.15em] mb-1.5">Balance</p>
+                      <p className="balance-text m-0 text-4xl font-black text-white tracking-tighter whitespace-nowrap">
+                        {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
+                      </p>
+                    </div>
+                    <div className="sm:hidden">
+                      <p className="m-0 text-[8px] text-white/40 font-black uppercase tracking-[0.15em] mb-0.5">Balance</p>
+                      <p className="balance-text m-0 text-[17px] font-black text-white tracking-widest leading-none">
+                        {showDetails ? `₹ ${accountData.balance.toLocaleString()}` : "₹ •••••"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-2 sm:gap-3 shrink-0">
+                    <div className="flex">
+                      <div className="mc-red    w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full" />
+                      <div className="mc-orange  w-6 h-6 sm:w-[34px] sm:h-[34px] rounded-full -ml-2 sm:-ml-3" />
+                    </div>
+                    <button
+                      onClick={() => setShowDetails(!showDetails)}
+                      className="show-btn flex items-center gap-1 sm:gap-2 px-2.5 sm:px-5 py-1 sm:py-[9px] rounded-[10px]
+                                 text-[10px] sm:text-[12px] font-bold text-white/85 tracking-wide
+                                 border border-white/[.22] backdrop-blur-md transition-all duration-200"
+                    >
+                      {showDetails ? <EyeOff size={10} className="sm:w-[13px] sm:h-[13px]" /> : <Eye size={10} className="sm:w-[13px] sm:h-[13px]" />}
+                      <span className="hidden sm:inline">{showDetails ? "Hide Details" : "Show Details"}</span>
+                      <span className="sm:hidden">{showDetails ? "Hide" : "Show"}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-
             </div>
-          </div>
+          )}
         </div>
 
         {/* ── QUICK ACTIONS ── */}
@@ -314,7 +316,15 @@ export default function DashboardHome() {
                   </tr>
                 </thead>
                 <tbody>
-                  {accountData.recentTxns.length === 0 ? (
+                  {loading ? (
+                    [...Array(5)].map((_, i) => (
+                      <tr key={i}>
+                        <td colSpan="6">
+                          <TableRowSkeleton />
+                        </td>
+                      </tr>
+                    ))
+                  ) : accountData.recentTxns.length === 0 ? (
                     <tr>
                       <td colSpan="6" className="py-10 text-slate-400 italic text-sm">No transactions found</td>
                     </tr>

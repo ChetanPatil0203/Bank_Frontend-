@@ -92,7 +92,7 @@ export default function ProfilePage() {
               ? "bg-green-50 border border-green-200 text-green-700"
               : "bg-red-50 border border-red-200 text-red-700"}`}>
             <CheckCircle size={16}/>
-            {msg === "success" ? "Profile update झाला ✅" : "Error आला ❌"}
+            {msg === "success" ? "Profile updated successfully ✅" : "An error occurred ❌"}
           </div>
         )}
 
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6 shadow-sm">
             <div className="flex items-center gap-3 text-amber-800 text-xs sm:text-sm font-medium">
               <span className="text-2xl">🏦</span>
-              <p>Bank account अजून open केलेला नाही. तुमची सेवा सुरू करण्यासाठी नवीन खाते उघडा.</p>
+              <p>Bank account not opened yet. Please open a new account to start your services.</p>
             </div>
             <button
               onClick={() => navigate("/open-account")}

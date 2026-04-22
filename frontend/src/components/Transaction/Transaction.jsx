@@ -3,7 +3,7 @@ import {
   Wallet, Search, Calendar, ArrowDownCircle, ArrowUpCircle,
   TrendingUp, ChevronRight
 } from "lucide-react";
-// apiServices मधून तुमचं नवीन फंक्शन इम्पोर्ट करा
+// Import your new function from apiServices
 import { getMyTransactions } from "../../utils/apiServices";
 
 /* ── Keyframes ── */
@@ -55,7 +55,7 @@ export default function TransactionHistory() {
   const [search, setSearch]         = useState("");
   const [dateFilter, setDateFilter] = useState("");
   
-  // बॅकएंड डेटासाठी नवीन स्टेट्स
+  // New states for backend data
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance]           = useState(0);
 
@@ -65,7 +65,7 @@ export default function TransactionHistory() {
     el.textContent = STYLES;
     document.head.appendChild(el);
     
-    // डेटा खेचणे
+    // Fetch data
     fetchData();
 
     return () => document.head.removeChild(el);

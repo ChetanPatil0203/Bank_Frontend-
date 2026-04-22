@@ -215,7 +215,7 @@ function Sidebar({ isOpen, onToggle }) {
         @keyframes sbFadeIn  { from{opacity:0} to{opacity:1} }
       `}</style>
 
-      {/* ══ MOBILE — hamburger + drawer (md से छोटं) ══ */}
+      {/* ══ MOBILE — hamburger + drawer (md or smaller) ══ */}
       <div className="md:hidden">
 
         {/* Hamburger button — top left, always visible */}
@@ -258,7 +258,7 @@ function Sidebar({ isOpen, onToggle }) {
         )}
       </div>
 
-      {/* ══ DESKTOP — fixed sidebar (md और ऊपर) ══ */}
+      {/* ══ DESKTOP — fixed sidebar (md or above) ══ */}
       <aside className={`
         hidden md:flex
         fixed top-0 left-0 h-screen flex-col z-50

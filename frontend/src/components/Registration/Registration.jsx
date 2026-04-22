@@ -166,9 +166,12 @@ export default function RegistrationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (age !== null && age < 18) { showToast("वय किमान 18 वर्षे असणे आवश्यक आहे ⚠️", "error"); return; }
-    if (formData.password.length < 6) { showToast("Password कमीत कमी 6 characters असावा ⚠️", "error"); return; }
-    if (formData.password !== formData.confirmPassword) { showToast("Passwords match नाही ❌", "error"); return; }
+    if (age !== null && age < 18) { showToast("Minimum age requirement is 18 years ⚠️", "error"); return; }
+    if (formData.password.length < 8) { showToast("Password must be at least 8 characters ⚠️", "error"); return; }
+    if (!/[A-Z]/.test(formData.password)) { showToast("Password must contain at least one uppercase letter ⚠️", "error"); return; }
+    if (!/[a-z]/.test(formData.password)) { showToast("Password must contain at least one lowercase letter ⚠️", "error"); return; }
+    if (!/[0-9]/.test(formData.password)) { showToast("Password must contain at least one number ⚠️", "error"); return; }
+    if (formData.password !== formData.confirmPassword) { showToast("Passwords do not match ❌", "error"); return; }
     setLoading(true);
     try {
       const result = await registerUser(formData);
@@ -179,7 +182,7 @@ export default function RegistrationPage() {
       else {
         showToast(result.data.message || "Something went wrong ❌", "error");
       }
-    } catch { showToast("❌ Server connect नाही झाला.", "error"); }
+    } catch { showToast("❌ Server connection failed.", "error"); }
     finally { setLoading(false); }
   };
 
