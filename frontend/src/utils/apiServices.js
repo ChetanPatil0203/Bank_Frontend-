@@ -1,51 +1,22 @@
-export const BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1";
+export const BASE_URL = "http://localhost:5000/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 async function request(endpoint, method = "GET", body = null, auth = false) {
-  let timeoutId = null;
-
+  const headers = { "Content-Type": "application/json" };
+  if (auth) {
+    const token = localStorage.getItem("payzen_token");
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+  }
   try {
-    const controller = new AbortController();
-    timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
-
-    const headers = {};
-    if (!(body instanceof FormData)) {
-      headers["Content-Type"] = "application/json";
-    }
-
-    if (auth) {
-      const token = localStorage.getItem("payzen_token");
-      if (token) headers["Authorization"] = `Bearer ${token}`;
-    }
-
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers,
-      body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
-      signal: controller.signal,
+      body: body ? JSON.stringify(body) : undefined,
     });
-    
-    if (timeoutId) clearTimeout(timeoutId);
-    
     const data = await res.json();
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
-    if (timeoutId) clearTimeout(timeoutId);
-    console.error(`API Error [${endpoint}]:`, err);
-
-    if (err.name === "AbortError") {
-      return {
-        ok: false,
-        status: 0,
-        data: { message: "Server is taking too long. It might be waking up. Please wait 30s and try again." },
-      };
-    }
-    
-    return { 
-      ok: false, 
-      status: 0, 
-      data: { message: `Connection error: ${err.message || "Please check your network"}` } 
-    };
+    return { ok: false, status: 0, data: { message: "Network error. Please try again." } };
   }
 }
 
@@ -70,12 +41,27 @@ export const getLoginActivity = () => request("/settings/security/activity", "GE
 // ─── ACCOUNT ──────────────────────────────────────────────────────────────────
 export const openAccount = async (data) => {
   const formData = new FormData();
+  const token = localStorage.getItem("payzen_token");
+
   Object.keys(data).forEach(key => {
     if (data[key] !== null && data[key] !== undefined) {
       formData.append(key, data[key]);
     }
   });
-  return request("/accounts/open-request", "POST", formData, true);
+
+  const headers = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/accounts/open-request`, {
+      method: "POST",
+      headers: headers,
+      body: formData,
+    });
+    return { ok: response.ok, data: await response.json() };
+  } catch (error) {
+    return { ok: false, data: { message: error.message } };
+  }
 };
 
 export const getAccountStatus = () => request("/users/account-status", "GET", null, true);
@@ -104,12 +90,26 @@ export const kycVerifyOtp = (email, otp) => request("/kyc/verify-otp", "POST", {
 
 export const kycSubmit = async (data) => {
   const formData = new FormData();
+  const token = localStorage.getItem("payzen_token");
   Object.keys(data).forEach((key) => {
     if (data[key] !== null && data[key] !== undefined) {
       formData.append(key, data[key]);
     }
   });
-  return request("/kyc/submit", "POST", formData, true);
+
+  const headers = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/kyc/submit`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    return { ok: response.ok, data: await response.json() };
+  } catch (error) {
+    return { ok: false, data: { message: error.message } };
+  }
 };
 
 // ─── KYC — ADMIN FLOW ────────────────────────────────────────────────────────

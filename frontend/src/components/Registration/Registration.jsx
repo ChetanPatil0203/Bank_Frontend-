@@ -179,9 +179,7 @@ export default function RegistrationPage() {
       else {
         showToast(result.data.message || "Something went wrong ❌", "error");
       }
-    } catch (err) { 
-      showToast(`❌ Connection Error: ${err.message || "Server connect nahi jhala."}`, "error"); 
-    }
+    } catch { showToast("❌ Server connect नाही झाला.", "error"); }
     finally { setLoading(false); }
   };
 
