@@ -2,39 +2,50 @@ export const BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1";
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 async function request(endpoint, method = "GET", body = null, auth = false) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout for Render cold starts
-
-  const headers = {};
-  if (!(body instanceof FormData)) {
-    headers["Content-Type"] = "application/json";
-  }
-
-  if (auth) {
-    const token = localStorage.getItem("payzen_token");
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-  }
+  let timeoutId = null;
 
   try {
+    const controller = new AbortController();
+    timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
+    const headers = {};
+    if (!(body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    if (auth) {
+      const token = localStorage.getItem("payzen_token");
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method,
       headers,
       body: body instanceof FormData ? body : (body ? JSON.stringify(body) : undefined),
       signal: controller.signal,
     });
-    clearTimeout(timeoutId);
+    
+    if (timeoutId) clearTimeout(timeoutId);
+    
     const data = await res.json();
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
-    clearTimeout(timeoutId);
+    if (timeoutId) clearTimeout(timeoutId);
+    console.error(`API Error [${endpoint}]:`, err);
+
     if (err.name === "AbortError") {
       return {
         ok: false,
         status: 0,
-        data: { message: "Server is taking too long. It might be waking up (Render cold start). Please wait 30s and try again." },
+        data: { message: "Server is taking too long. It might be waking up. Please wait 30s and try again." },
       };
     }
-    return { ok: false, status: 0, data: { message: "Network connection error. Please check your connection or try again later." } };
+    
+    return { 
+      ok: false, 
+      status: 0, 
+      data: { message: `Connection error: ${err.message || "Please check your network"}` } 
+    };
   }
 }
 
