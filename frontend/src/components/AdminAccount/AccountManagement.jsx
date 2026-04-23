@@ -6,14 +6,18 @@ import {
   PenLine
 } from "lucide-react";
 
+import {
+  adminGetBankAccounts, adminGetRequests, adminToggleAccountStatus,
+  adminCloseAccountStatus, adminApproveRequest, adminRejectRequest,
+  adminCreateAccountRequestForm
+} from "../../utils/apiServices";
+
 const C = {
   navy: "#0f1f4b", bg: "#f0f4ff", card: "#ffffff",
   text: "#1e293b", muted: "#64748b", border: "#e2e8f0",
   accent: "#3b82f6", green: "#10b981", red: "#ef4444",
   gold: "#f59e0b", purple: "#8b5cf6",
 };
-
-const BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1/admin";
 
 const RESPONSIVE_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
@@ -176,7 +180,7 @@ function DetailRow({ label, value, mono, badge, full }) {
 }
 
 function DocChip({ label, uploaded, url }) {
-  const fullUrl = url ? `https://bank-backend-3-b5li.onrender.com${url}` : null;
+  const fullUrl = url ? `http://localhost:5000${url}` : null;
   return (
     <div
       onClick={() => fullUrl && window.open(fullUrl, '_blank')}
@@ -301,7 +305,7 @@ function CreateAccountModal({ onClose, onSuccess }) {
       if (files.pan) fd.append("pan_doc", files.pan);
       if (signatureData) fd.append("signature", signatureData);
 
-      const res = await fetch(`${BASE_URL}/account-requests`, { method: "POST", body: fd });
+      const res = await adminCreateAccountRequestForm(fd);
       if (res.ok) {
         onSuccess && onSuccess();
         onClose();
@@ -767,11 +771,11 @@ export default function AccountsView() {
   const fetchData = async () => {
     try {
       const [accRes, reqRes] = await Promise.all([
-        fetch(`${BASE_URL}/accounts`),
-        fetch(`${BASE_URL}/account-requests`)
+        adminGetBankAccounts(),
+        adminGetRequests()
       ]);
-      const accData = await accRes.json();
-      const reqData = await reqRes.json();
+      const accData = accRes.data;
+      const reqData = reqRes.data;
 
       if (Array.isArray(accData)) {
         setAccounts(accData.map(a => ({
@@ -809,21 +813,21 @@ export default function AccountsView() {
 
   async function handleToggle(acc) {
     if (acc.status === "Closed") return;
-    try { const res = await fetch(`${BASE_URL}/accounts/${acc.id}/toggle`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await adminToggleAccountStatus(acc.id); if (res.ok) fetchData(); } catch (err) { }
     setModal(null);
   }
 
   async function handleClose(acc) {
-    try { const res = await fetch(`${BASE_URL}/accounts/${acc.id}/close`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await adminCloseAccountStatus(acc.id); if (res.ok) fetchData(); } catch (err) { }
     setModal(null);
   }
 
   async function handleApprove(req) {
-    try { const res = await fetch(`${BASE_URL}/account-requests/${req.id}/approve`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await adminApproveRequest(req.id); if (res.ok) fetchData(); } catch (err) { }
   }
 
   async function handleReject(req) {
-    try { const res = await fetch(`${BASE_URL}/account-requests/${req.id}/reject`, { method: "POST" }); if (res.ok) fetchData(); } catch (err) { }
+    try { const res = await adminRejectRequest(req.id); if (res.ok) fetchData(); } catch (err) { }
   }
 
   const TABS = [
