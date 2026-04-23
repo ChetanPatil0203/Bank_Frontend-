@@ -12,8 +12,7 @@ import AdminTransactionManager from "../AdminTransation/admintransation.jsx";
 import AdminKYC from "../AdminKYC/kyc.jsx";
 import AdminSettings from "../AdminSetting/setting.jsx";
 import AdminSupport from "../AdminSupport/AdminSupport.jsx";
-
-const API_BASE_URL = "https://bank-backend-3-b5li.onrender.com/api/v1";
+import { adminGetDashboardStats } from "../../utils/apiServices";
 
 /* ── Mapping Icons to Stat Labels ── */
 const STAT_CONFIG = {
@@ -193,11 +192,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (active === "dashboard") {
       setLoading(true);
-      fetch(`${API_BASE_URL}/admin/dashboard-stats`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setDashData(data.data);
+      adminGetDashboardStats()
+        .then(res => {
+          if (res.ok && res.data && res.data.success) {
+            setDashData(res.data.data);
           }
         })
         .catch(err => console.error("Error fetching stats:", err))

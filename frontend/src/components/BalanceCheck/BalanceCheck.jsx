@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getBalance } from "../../utils/apiServices";
 
 export default function BalanceCheck() {
 
@@ -9,17 +10,35 @@ export default function BalanceCheck() {
   });
 
   const [balance, setBalance] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    if (error) setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setBalance("₹ 45,250.00");
+    setLoading(true);
+    setError("");
+    setBalance(null);
+
+    try {
+      const response = await getBalance();
+      if (response.ok && response.data.success) {
+        setBalance(`₹ ${response.data.balance.toLocaleString()}`);
+      } else {
+        setError(response.data.message || "Failed to fetch balance.");
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,11 +108,17 @@ export default function BalanceCheck() {
           </div>
 
           <button 
-            className="w-full py-4 bg-blue-900 hover:bg-blue-950 text-white rounded-2xl 
+            type="submit"
+            disabled={loading}
+            className="w-full py-4 bg-blue-900 hover:bg-blue-950 disabled:bg-blue-700 text-white rounded-2xl 
             font-black text-sm uppercase tracking-[0.2em] shadow-lg shadow-blue-900/20 active:scale-[0.98] transition-all mt-4"
           >
-            Check Balance
+            {loading ? "Checking..." : "Check Balance"}
           </button>
+
+          {error && (
+            <p className="text-red-600 text-sm font-medium mt-2 text-center">{error}</p>
+          )}
 
         </form>
 

@@ -76,12 +76,36 @@ export const adminApproveRequest = (requestId) =>
 export const adminRejectRequest = (requestId, remark = "") =>
   request(`/admin/account-requests/${requestId}/reject`, "POST", { remark }, false);
 
+export const adminCreateAccountRequestForm = async (formData) => {
+  const token = localStorage.getItem("payzen_token");
+  const headers = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(`${BASE_URL}/admin/account-requests`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    return { ok: response.ok, data: await response.json() };
+  } catch (error) {
+    return { ok: false, data: { message: error.message } };
+  }
+};
+
+// ─── ADMIN — DASHBOARD ────────────────────────────────────────────────────────
+export const adminGetDashboardStats = () =>
+  request("/admin/dashboard-stats", "GET", null, false);
+
 // ─── ADMIN — BANK ACCOUNTS ────────────────────────────────────────────────────
 export const adminGetBankAccounts = () =>
-  request("/admin/bank-accounts", "GET", null, false);
+  request("/admin/accounts", "GET", null, false);
 
-export const adminToggleAccountStatus = (accountId, status) =>
-  request(`/admin/bank-accounts/${accountId}/status`, "PATCH", { status }, false);
+export const adminToggleAccountStatus = (accountId) =>
+  request(`/admin/accounts/${accountId}/toggle`, "POST", null, false);
+
+export const adminCloseAccountStatus = (accountId) =>
+  request(`/admin/accounts/${accountId}/close`, "POST", null, false);
 
 
 // ─── KYC — USER FLOW ─────────────────────────────────────────────────────────
@@ -148,3 +172,6 @@ export const sendAIChatMessage = (text, history) => request("/ai/chat", "POST", 
 
 // ─── MONEY TRANSFER ───────────────────────────────────────────────────────────
 export const performTransfer = (data) => request("/auth/transfer", "POST", data, true);
+
+// ─── BALANCE CHECK ────────────────────────────────────────────────────────────
+export const getBalance = () => request("/auth/balance", "GET", null, true);
