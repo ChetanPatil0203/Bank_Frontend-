@@ -401,7 +401,6 @@ export default function AccountDetails() {
 
 /* ── CARD FIELD — inside blue bank card ── */
 function CardField({ label, value, onCopy, copied, className = "" }) {
-  const { t } = useContext(LanguageContext);
   return (
     <div className={className}>
       <p className="text-[10px] text-blue-200/60 font-black uppercase tracking-[0.15em] mb-2">

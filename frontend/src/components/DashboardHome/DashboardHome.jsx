@@ -82,7 +82,6 @@ export default function DashboardHome() {
   const navigate = useNavigate();
   const payzenUser = JSON.parse(localStorage.getItem("payzen_user") || "{}");
   const userName = payzenUser?.name || "User";
-  const token = localStorage.getItem("payzen_token");
 
   useEffect(() => {
     const el = document.createElement("style");
