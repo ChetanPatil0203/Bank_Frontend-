@@ -155,13 +155,13 @@ export default function AdminTransactionManager() {
       if (res.ok && res.data.success) {
         // Success: Update UI
         setLastTxn({
-          ...res.data.transaction,
+          ...res.data.data.transaction,
           holder: selected.bank_holder_name,
           prevBalance: selected.balance,
-          newBalance: res.data.account.balance
+          newBalance: res.data.data.account.balance
         });
-        setSelected(res.data.account);
-        setResults(prev => prev.map(a => a.id === res.data.account.id ? res.data.account : a));
+        setSelected(res.data.data.account);
+        setResults(prev => prev.map(a => a.id === res.data.data.account.id ? res.data.data.account : a));
         setModal("success");
       } else {
         setError(res.data?.message || "Transaction failed.");

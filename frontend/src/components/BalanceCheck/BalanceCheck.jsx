@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { getBalance } from "../../utils/apiServices";
+import { LanguageContext } from "../../context/LanguageContext";
+import { jsPDF } from "jspdf";
+import { Download } from "lucide-react";
 
 export default function BalanceCheck() {
+  const { t } = useContext(LanguageContext);
 
   const [formData, setFormData] = useState({
     accountNumber: "",
@@ -41,6 +45,41 @@ export default function BalanceCheck() {
     }
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    
+    doc.setFontSize(22);
+    doc.setTextColor(15, 31, 75);
+    doc.text("PAYZEN BANK", 105, 20, null, null, "center");
+    
+    doc.setFontSize(14);
+    doc.setTextColor(100);
+    doc.text("Account Statement (Summary)", 105, 30, null, null, "center");
+    
+    doc.setLineWidth(0.5);
+    doc.line(20, 35, 190, 35);
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 45);
+    doc.text(`Account Holder: ${formData.accountHolder || "N/A"}`, 20, 55);
+    doc.text(`Account Number: ${formData.accountNumber.replace(/.(?=.{4})/g, '*') || "N/A"}`, 20, 65);
+    doc.text(`Account Type: ${formData.accountType || "N/A"}`, 20, 75);
+    
+    doc.setLineWidth(0.2);
+    doc.line(20, 85, 190, 85);
+    
+    doc.setFontSize(16);
+    doc.setTextColor(16, 185, 129);
+    doc.text(`Available Balance: ${balance}`, 20, 95);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text("This is a computer generated statement and does not require a physical signature.", 105, 120, null, null, "center");
+    
+    doc.save(`Payzen_Statement_${formData.accountNumber.slice(-4) || 'Stmt'}.pdf`);
+  };
+
   return (
     <div className="min-h-screen py-6 sm:py-12 px-4 bg-slate-50 relative overflow-hidden" 
          style={{ fontFamily: "'Sora', sans-serif" }}>
@@ -63,7 +102,7 @@ export default function BalanceCheck() {
             </svg>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Check Balance
+            {t("balance_check")}
           </h2>
           <p className="text-slate-500 mt-2 text-sm sm:text-base font-medium">
             Securely access your real-time account status
@@ -74,14 +113,14 @@ export default function BalanceCheck() {
 
           <div className="space-y-5">
             <Input
-              label="Account Number"
+              label={t("account_number")}
               name="accountNumber"
               placeholder="0000 0000 0000 0000"
               handleChange={handleChange}
             />
 
             <Input
-              label="Account Holder"
+              label={t("account_holder")}
               name="accountHolder"
               placeholder="Your full name"
               handleChange={handleChange}
@@ -89,7 +128,7 @@ export default function BalanceCheck() {
 
             <div>
               <label className="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 px-1">
-                Account Type
+                {t("account_type")}
               </label>
 
               <select
@@ -100,9 +139,9 @@ export default function BalanceCheck() {
                 style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 1rem center", backgroundSize: "1em" }}
                 required
               >
-                <option value="">Select Account Type</option>
-                <option>Saving Account</option>
-                <option>Current Account</option>
+                <option value="">{t("select_account_type")}</option>
+                <option>{t("saving_account")}</option>
+                <option>{t("current_account")}</option>
               </select>
             </div>
           </div>
@@ -113,7 +152,7 @@ export default function BalanceCheck() {
             className="w-full py-4 bg-blue-900 hover:bg-blue-950 disabled:bg-blue-700 text-white rounded-2xl 
             font-black text-sm uppercase tracking-[0.2em] shadow-lg shadow-blue-900/20 active:scale-[0.98] transition-all mt-4"
           >
-            {loading ? "Checking..." : "Check Balance"}
+            {loading ? t("checking_btn") : t("check_balance_btn")}
           </button>
 
           {error && (
@@ -137,6 +176,14 @@ export default function BalanceCheck() {
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[10px] font-bold text-emerald-700 uppercase">Live from database</span>
             </div>
+            
+            <button 
+              onClick={downloadPDF}
+              className="mt-6 mx-auto flex items-center justify-center gap-2 py-3 px-6 bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow-md active:scale-95"
+            >
+              <Download size={18} />
+              {t("download_statement")}
+            </button>
           </div>
         )}
 

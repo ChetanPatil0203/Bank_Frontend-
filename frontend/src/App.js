@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState } from "react";
 import "./App.css";
+import { LanguageProvider } from "./context/LanguageContext";
 
 import HeaderSection from "./components/HeaderSection/HeaderSection.jsx";
 import Sidebar from "./components/Dashboard/Dashboard.jsx";
@@ -23,7 +24,7 @@ import AdminLogin from "./components/AdminLogin/adminlogin.jsx";
 import AdminLogout from "./components/Adminlogout/adminlogout.jsx";
 import AIChat from "./components/AIChat/AIChat.jsx";
 import MoneyTransfer from "./components/MoneyTransfer/MoneyTransfer.jsx";
-
+import BalanceCheck from "./components/BalanceCheck/BalanceCheck.jsx";
 
 function AppContent() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -62,6 +63,7 @@ function AppContent() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/details" element={<AccountDetails />} />
+            <Route path="/balance-check" element={<BalanceCheck />} />
             <Route path="/kyc" element={<KYCPage />} />
             <Route path="/helpsupport" element={<HelpSupport />} />
             <Route path="/setting" element={<Settings />} />
@@ -80,9 +82,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </LanguageProvider>
   );
 }
 

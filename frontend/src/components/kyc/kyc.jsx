@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   ClipboardList, User, ShieldCheck,
   Mail, Phone, Calendar, MapPin, CreditCard,
@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { kycSendOtp, kycVerifyOtp, kycSubmit } from "../../utils/apiServices";
 import { messaging, getToken } from "../../firebase";
+import { LanguageContext } from "../../context/LanguageContext";
 
 /* ── Step Dot ── */
 function StepDot({ number, label, active, done }) {
@@ -54,6 +55,7 @@ function Input({ type = "text", label, name, value, onChange, maxLength, placeho
 }
 
 export default function KYCPage() {
+  const { t } = useContext(LanguageContext);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     fullName: "", dob: "", gender: "", mobile: "", email: "",
@@ -145,21 +147,21 @@ export default function KYCPage() {
         {/* Header */}
         <div className="flex items-center gap-2 mb-1">
           <ClipboardList size={18} className="text-blue-900" />
-          <h2 className="text-base font-bold text-gray-900">Submit New KYC</h2>
+          <h2 className="text-base font-bold text-gray-900">{t("submit_kyc")}</h2>
         </div>
         <p className="text-xs text-gray-400 mb-4">
-          {step === 1 ? "Step 1 of 3 — Personal Information"
-            : step === 2 ? "Step 2 of 3 — Document Details"
-            : "Step 3 of 3 — OTP Verification"}
+          {step === 1 ? t("step_1")
+            : step === 2 ? t("step_2")
+            : t("step_3")}
         </p>
 
         {/* Stepper */}
         <div className="flex items-center gap-2 mb-5">
-          <StepDot number={1} label="Personal" active={step === 1} done={step > 1} />
+          <StepDot number={1} label={t("personal")} active={step === 1} done={step > 1} />
           <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 1 ? "bg-blue-900" : "bg-gray-200"}`} />
-          <StepDot number={2} label="Documents" active={step === 2} done={step > 2} />
+          <StepDot number={2} label={t("documents")} active={step === 2} done={step > 2} />
           <div className={`flex-1 h-0.5 rounded-full transition-colors ${step > 2 ? "bg-blue-900" : "bg-gray-200"}`} />
-          <StepDot number={3} label="OTP" active={step === 3} done={otpVerified} />
+          <StepDot number={3} label={t("otp")} active={step === 3} done={otpVerified} />
         </div>
 
         {/* Error */}
@@ -172,20 +174,20 @@ export default function KYCPage() {
         {/* ── STEP 1 ── */}
         {step === 1 && (
           <div className="space-y-3">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Personal Information</p>
-            <Input label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange}
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t("personal_info") || t("personal")}</p>
+            <Input label={t("full_name")} name="fullName" value={formData.fullName} onChange={handleChange}
               placeholder="e.g. Rahul Mehta" icon={<User size={14} />} required />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange}
+              <Input label={t("email")} type="email" name="email" value={formData.email} onChange={handleChange}
                 placeholder="email@gmail.com" icon={<Mail size={14} />} required />
-              <Input label="Phone" name="mobile" value={formData.mobile} onChange={handleChange}
+              <Input label={t("phone")} name="mobile" value={formData.mobile} onChange={handleChange}
                 maxLength={10} placeholder="9XXXXXXXXX" icon={<Phone size={14} />} required />
             </div>
-            <Input label="Date of Birth" type="date" name="dob" value={formData.dob}
+            <Input label={t("dob")} type="date" name="dob" value={formData.dob}
               onChange={handleChange} icon={<Calendar size={14} />} required />
             <div>
               <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1">
-                Address <span className="text-red-500">*</span>
+                {t("address")} <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <MapPin size={14} className="absolute left-3 top-3 text-gray-400" />
@@ -199,7 +201,7 @@ export default function KYCPage() {
               <button onClick={handleNext}
                 className="flex items-center gap-2 px-5 py-2.5 bg-blue-900 hover:bg-blue-800 
                   text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-md">
-                Next <ArrowRight size={14} />
+                {t("next")} <ArrowRight size={14} />
               </button>
             </div>
           </div>
@@ -208,18 +210,18 @@ export default function KYCPage() {
         {/* ── STEP 2 ── */}
         {step === 2 && (
           <div className="space-y-3">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document Details</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t("documents")}</p>
             <div>
-              <Input label="Aadhaar Number" name="aadhaar" value={formData.aadhaar} onChange={handleChange}
+              <Input label={t("aadhaar_number")} name="aadhaar" value={formData.aadhaar} onChange={handleChange}
                 maxLength={12} placeholder="12-digit Aadhaar number" icon={<ShieldCheck size={14} />} required />
               <p className="text-[10px] text-gray-400 mt-1">Only last 4 digits stored for security.</p>
             </div>
-            <Input label="PAN Number" name="pan" value={formData.pan} onChange={handleChange}
+            <Input label={t("pan_number")} name="pan" value={formData.pan} onChange={handleChange}
               maxLength={10} placeholder="e.g. ABCDE1234F" icon={<CreditCard size={14} />} required />
 
             {/* Aadhaar Upload */}
             <div>
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">Aadhaar Document</p>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{t("aadhaar_doc")}</p>
               <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-xl py-5
                 cursor-pointer transition-all gap-1.5
                 ${formData.aadhaarFile ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-blue-400"}`}>
@@ -227,16 +229,16 @@ export default function KYCPage() {
                 <span className="text-xs font-medium text-gray-500">
                   {formData.aadhaarFile
                     ? <span className="text-green-600 font-bold">✅ {formData.aadhaarFile.name}</span>
-                    : "Upload Aadhaar PDF or Image"}
+                    : t("upload_aadhaar")}
                 </span>
-                <span className="text-[10px] text-gray-400">PDF, JPG, PNG — Max 5MB</span>
+                <span className="text-[10px] text-gray-400">{t("upload_limit")}</span>
                 <input name="aadhaarFile" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} className="hidden" />
               </label>
             </div>
 
             {/* PAN Upload */}
             <div>
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">PAN Document</p>
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">{t("pan_doc")}</p>
               <label className={`flex flex-col items-center justify-center border-2 border-dashed rounded-xl py-5
                 cursor-pointer transition-all gap-1.5
                 ${formData.panFile ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-blue-400"}`}>
@@ -244,9 +246,9 @@ export default function KYCPage() {
                 <span className="text-xs font-medium text-gray-500">
                   {formData.panFile
                     ? <span className="text-green-600 font-bold">✅ {formData.panFile.name}</span>
-                    : "Upload PAN PDF or Image"}
+                    : t("upload_pan")}
                 </span>
-                <span className="text-[10px] text-gray-400">PDF, JPG, PNG — Max 5MB</span>
+                <span className="text-[10px] text-gray-400">{t("upload_limit")}</span>
                 <input name="panFile" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={handleChange} className="hidden" />
               </label>
             </div>
@@ -254,19 +256,19 @@ export default function KYCPage() {
             <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2.5">
               <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
               <p className="text-[11px] text-blue-700">
-                After submission, KYC will be <strong>Pending</strong> until reviewed by admin.
+                {t("kyc_pending_note")}
               </p>
             </div>
 
             <div className="flex justify-between items-center pt-1">
               <button onClick={() => { setStep(1); setError(""); }}
                 className="flex items-center gap-1 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 font-medium">
-                <ArrowLeft size={14} /> Back
+                <ArrowLeft size={14} /> {t("back")}
               </button>
               <button onClick={handleNextStep2} disabled={loading}
                 className="flex items-center gap-2 px-5 py-2.5 bg-blue-900 hover:bg-blue-800 
                   text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-md disabled:opacity-60">
-                {loading ? <><Loader2 size={13} className="animate-spin" /> Sending OTP...</> : <>Next <ArrowRight size={14} /></>}
+                {loading ? <><Loader2 size={13} className="animate-spin" /> {t("sending_otp")}</> : <>{t("next")} <ArrowRight size={14} /></>}
               </button>
             </div>
           </div>
@@ -275,14 +277,14 @@ export default function KYCPage() {
         {/* ── STEP 3 ── */}
         {step === 3 && (
           <div className="space-y-3">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">OTP Verification</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t("otp_verification") || t("otp")}</p>
 
             {otpVerified ? (
               <div className="flex flex-col items-center justify-center py-10 gap-3">
                 <CheckCircle2 size={52} className="text-green-500" />
-                <p className="text-green-600 font-bold text-sm">KYC Successfully Submitted!</p>
+                <p className="text-green-600 font-bold text-sm">{t("kyc_success")}</p>
                 <p className="text-[11px] text-gray-400 text-center">
-                  Your KYC is now <strong>Pending</strong> review.<br />Admin will verify your documents shortly.
+                  {t("kyc_success_msg")}
                 </p>
               </div>
             ) : (
@@ -292,20 +294,20 @@ export default function KYCPage() {
                   <p className="text-[11px] text-blue-700">
                     {otpSent
                       ? <>OTP sent to <strong>{formData.email}</strong>. Enter it below.</>
-                      : <>Sending OTP to <strong>{formData.email}</strong>...</>}
+                      : <>{t("sending_otp")}</>}
                   </p>
                 </div>
 
                 <div>
                   <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide block mb-1">
-                    Enter OTP <span className="text-red-500">*</span>
+                    {t("enter_otp")} <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <KeyRound size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       value={otp}
                       onChange={(e) => { setOtp(e.target.value); setError(""); }}
-                      placeholder="6-digit OTP"
+                      placeholder={t("otp_placeholder")}
                       maxLength={6}
                       className="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm font-mono
                         tracking-widest bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
@@ -315,28 +317,28 @@ export default function KYCPage() {
 
                 {otpSent && (
                   <p className="text-[10px] text-gray-400">
-                    {timer > 0 ? `⏳ OTP expires in ${timer} seconds` : "OTP expired."}
+                    {timer > 0 ? `⏳ ${t("otp_expiry")} ${timer} seconds` : "OTP expired."}
                   </p>
                 )}
 
                 {(timer === 0 || !otpSent) && (
                   <button onClick={handleSendOtp} disabled={loading}
                     className="flex items-center gap-1 text-blue-900 text-xs font-semibold underline disabled:opacity-60">
-                    <RefreshCw size={11} /> {loading ? "Sending..." : otpSent ? "Resend OTP" : "Send OTP"}
+                    <RefreshCw size={11} /> {loading ? t("sending_otp") : otpSent ? t("resend_otp") : t("send_otp") || "Send OTP"}
                   </button>
                 )}
 
                 <div className="flex justify-between items-center pt-1">
                   <button onClick={() => { setStep(2); setError(""); setOtpSent(false); setOtp(""); }}
                     className="flex items-center gap-1 px-3 py-2 text-xs text-gray-500 hover:text-gray-700 font-medium">
-                    <ArrowLeft size={14} /> Back
+                    <ArrowLeft size={14} /> {t("back")}
                   </button>
                   <button onClick={handleSubmit} disabled={loading || !otpSent}
                     className="flex items-center gap-2 px-5 py-2.5 bg-blue-900 hover:bg-blue-800
                       text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-md disabled:opacity-60">
                     {loading
-                      ? <><Loader2 size={13} className="animate-spin" /> Submitting...</>
-                      : <><CheckCircle2 size={14} /> Submit KYC</>}
+                      ? <><Loader2 size={13} className="animate-spin" /> {t("submitting")}</>
+                      : <><CheckCircle2 size={14} /> {t("submit_kyc_btn")}</>}
                   </button>
                 </div>
               </>

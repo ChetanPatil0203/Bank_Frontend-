@@ -1,7 +1,8 @@
 import { Pencil, Save, CheckCircle, User, Phone, Mail, MapPin, Calendar, CreditCard, Hash, Landmark } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../../utils/apiServices";
+import { LanguageContext } from "../../context/LanguageContext";
 
 function getInitials(name) {
   if (!name) return "?";
@@ -9,6 +10,7 @@ function getInitials(name) {
 }
 
 export default function ProfilePage() {
+  const { t } = useContext(LanguageContext);
   const navigate = useNavigate();
   const [edit, setEdit]       = useState(false);
   const [saving, setSaving]   = useState(false);
@@ -92,7 +94,7 @@ export default function ProfilePage() {
               ? "bg-green-50 border border-green-200 text-green-700"
               : "bg-red-50 border border-red-200 text-red-700"}`}>
             <CheckCircle size={16}/>
-            {msg === "success" ? "Profile updated successfully ✅" : "An error occurred ❌"}
+            {msg === "success" ? t("profile_update_success") : t("error_occurred")}
           </div>
         )}
 
@@ -116,7 +118,7 @@ export default function ProfilePage() {
                 {profile.fullName || "—"}
               </h2>
               <p className="text-xs sm:text-sm text-gray-500 truncate">
-                {account ? `Account No: ${account.account_number}` : "Account: Not opened yet"}
+                {account ? `${t("acc_no")}: ${account.account_number}` : t("acc_not_opened")}
               </p>
             </div>
           </div>
@@ -129,10 +131,10 @@ export default function ProfilePage() {
               disabled:opacity-60 transition-all shadow-md flex-shrink-0">
             {edit ? <Save size={15}/> : <Pencil size={15}/>}
             <span className="hidden xs:inline sm:inline">
-              {saving ? "Saving..." : edit ? "Save" : "Edit"}
+              {saving ? t("saving") : edit ? t("save") : t("edit")}
             </span>
             <span className="xs:hidden sm:hidden">
-              {saving ? "..." : edit ? "Save" : "Edit"}
+              {saving ? "..." : edit ? t("save") : t("edit")}
             </span>
           </button>
         </div>
@@ -140,32 +142,32 @@ export default function ProfilePage() {
         {/* Personal Details */}
         <div className="flex items-center gap-2 mb-4">
           <User size={18} className="text-blue-900" />
-          <h3 className="text-sm sm:text-base font-bold text-blue-900">Personal Details</h3>
+          <h3 className="text-sm sm:text-base font-bold text-blue-900">{t("personal_details")}</h3>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-8">
-          <Field label="Full Name"     value={profile.fullName} icon={<User size={14} />} />
-          <Field label="Mobile"        value={profile.mobile} icon={<Phone size={14} />} />
-          <Field label="Email"         value={profile.email} icon={<Mail size={14} />} />
-          <Field label="Gender"        value={profile.gender} icon={<User size={14} />} />
-          <Field label="Date of Birth" value={profile.date_of_birth} icon={<Calendar size={14} />} />
+          <Field label={t("full_name")}     value={profile.fullName} icon={<User size={14} />} />
+          <Field label={t("phone")}        value={profile.mobile} icon={<Phone size={14} />} />
+          <Field label={t("email")}         value={profile.email} icon={<Mail size={14} />} />
+          <Field label={t("gender")}        value={profile.gender} icon={<User size={14} />} />
+          <Field label={t("dob")} value={profile.date_of_birth} icon={<Calendar size={14} />} />
 
           {/* Address — editable */}
           <div className="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
             <label className="text-[11px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
-              <MapPin size={12} /> Address
+              <MapPin size={12} /> {t("address")}
             </label>
             {edit ? (
               <textarea
                 value={profile.address}
                 onChange={e => setProfile({ ...profile, address: e.target.value })}
-                placeholder="Enter your address..."
+                placeholder={t("placeholder_address")}
                 className="border-2 border-blue-50 bg-blue-50/20 rounded-2xl px-4 py-3 text-xs sm:text-sm h-24
                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none transition-all"
               />
             ) : (
               <div className={`border border-gray-100 bg-gray-50/50 rounded-2xl px-4 py-3 text-xs sm:text-sm min-h-[50px]
                 ${profile.address ? "text-gray-800 font-medium" : "text-gray-300 italic"}`}>
-                {profile.address || "Address not added yet — click Edit to add"}
+                {profile.address || t("address_not_added")}
               </div>
             )}
           </div>
@@ -174,7 +176,7 @@ export default function ProfilePage() {
         {/* Account Details */}
         <div className="flex items-center gap-2 mb-4">
           <CreditCard size={18} className="text-blue-900" />
-          <h3 className="text-sm sm:text-base font-bold text-blue-900">Account Details</h3>
+          <h3 className="text-sm sm:text-base font-bold text-blue-900">{t("account_details")}</h3>
         </div>
 
         {!account ? (
@@ -182,24 +184,24 @@ export default function ProfilePage() {
             bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6 shadow-sm">
             <div className="flex items-center gap-3 text-amber-800 text-xs sm:text-sm font-medium">
               <span className="text-2xl">🏦</span>
-              <p>Bank account not opened yet. Please open a new account to start your services.</p>
+              <p>{t("acc_not_opened_msg")}</p>
             </div>
             <button
               onClick={() => navigate("/open-account")}
               className="w-full xs:w-auto text-xs font-black bg-amber-500 hover:bg-amber-600 active:scale-95
                 text-white px-6 py-2.5 rounded-xl transition-all whitespace-nowrap shadow-md shadow-amber-200">
-              CREATE ACCOUNT
+              {t("create_acc_btn")}
             </button>
           </div>
         ) : null}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <Field label="Account Number" value={account?.account_number || ""} empty={!account} icon={<Hash size={14} />} />
-          <Field label="Account Type"   value={account?.account_type   || ""} empty={!account} icon={<CreditCard size={14} />} />
-          <Field label="Branch"         value={account?.branch         || ""} empty={!account} icon={<Landmark size={14} />} />
-          <Field label="IFSC Code"      value={account?.ifsc           || ""} empty={!account} icon={<Hash size={14} />} />
+          <Field label={t("account_number")} value={account?.account_number || ""} empty={!account} icon={<Hash size={14} />} />
+          <Field label={t("account_type")}   value={account?.account_type   || ""} empty={!account} icon={<CreditCard size={14} />} />
+          <Field label={t("branch")}         value={account?.branch         || ""} empty={!account} icon={<Landmark size={14} />} />
+          <Field label={t("ifsc")}      value={account?.ifsc           || ""} empty={!account} icon={<Hash size={14} />} />
           {account?.bank_holder_name && (
-            <Field label="Account Holder" value={account.bank_holder_name} icon={<User size={14} />} />
+            <Field label={t("account_holder")} value={account.bank_holder_name} icon={<User size={14} />} />
           )}
         </div>
 

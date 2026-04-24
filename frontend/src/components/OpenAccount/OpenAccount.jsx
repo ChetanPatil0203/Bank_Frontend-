@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
   CheckCircle, AlertCircle, Loader,
   User, Users, Calendar, UserCheck,
@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { openAccount } from "../../utils/apiServices";
+import { LanguageContext } from "../../context/LanguageContext";
 
 /* ════════════════════════════════════════════════════
    SUCCESS POPUP
@@ -403,6 +404,7 @@ function DocumentUploadCard({ label, sublabel, icon: Icon, accentColor, file, pr
    MAIN PAGE
    ════════════════════════════════════════════════════ */
 export default function OpenAccountPage() {
+  const { t } = useContext(LanguageContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -530,8 +532,8 @@ export default function OpenAccountPage() {
         >
 
           <div className="text-center mb-4">
-            <h2 className="text-base sm:text-lg font-semibold text-blue-900">Open New Account</h2>
-            <p className="text-gray-500 text-xs">Secure Banking Registration Portal</p>
+            <h2 className="text-base sm:text-lg font-semibold text-blue-900">{t("open_account")}</h2>
+            <p className="text-gray-500 text-xs">{t("secure_portal")}</p>
           </div>
 
           {alert.show && (
@@ -549,50 +551,50 @@ export default function OpenAccountPage() {
           <form onSubmit={handleSubmit} className="space-y-3">
 
             {/* Personal Details */}
-            <Section title="Personal Details">
-              <Field label="Full Name (Bank Holder)">
+            <Section title={t("personal_details")}>
+              <Field label={t("bank_holder_name")}>
                 <IconInput icon={<User size={14}/>}>
                   <input type="text" name="bank_holder_name" value={formData.bank_holder_name}
                     onChange={handleChange} required placeholder="Enter full name"/>
                 </IconInput>
               </Field>
-              <Field label="Father Name">
+              <Field label={t("father_name")}>
                 <IconInput icon={<Users size={14}/>}>
                   <input type="text" name="father_name" value={formData.father_name}
                     onChange={handleChange} required placeholder="Enter father's name"/>
                 </IconInput>
               </Field>
-              <Field label="Date of Birth">
+              <Field label={t("dob")}>
                 <IconInput icon={<Calendar size={14}/>}>
                   <input type="date" name="dob" value={formData.dob} onChange={handleChange} required/>
                 </IconInput>
               </Field>
-              <Field label="Gender">
+              <Field label={t("gender")}>
                 <IconInput icon={<UserCheck size={14}/>}>
                   <select name="gender" value={formData.gender} onChange={handleChange} required>
-                    <option value="">Select Gender</option>
-                    <option>Male</option><option>Female</option><option>Other</option>
+                    <option value="">{t("select_gender")}</option>
+                    <option>{t("male")}</option><option>{t("female")}</option><option>{t("other")}</option>
                   </select>
                 </IconInput>
               </Field>
             </Section>
 
             {/* Contact Details */}
-            <Section title="Contact Details">
-              <Field label="Mobile Number">
+            <Section title={t("contact_details")}>
+              <Field label={t("phone")}>
                 <IconInput icon={<Phone size={14}/>}>
                   <input type="tel" name="mobile" value={formData.mobile}
                     onChange={handleChange} required placeholder="10-digit mobile number" maxLength={10}/>
                 </IconInput>
               </Field>
-              <Field label="Email Address">
+              <Field label={t("email")}>
                 <IconInput icon={<Mail size={14}/>}>
                   <input type="email" name="email" value={formData.email}
                     onChange={handleChange} required placeholder="your@email.com"/>
                 </IconInput>
               </Field>
               <div className="col-span-1 sm:col-span-2 flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-700">Residential Address <span className="text-red-500">*</span></label>
+                <label className="text-xs font-medium text-gray-700">{t("residential_address")} <span className="text-red-500">*</span></label>
                 <div className="relative">
                   <MapPin size={13} className="absolute left-2.5 top-2 text-gray-400"/>
                   <textarea name="address" value={formData.address} onChange={handleChange} required
@@ -604,15 +606,15 @@ export default function OpenAccountPage() {
             </Section>
 
             {/* KYC Verification */}
-            <Section title="KYC Verification">
-              <Field label="Aadhaar Number">
+            <Section title={t("kyc_verification")}>
+              <Field label={t("aadhaar_number")}>
                 <IconInput icon={<ShieldCheck size={14}/>}>
                   <input type="text" name="aadhaar" value={formData.aadhaar}
                     onChange={handleAadhaar} required placeholder="123456789012" maxLength={12}
                     className="tracking-widest"/>
                 </IconInput>
               </Field>
-              <Field label="PAN Number">
+              <Field label={t("pan_number")}>
                 <IconInput icon={<CreditCard size={14}/>}>
                   <input type="text" name="pan" value={formData.pan}
                     onChange={handlePan} required placeholder="ABCDE1234F" maxLength={10}
@@ -622,24 +624,24 @@ export default function OpenAccountPage() {
             </Section>
 
             {/* Account Details */}
-            <Section title="Account Details">
-              <Field label="Account Type">
+            <Section title={t("account_details")}>
+              <Field label={t("account_type")}>
                 <IconInput icon={<Landmark size={14}/>}>
                   <select name="account_type" value={formData.account_type} onChange={handleChange} required>
-                    <option value="">Select Account Type</option>
-                    <option>Saving Account</option>
-                    <option>Current Account</option>
+                    <option value="">{t("select_account_type")}</option>
+                    <option>{t("saving_account")}</option>
+                    <option>{t("current_account")}</option>
                   </select>
                 </IconInput>
               </Field>
-              <Field label="Preferred Branch">
+              <Field label={t("preferred_branch")}>
                 <IconInput icon={<GitBranch size={14}/>}>
                   <input type="text" name="branch" value={formData.branch}
                     onChange={handleChange} required placeholder="e.g. Nashik Main Branch"/>
                 </IconInput>
               </Field>
               <div className="col-span-1 sm:col-span-2 flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-700">Purpose of Opening Account <span className="text-red-500">*</span></label>
+                <label className="text-xs font-medium text-gray-700">{t("purpose_of_opening")} <span className="text-red-500">*</span></label>
                 <IconInput icon={<HelpCircle size={14}/>}>
                   <input type="text" name="reason" value={formData.reason}
                     onChange={handleChange} required placeholder="e.g. Salary, Savings, Business transitions"/>
@@ -648,14 +650,14 @@ export default function OpenAccountPage() {
             </Section>
 
             {/* Nominee Details */}
-            <Section title="Nominee Details">
-              <Field label="Nominee Name">
+            <Section title={t("nominee_details")}>
+              <Field label={t("nominee_name")}>
                 <IconInput icon={<UserPlus size={14}/>}>
                   <input type="text" name="nominee_name" value={formData.nominee_name}
                     onChange={handleChange} required placeholder="Enter nominee full name"/>
                 </IconInput>
               </Field>
-              <Field label="Relation with Nominee">
+              <Field label={t("nominee_relation")}>
                 <IconInput icon={<Heart size={14}/>}>
                   <input type="text" name="nominee_relation" value={formData.nominee_relation}
                     onChange={handleChange} required placeholder="e.g. Father, Mother, Spouse"/>
@@ -667,7 +669,7 @@ export default function OpenAccountPage() {
             <div className="rounded-lg p-3 bg-gray-50">
               <h3 className="text-xs font-semibold text-blue-900 mb-2.5 flex items-center gap-2">
                 <FileText size={13} className="text-blue-700"/>
-                Document Upload
+                {t("doc_upload")}
                 <span className="text-red-500 font-normal ml-0.5">*</span>
               </h3>
 
@@ -706,9 +708,9 @@ export default function OpenAccountPage() {
 
               {/* On mobile: 1 col, on sm+: 3 col */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                <DocumentUploadCard label="Passport Photo"  sublabel="Clear face photo"      icon={ImagePlus}   accentColor="#6366f1" file={photo}      preview={photoPreview}   onUpload={makeFileHandler(setPhoto, setPhotoPreview)}         onRemove={makeRemover(setPhoto, setPhotoPreview)}       inputId="upload-photo"/>
-                <DocumentUploadCard label="Aadhaar Card"    sublabel="Front side of Aadhaar" icon={ShieldCheck} accentColor="#0ea5e9" file={aadhaarDoc} preview={aadhaarPreview} onUpload={makeFileHandler(setAadhaarDoc, setAadhaarPreview)} onRemove={makeRemover(setAadhaarDoc, setAadhaarPreview)} inputId="upload-aadhaar"/>
-                <DocumentUploadCard label="PAN Card"        sublabel="Clear PAN card image"  icon={CreditCard}  accentColor="#f59e0b" file={panDoc}     preview={panPreview}     onUpload={makeFileHandler(setPanDoc, setPanPreview)}         onRemove={makeRemover(setPanDoc, setPanPreview)}         inputId="upload-pan"/>
+                <DocumentUploadCard label={t("passport_photo")}  sublabel={t("clear_face_photo")}      icon={ImagePlus}   accentColor="#6366f1" file={photo}      preview={photoPreview}   onUpload={makeFileHandler(setPhoto, setPhotoPreview)}         onRemove={makeRemover(setPhoto, setPhotoPreview)}       inputId="upload-photo"/>
+                <DocumentUploadCard label={t("aadhaar_number")}    sublabel={t("front_aadhaar")} icon={ShieldCheck} accentColor="#0ea5e9" file={aadhaarDoc} preview={aadhaarPreview} onUpload={makeFileHandler(setAadhaarDoc, setAadhaarPreview)} onRemove={makeRemover(setAadhaarDoc, setAadhaarPreview)} inputId="upload-aadhaar"/>
+                <DocumentUploadCard label={t("pan_number")}        sublabel={t("clear_pan_img")}  icon={CreditCard}  accentColor="#f59e0b" file={panDoc}     preview={panPreview}     onUpload={makeFileHandler(setPanDoc, setPanPreview)}         onRemove={makeRemover(setPanDoc, setPanPreview)}         inputId="upload-pan"/>
               </div>
             </div>
 
@@ -716,8 +718,7 @@ export default function OpenAccountPage() {
             <div className="flex gap-2 items-start">
               <input type="checkbox" name="agree" onChange={handleChange} className="mt-0.5 flex-shrink-0" required/>
               <p className="text-[11px] text-gray-600 leading-relaxed">
-                I confirm that all the information provided is accurate and correct.{" "}
-                <span className="text-red-500">*</span>
+                {t("terms_agree")} <span className="text-red-500">*</span>
               </p>
             </div>
 
@@ -766,7 +767,7 @@ export default function OpenAccountPage() {
                   <>
                     <PenLine size={17} color="#2563eb"/>
                     <span style={{ fontSize: 14, fontWeight: 600, color: "#2563eb" }}>
-                      Add Signature
+                      {t("add_signature")}
                     </span>
                   </>
                 )}

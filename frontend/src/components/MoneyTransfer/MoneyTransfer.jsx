@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Send, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { performTransfer } from '../../utils/apiServices';
+import { LanguageContext } from '../../context/LanguageContext';
 
 export default function MoneyTransfer() {
+    const { t } = useContext(LanguageContext);
     const [formData, setFormData] = useState({
         beneficiaryName: '',
         accountNumber: '',
@@ -87,8 +89,8 @@ export default function MoneyTransfer() {
                             <CheckCircle2 className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="text-emerald-800 font-semibold text-lg">Transfer Successful</h3>
-                            <p className="text-emerald-600 font-medium text-sm mt-0.5">Your funds have been securely transferred to the beneficiary.</p>
+                            <h3 className="text-emerald-800 font-semibold text-lg">{t("transfer_success")}</h3>
+                            <p className="text-emerald-600 font-medium text-sm mt-0.5">{t("transfer_success_msg")}</p>
                         </div>
                     </div>
                 )}
@@ -105,7 +107,7 @@ export default function MoneyTransfer() {
                         <div className="relative z-10">
                             <div className="flex items-center gap-2 mb-2">
                                 <ShieldCheck className="w-5 h-5 text-violet-200" />
-                                <span className="text-violet-200 font-medium text-sm tracking-wide uppercase">Money Transfer</span>
+                                <span className="text-violet-200 font-medium text-sm tracking-wide uppercase">{t("money_transfer")}</span>
                             </div>
                         </div>
                     </div>
@@ -121,10 +123,10 @@ export default function MoneyTransfer() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             {/* Left Column: Beneficiary Details */}
                             <div className="space-y-5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest pl-1">Beneficiary Details</h3>
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest pl-1">{t("beneficiary_details")}</h3>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">Account Holder Name</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("acc_holder_name")}</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 
@@ -142,7 +144,7 @@ export default function MoneyTransfer() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">Account Number</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("account_number")}</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         </div>
@@ -159,7 +161,7 @@ export default function MoneyTransfer() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">Confirm Account Number</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("confirm_acc_number")}</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         </div>
@@ -176,7 +178,7 @@ export default function MoneyTransfer() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">IFSC Code</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("ifsc_code")}</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 
@@ -191,16 +193,16 @@ export default function MoneyTransfer() {
                                             className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 uppercase placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                         />
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-2 pl-1">Ensure the IFSC code is exactly 11 characters.</p>
+                                    <p className="text-xs text-gray-400 mt-2 pl-1">{t("ifsc_note")}</p>
                                 </div>
                             </div>
 
                             {/* Right Column: Transfer Details */}
                             <div className="space-y-5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest pl-1 mt-6 md:mt-0">Payment Details</h3>
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest pl-1 mt-6 md:mt-0">{t("payment_details")}</h3>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">Amount to Transfer</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("amount_to_transfer")}</label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                             <span className="text-gray-500 font-semibold text-lg">₹</span>
@@ -236,13 +238,13 @@ export default function MoneyTransfer() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">Remarks (Optional)</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5 pl-1">{t("remarks_optional")}</label>
                                     <input
                                         type="text"
                                         name="remark"
                                         value={formData.remark}
                                         onChange={handleChange}
-                                        placeholder="What is this for?"
+                                        placeholder={t("what_is_this_for")}
                                         className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
                                     />
                                 </div>
@@ -256,7 +258,7 @@ export default function MoneyTransfer() {
                                 className="flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-600 font-semibold rounded-lg text-xs hover:bg-gray-300 active:scale-[0.98] transition-all"
                                 onClick={() => setFormData({ beneficiaryName: '', accountNumber: '', confirmAccountNumber: '', ifscCode: '', amount: '', remark: '' })}
                             >
-                                Clear Details
+                                {t("clear_details")}
                             </button>
 
                             <button
@@ -270,11 +272,11 @@ export default function MoneyTransfer() {
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        Processing...
+                                        {t("processing")}
                                     </>
                                 ) : (
                                     <>
-                                        Transfer Securely <Send className="w-4 h-4 ml-1" />
+                                        {t("transfer_securely")} <Send className="w-4 h-4 ml-1" />
                                     </>
                                 )}
                             </button>
@@ -286,7 +288,7 @@ export default function MoneyTransfer() {
                 {/* Footer info */}
                 <p className="text-center text-xs text-gray-400 mt-6 flex items-center justify-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    Transfers are processed instantly and are secured by 256-bit encryption.
+                    {t("secure_footer")}
                 </p>
             </div>
         </div>

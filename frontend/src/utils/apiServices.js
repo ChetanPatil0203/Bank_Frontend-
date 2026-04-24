@@ -95,7 +95,7 @@ export const adminCreateAccountRequestForm = async (formData) => {
 
 // ─── ADMIN — DASHBOARD ────────────────────────────────────────────────────────
 export const adminGetDashboardStats = () =>
-  request("/admin/dashboard-stats", "GET", null, false);
+  request("/admin/dashboard-stats", "GET", null, true);
 
 // ─── ADMIN — BANK ACCOUNTS ────────────────────────────────────────────────────
 export const adminGetBankAccounts = () =>

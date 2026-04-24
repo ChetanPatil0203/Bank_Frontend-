@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getProfile, updateProfile, getPreferences, updatePreferences, changePassword, getLoginActivity } from "../../utils/apiServices";
+import { LanguageContext } from "../../context/LanguageContext";
 
-import { User, Shield, Bell, Key, Mail, Phone, MapPin, CheckCircle, Smartphone, CreditCard, Gift, Lock, Calendar } from "lucide-react";
+import { User, Shield, Bell, Key, Mail, Phone, MapPin, CheckCircle, Smartphone, CreditCard, Gift, Lock, Calendar, Globe } from "lucide-react";
 
 function Ico({ icon: Icon, size = 16, className = "" }) {
   if (!Icon) return null;
@@ -23,23 +24,24 @@ function Toggle({ on, onChange, disabled = false }) {
 }
 
 const PROFILE_META = {
-  name:    { label: "Full Name",      type: "text",  icon: User,      bg: "bg-blue-50",   color: "text-blue-600"   },
-  email:   { label: "Email Address",  type: "email", icon: Mail,      bg: "bg-violet-50", color: "text-violet-600" },
-  phone:   { label: "Phone Number",   type: "tel",   icon: Phone,     bg: "bg-green-50",  color: "text-green-600"  },
-  dob:     { label: "Date of Birth",  type: "date",  icon: Calendar,  bg: "bg-orange-50", color: "text-orange-500" },
-  address: { label: "Address",        type: "text",  icon: MapPin,    bg: "bg-rose-50",   color: "text-rose-600"   },
+  name:    { labelKey: "full_name",      type: "text",  icon: User,      bg: "bg-blue-50",   color: "text-blue-600"   },
+  email:   { labelKey: "email",          type: "email", icon: Mail,      bg: "bg-violet-50", color: "text-violet-600" },
+  phone:   { labelKey: "phone",          type: "tel",   icon: Phone,     bg: "bg-green-50",  color: "text-green-600"  },
+  dob:     { labelKey: "dob",            type: "date",  icon: Calendar,  bg: "bg-orange-50", color: "text-orange-500" },
+  address: { labelKey: "address",        type: "text",  icon: MapPin,    bg: "bg-rose-50",   color: "text-rose-600"   },
 };
 
 const NOTIF_META = {
-  email:        { label: "Email Notifications",  desc: "Get account updates via email",        icon: Mail,       iconBg: "bg-blue-100",   iconTx: "text-blue-600",   badge: "Recommended" },
-  sms:          { label: "SMS Alerts",           desc: "Receive SMS for every transaction",    icon: Smartphone, iconBg: "bg-green-100",  iconTx: "text-green-600",  badge: ""            },
-  push:         { label: "Push Notifications",   desc: "Browser and app push alerts",          icon: Bell,       iconBg: "bg-violet-100", iconTx: "text-violet-600", badge: ""            },
-  transactions: { label: "Transaction Alerts",   desc: "Every debit and credit notification",  icon: CreditCard, iconBg: "bg-amber-100",  iconTx: "text-amber-600",  badge: "Important"   },
-  offers:       { label: "Offers & Promotions",  desc: "Banking deals and offers",             icon: Gift,       iconBg: "bg-pink-100",   iconTx: "text-pink-600",   badge: ""            },
-  security:     { label: "Security Alerts",      desc: "Login attempts & security warnings",   icon: Shield,     iconBg: "bg-red-100",    iconTx: "text-red-600",    badge: "Critical"    },
+  email:        { labelKey: "email_notif",  descKey: "email_notif_desc",        icon: Mail,       iconBg: "bg-blue-100",   iconTx: "text-blue-600",   badgeKey: "recommended" },
+  sms:          { labelKey: "sms_alerts",   descKey: "sms_alerts_desc",         icon: Smartphone, iconBg: "bg-green-100",  iconTx: "text-green-600",  badgeKey: ""            },
+  push:         { labelKey: "push_notif",   descKey: "push_notif_desc",           icon: Bell,       iconBg: "bg-violet-100", iconTx: "text-violet-600", badgeKey: ""            },
+  transactions: { labelKey: "trans_alerts", descKey: "trans_alerts_desc",         icon: CreditCard, iconBg: "bg-amber-100",  iconTx: "text-amber-600",  badgeKey: "important"   },
+  offers:       { labelKey: "offers_promo", descKey: "offers_promo_desc",         icon: Gift,       iconBg: "bg-pink-100",   iconTx: "text-pink-600",   badgeKey: ""            },
+  security:     { labelKey: "security_alerts", descKey: "security_alerts_desc",   icon: Shield,     iconBg: "bg-red-100",    iconTx: "text-red-600",    badgeKey: "critical"    },
 };
 
 export default function Setting() {
+  const { language, toggleLanguage, t } = useContext(LanguageContext);
   const [tab, setTab] = useState("profile");
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
@@ -152,9 +154,10 @@ export default function Setting() {
   };
 
   const tabs = [
-    { id: "profile",       label: "Profile",        icon: User,   activeCls: "bg-blue-600 text-white shadow-lg shadow-blue-200 scale-105",    hoverCls: "hover:bg-blue-50",    iconActiveCls: "text-white", iconInactiveCls: "text-blue-500"    },
-    { id: "security",      label: "Security",       icon: Shield, activeCls: "bg-red-500 text-white shadow-lg shadow-red-200 scale-105",     hoverCls: "hover:bg-red-50",     iconActiveCls: "text-white", iconInactiveCls: "text-red-500"     },
-    { id: "notifications", label: "Notifications",  icon: Bell,   activeCls: "bg-violet-600 text-white shadow-lg shadow-violet-200 scale-105", hoverCls: "hover:bg-violet-50",  iconActiveCls: "text-white", iconInactiveCls: "text-violet-500"  },
+    { id: "profile",       label: t("profile"),        icon: User,   activeCls: "bg-blue-600 text-white shadow-lg shadow-blue-200 scale-105",    hoverCls: "hover:bg-blue-50",    iconActiveCls: "text-white", iconInactiveCls: "text-blue-500"    },
+    { id: "security",      label: t("security"),       icon: Shield, activeCls: "bg-red-500 text-white shadow-lg shadow-red-200 scale-105",     hoverCls: "hover:bg-red-50",     iconActiveCls: "text-white", iconInactiveCls: "text-red-500"     },
+    { id: "notifications", label: t("notifications"),  icon: Bell,   activeCls: "bg-violet-600 text-white shadow-lg shadow-violet-200 scale-105", hoverCls: "hover:bg-violet-50",  iconActiveCls: "text-white", iconInactiveCls: "text-violet-500"  },
+    { id: "preferences",   label: t("preferences"),    icon: Globe,  activeCls: "bg-emerald-600 text-white shadow-lg shadow-emerald-200 scale-105", hoverCls: "hover:bg-emerald-50", iconActiveCls: "text-white", iconInactiveCls: "text-emerald-500" },
   ];
 
   // ── Edit Profile ──────────────────────────────────────────────────────────
@@ -163,15 +166,15 @@ export default function Setting() {
       <div className="min-h-screen py-3 px-3 bg-white">
         <div className="w-full">
           <div className="mb-4">
-            <h1 className="text-lg font-black text-slate-800">Edit Profile</h1>
-            <p className="text-xs text-slate-400 mt-0.5">Update your profile information</p>
+            <h1 className="text-lg font-black text-slate-800">{t("edit_profile")}</h1>
+            <p className="text-xs text-slate-400 mt-0.5">{t("update_profile_info")}</p>
           </div>
 
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
               <div>
-                <h2 className="text-sm font-black text-slate-900">Profile Information</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Edit your profile details</p>
+                <h2 className="text-sm font-black text-slate-900">{t("profile_info")}</h2>
+                <p className="text-xs text-slate-400 mt-0.5">{t("edit_profile_details")}</p>
               </div>
             </div>
 
@@ -182,12 +185,12 @@ export default function Setting() {
                     <Ico icon={meta.icon} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{meta.label}</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{t(meta.labelKey)}</p>
                     <input
                       type={meta.type}
                       value={editData[key] || ""}
                       onChange={e => setEditData(p => ({ ...p, [key]: e.target.value }))}
-                      placeholder={meta.label}
+                      placeholder={t(meta.labelKey)}
                       className="w-full text-xs font-semibold text-slate-800 bg-transparent border-0 outline-none mt-0.5 p-0 placeholder-slate-400"
                     />
                   </div>
@@ -197,14 +200,14 @@ export default function Setting() {
 
             <div className="px-4 sm:px-5 py-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50">
               <p className="text-xs text-slate-400 flex items-center gap-1">
-                <Ico icon={Shield} size={11} /> Your data is encrypted and secure.
+                <Ico icon={Shield} size={11} /> {t("data_encrypted_secure")}
               </p>
               <div className="flex gap-2">
                 <button onClick={cancelEdit} disabled={isLoading} className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg text-xs active:scale-[0.98] transition-all disabled:opacity-50">
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button onClick={saveEdit} disabled={isLoading} className="px-4 py-2 bg-gradient-to-b from-[#1e3a7b] to-[#0f1f4d] text-white font-semibold rounded-lg flex items-center gap-1.5 text-xs active:scale-[0.98] transition-all disabled:opacity-50">
-                  {isLoading ? "Saving..." : editSaved ? <><Ico icon={CheckCircle} size={13} /> Saved</> : "Save Changes"}
+                  {isLoading ? t("saving") : editSaved ? <><Ico icon={CheckCircle} size={13} /> {t("saved")}</> : t("save_changes")}
                 </button>
               </div>
             </div>
@@ -220,8 +223,8 @@ export default function Setting() {
       <div className="w-full">
 
         <div className="mb-4">
-          <h1 className="text-lg font-black text-slate-800">Settings</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Manage your account preferences</p>
+          <h1 className="text-lg font-black text-slate-800">{t("settings")}</h1>
+          <p className="text-xs text-slate-400 mt-0.5">{t("manage_account_pref")}</p>
         </div>
 
         {/* Tab Bar */}
@@ -249,8 +252,8 @@ export default function Setting() {
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white">
               <div>
-                <h2 className="text-sm font-black text-slate-900">Profile Information</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Your profile details</p>
+                <h2 className="text-sm font-black text-slate-900">{t("profile_info")}</h2>
+                <p className="text-xs text-slate-400 mt-0.5">{t("profile")}</p>
               </div>
             </div>
 
@@ -261,7 +264,7 @@ export default function Setting() {
                     <Ico icon={meta.icon} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{meta.label}</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">{t(meta.labelKey)}</p>
                     <p className="text-xs font-semibold text-slate-800 truncate mt-0.5">{profileValues[key] || "Loading..."}</p>
                   </div>
                 </div>
@@ -270,11 +273,11 @@ export default function Setting() {
 
             <div className="px-4 sm:px-5 py-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50">
               <p className="text-xs text-slate-400 flex items-center gap-1">
-                <Ico icon={Shield} size={11} /> Your data is encrypted and secure.
+                <Ico icon={Shield} size={11} /> {t("data_encrypted_secure")}
               </p>
               <div className="flex gap-2">
                 <button onClick={openEdit} disabled={isLoading} className="px-4 py-2 bg-gradient-to-b from-[#1e3a7b] to-[#0f1f4d] text-white font-semibold rounded-lg text-xs active:scale-[0.98] transition-all disabled:opacity-50">
-                  Edit Profile
+                  {t("edit_profile")}
                 </button>
               </div>
             </div>
@@ -287,8 +290,8 @@ export default function Setting() {
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-red-50 to-white">
                 <div>
-                  <h2 className="text-sm font-black text-slate-900">Security Settings</h2>
-                  <p className="text-xs text-slate-400 mt-0.5">Manage your account protection</p>
+                  <h2 className="text-sm font-black text-slate-900">{t("security_settings")}</h2>
+                  <p className="text-xs text-slate-400 mt-0.5">{t("manage_acc_protection")}</p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-red-100 text-red-500 flex items-center justify-center shadow-sm">
                   <Ico icon={Shield} size={20} />
@@ -301,13 +304,13 @@ export default function Setting() {
                     <Ico icon={Key} size={15} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-800">Change Password</p>
-                    <p className="text-xs text-slate-400">Update your login password regularly</p>
+                    <p className="text-xs font-bold text-slate-800">{t("change_password")}</p>
+                    <p className="text-xs text-slate-400">{t("update_pwd_regularly")}</p>
                   </div>
                 </div>
                 <button onClick={() => { setShowPwd(v => !v); setPwdMsg(null); }}
                   className="px-3 py-1.5 bg-amber-500 text-white text-xs font-bold rounded-lg active:scale-[0.98] transition-all">
-                  {showPwd ? "Cancel" : "Change"}
+                  {showPwd ? t("cancel") : t("change")}
                 </button>
               </div>
 
@@ -323,9 +326,9 @@ export default function Setting() {
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
-                      { k: "old",     l: "Current Password" },
-                      { k: "new",     l: "New Password"      },
-                      { k: "confirm", l: "Confirm Password"  },
+                      { k: "old",     l: t("current_pwd") },
+                      { k: "new",     l: t("new_pwd")      },
+                      { k: "confirm", l: t("confirm_pwd")  },
                     ].map(({ k, l }) => (
                       <div key={k}>
                         <label className="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">{l}</label>
@@ -340,7 +343,7 @@ export default function Setting() {
                     ))}
                   </div>
                   <button onClick={updatePwd} disabled={isLoading} className="mt-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-lg transition-all disabled:opacity-50">
-                    {isLoading ? "Updating..." : "Update Password"}
+                    {isLoading ? t("updating") : t("update_pwd_btn")}
                   </button>
                 </div>
               )}
@@ -348,7 +351,7 @@ export default function Setting() {
 
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-4 sm:px-5 py-3 border-b border-slate-100">
-                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Recent Activity</h3>
+                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">{t("recent_activity")}</h3>
                 </div>
                 <div className="divide-y divide-slate-100">
                     {activity.length > 0 ? activity.map((act) => (
@@ -356,14 +359,14 @@ export default function Setting() {
                             <div className="flex items-center gap-3">
                                 <span className={`w-2 h-2 rounded-full ${act.status === 'Success' ? 'bg-green-500' : 'bg-red-500'}`} />
                                 <div>
-                                    <p className="text-xs font-bold text-slate-800">{act.status} Login</p>
+                                    <p className="text-xs font-bold text-slate-800">{act.status === 'Success' ? t("success_login") : t("failed_login")}</p>
                                     <p className="text-[10px] text-slate-400">{act.time} · IP: {act.ip}</p>
                                 </div>
                             </div>
                         </div>
                     )) : (
                         <div className="px-4 sm:px-5 py-8 text-center text-xs text-slate-400">
-                            No recent activity found.
+                            {t("no_recent_activity")}
                         </div>
                     )}
                 </div>
@@ -376,8 +379,8 @@ export default function Setting() {
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-violet-50 to-white">
               <div>
-                <h2 className="text-sm font-black text-slate-900">Notification Preferences</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Control what alerts you receive</p>
+                <h2 className="text-sm font-black text-slate-900">{t("notif_pref")}</h2>
+                <p className="text-xs text-slate-400 mt-0.5">{t("control_alerts")}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center">
                 <Ico icon={Bell} size={16} />
@@ -393,16 +396,16 @@ export default function Setting() {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <p className="text-xs font-bold text-slate-800">{item.label}</p>
-                        {item.badge && (
+                        <p className="text-xs font-bold text-slate-800">{t(item.labelKey)}</p>
+                        {item.badgeKey && (
                           <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${
-                            item.badge === "Critical"  ? "bg-red-100 text-red-600"     :
-                            item.badge === "Important" ? "bg-amber-100 text-amber-600" :
-                                                         "bg-blue-100 text-blue-600"
-                          }`}>{item.badge}</span>
+                            item.badgeKey === "critical"  ? "bg-red-100 text-red-600"     :
+                            item.badgeKey === "important" ? "bg-amber-100 text-amber-600" :
+                                                           "bg-blue-100 text-blue-600"
+                          }`}>{t(item.badgeKey)}</span>
                         )}
                       </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{item.desc}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{t(item.descKey)}</p>
                     </div>
                   </div>
                   <Toggle on={notifToggles[key]} disabled={isLoading} onChange={() => setNotifToggles(p => ({ ...p, [key]: !p[key] }))} />
@@ -418,8 +421,52 @@ export default function Setting() {
                   notifSaved ? "bg-green-500 text-white" : "bg-violet-600 hover:bg-violet-700 text-white"
                 } disabled:opacity-50`}
               >
-                {isLoading ? "Saving..." : notifSaved ? <><Ico icon={CheckCircle} size={12} /> Saved!</> : "Save Preferences"}
+                {isLoading ? t("saving") : notifSaved ? <><Ico icon={CheckCircle} size={12} /> {t("saved")}!</> : t("save_pref_btn")}
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Preferences Tab ── */}
+        {tab === "preferences" && (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
+              <div>
+                <h2 className="text-sm font-black text-slate-900">{t("preferences")}</h2>
+                <p className="text-xs text-slate-400 mt-0.5">{t("manage_lang_pref")}</p>
+              </div>
+              <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-sm">
+                <Ico icon={Globe} size={16} />
+              </div>
+            </div>
+
+            <div className="px-4 sm:px-6 py-4 flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-slate-100 rounded-xl bg-slate-50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-sm">
+                    <Ico icon={Globe} size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-800">{t("language")}</p>
+                    <p className="text-xs text-slate-500">{t("choose_lang")}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
+                  <button 
+                    onClick={() => toggleLanguage('en')}
+                    className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${language === 'en' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}
+                  >
+                    {t("english")}
+                  </button>
+                  <button 
+                    onClick={() => toggleLanguage('mr')}
+                    className={`px-4 py-2 rounded-md text-xs font-bold transition-all ${language === 'mr' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}
+                  >
+                    {t("marathi")}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

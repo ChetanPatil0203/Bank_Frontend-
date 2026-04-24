@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Wallet, Search, Calendar, ArrowDownCircle, ArrowUpCircle,
   TrendingUp, ChevronRight
 } from "lucide-react";
 // Import your new function from apiServices
 import { getMyTransactions } from "../../utils/apiServices";
+import { LanguageContext } from "../../context/LanguageContext";
 
 /* ── Keyframes ── */
 const STYLES = `
@@ -52,6 +53,7 @@ const STYLES = `
 `;
 
 export default function TransactionHistory() {
+  const { t } = useContext(LanguageContext);
   const [search, setSearch]         = useState("");
   const [dateFilter, setDateFilter] = useState("");
   
@@ -74,9 +76,9 @@ export default function TransactionHistory() {
   const fetchData = async () => {
     try {
       const res = await getMyTransactions();
-      if (res.success) {
-        setTransactions(res.data.transactions || []);
-        setBalance(res.data.balance || 0);
+      if (res.ok && res.data.success) {
+        setTransactions(res.data.data.transactions || []);
+        setBalance(res.data.data.balance || 0);
       }
     } catch (error) {
       console.error("Error fetching transactions:", error);
@@ -108,7 +110,7 @@ export default function TransactionHistory() {
         {/* PAGE TITLE */}
         <div className="txn-card-in mb-4 px-1">
           <h2 className="text-lg font-extrabold text-slate-800 tracking-[.10em] uppercase">
-            Transaction History
+            {t("transaction_history")}
           </h2>
           <p className="text-[12px] text-slate-400 mt-0.5 font-medium">All your account activity in one place</p>
         </div>

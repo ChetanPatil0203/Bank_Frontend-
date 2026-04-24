@@ -8,20 +8,23 @@ import {
   BadgeCheckIcon,
   Landmark,
   Settings,
+  Wallet,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { LanguageContext } from "../../context/LanguageContext";
 import { X, Menu } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
    PAYZEN LOGO — inline flow (same as before)
 ═══════════════════════════════════════════════════════════ */
 function PayZenLogo() {
+  const { t } = useContext(LanguageContext);
   const [on, setOn] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setOn(true), 100);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setOn(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -104,7 +107,7 @@ function PayZenLogo() {
             textTransform: "uppercase", color: "rgba(148,163,184,0.4)",
             marginTop: 5, opacity: on ? 1 : 0,
             transition: "opacity 0.4s ease 0.8s", whiteSpace: "nowrap",
-          }}>Secure · Smart · Banking</div>
+          }}>{t("secure_smart_banking")}</div>
         </div>
       </div>
     </>
@@ -191,17 +194,19 @@ function SidebarInner({ isOpen, onToggle, menuItems, isMobile }) {
 ═══════════════════════════════════════════════════════════ */
 function Sidebar({ isOpen, onToggle }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useContext(LanguageContext);
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={23} />, path: "/dashboard" },
-    { name: "My Profile", icon: <CircleUserRound size={23} />, path: "/profile" },
-    { name: "Open New Account", icon: <UserCheck size={23} />, path: "/open-account" },
-    { name: "KYC Verification", icon: <BadgeCheckIcon size={23} />, path: "/kyc" },
-    { name: "Transaction History", icon: <ArrowLeftRight size={23} />, path: "/transactions" },
-    { name: "Account Details", icon: <Landmark size={23} />, path: "/details" },
-    { name: "Help & Support", icon: <Headphones size={23} />, path: "/helpsupport" },
-    { name: "Settings", icon: <Settings size={23} />, path: "/setting" },
-    { name: "LogOut", icon: <LogOut size={23} />, path: "/logout" },
+    { name: t("dashboard"), icon: <LayoutDashboard size={23} />, path: "/dashboard" },
+    { name: t("my_profile"), icon: <CircleUserRound size={23} />, path: "/profile" },
+    { name: t("open_account"), icon: <UserCheck size={23} />, path: "/open-account" },
+    { name: t("kyc_verification"), icon: <BadgeCheckIcon size={23} />, path: "/kyc" },
+    { name: t("balance_check"), icon: <Wallet size={23} />, path: "/balance-check" },
+    { name: t("transaction_history"), icon: <ArrowLeftRight size={23} />, path: "/transactions" },
+    { name: t("account_details"), icon: <Landmark size={23} />, path: "/details" },
+    { name: t("help_support"), icon: <Headphones size={23} />, path: "/helpsupport" },
+    { name: t("settings"), icon: <Settings size={23} />, path: "/setting" },
+    { name: t("logout"), icon: <LogOut size={23} />, path: "/logout" },
   ];
 
   /* Close mobile drawer on route change */

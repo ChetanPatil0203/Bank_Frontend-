@@ -3,14 +3,16 @@ import {
   MapPin, Shield, Users, Copy, CheckCheck,
   BadgeCheck, AlertCircle
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../../utils/apiServices";
 import jsPDF from "jspdf";
+import { LanguageContext } from "../../context/LanguageContext";
 
 const PAYZEN_LOGO = "data:image/jpeg;base64,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";
 
 export default function AccountDetails() {
+  const { t } = useContext(LanguageContext);
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -185,7 +187,7 @@ export default function AccountDetails() {
   if (loading) return (
     <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
       <div className="w-10 h-10 rounded-full border-[3px] border-slate-200 border-t-blue-900 animate-spin" />
-      <p className="text-slate-500 text-sm font-serif">Loading account details...</p>
+      <p className="text-slate-500 text-sm font-serif">{t("loading_acc_details")}</p>
     </div>
   );
 
@@ -232,10 +234,10 @@ export default function AccountDetails() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p className="text-[10px] sm:text-[11px] font-black tracking-[0.2em] uppercase text-blue-900/40 mb-1">
-                  OFFICIAL RECORD
+                  {t("official_record")}
                 </p>
                 <h1 className="serif text-2xl sm:text-3xl font-extrabold text-[#0f1e3c] leading-tight m-0 tracking-tight">
-                  Account Details
+                  {t("account_details")}
                 </h1>
               </div>
 
@@ -244,7 +246,7 @@ export default function AccountDetails() {
                 className="dl-btn w-full sm:w-auto flex items-center justify-center gap-2 bg-[#0f1e3c] text-white border-0 rounded-2xl cursor-pointer px-6 py-3.5 text-[13px] font-bold shadow-[0_10px_20px_rgba(15,30,60,0.2)] transition-all duration-300 acct-font hover:scale-[1.02] active:scale-95"
               >
                 <ArrowDownToLineIcon size={16} />
-                <span>Download Statement</span>
+                <span>{t("download_statement_btn")}</span>
               </button>
             </div>
           </div>
@@ -255,12 +257,12 @@ export default function AccountDetails() {
               <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CreditCard size={28} className="text-slate-400" />
               </div>
-              <p className="text-slate-500 text-[15px] mb-5">No bank account linked to your profile.</p>
+              <p className="text-slate-500 text-[15px] mb-5">{t("no_acc_linked")}</p>
               <button
                 onClick={() => navigate("/open-account")}
                 className="bg-blue-900 text-white border-0 rounded-xl px-7 py-3 font-semibold text-sm cursor-pointer acct-font"
               >
-                + Open New Account
+                {t("open_new_acc_btn")}
               </button>
             </div>
           )}
@@ -279,7 +281,7 @@ export default function AccountDetails() {
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6 sm:mb-7">
                     <div>
                       <p className="text-[10px] text-blue-200/70 font-semibold tracking-[0.12em] uppercase mb-1">
-                        Account Holder
+                        {t("account_holder")}
                       </p>
                       <p className="serif text-lg sm:text-xl font-bold text-white m-0">
                         {data.name || "—"}
@@ -290,35 +292,35 @@ export default function AccountDetails() {
                         ? "bg-green-500/15 text-green-300 border-green-400/30"
                         : "bg-red-500/15 text-red-300 border-red-400/30"}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${acc.status === "active" ? "bg-green-400" : "bg-red-400"}`} />
-                      {acc.status ? acc.status.charAt(0).toUpperCase() + acc.status.slice(1) : "Active"}
+                      {acc.status ? acc.status.charAt(0).toUpperCase() + acc.status.slice(1) : t("active")}
                     </span>
                   </div>
 
                   {/* Account Fields — 2-col on mobile, 3-col on sm+ */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-6 gap-x-4 sm:gap-5">
                     <CardField
-                      label="Account Number" value={acc.account_number}
+                      label={t("account_number")} value={acc.account_number}
                       onCopy={() => copyToClipboard(acc.account_number, "accno")}
                       copied={copiedField === "accno"}
                       className="col-span-2 sm:col-span-1"
                     />
                     <CardField
-                      label="IFSC Code" value={acc.ifsc}
+                      label={t("ifsc_code")} value={acc.ifsc}
                       onCopy={() => copyToClipboard(acc.ifsc, "ifsc")}
                       copied={copiedField === "ifsc"}
                     />
-                    <CardField label="Type" value={acc.account_type} />
+                    <CardField label={t("account_type")} value={acc.account_type} />
                   </div>
 
                   {/* Bottom: Branch + Bank */}
                   <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div>
-                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">Branch</p>
+                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">{t("branch")}</p>
                       <p className="text-slate-200 text-[13px] font-medium m-0">{acc.branch || "—"}</p>
                     </div>
                     <div className="sm:text-right">
-                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">Bank</p>
-                      <p className="serif text-slate-200 text-[13px] font-medium m-0">PayZen Bank</p>
+                      <p className="text-[10px] text-blue-200/60 font-semibold tracking-[0.1em] uppercase mb-1">{t("bank_name")}</p>
+                      <p className="serif text-slate-200 text-[13px] font-medium m-0">{t("payzen_bank")}</p>
                     </div>
                   </div>
                 </div>
@@ -328,41 +330,41 @@ export default function AccountDetails() {
               {/* 2-col on md+, 1-col on mobile */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                 <InfoSection
-                  title="Personal Information"
+                  title={t("personal_info")}
                   icon={<User size={15} />}
                   className="acct-card"
                   rows={[
-                    { label: "Gender", value: data.gender },
-                    { label: "Date of Birth", value: data.date_of_birth },
-                    { label: "Father's Name", value: acc.father_name },
+                    { label: t("gender"), value: data.gender },
+                    { label: t("dob"), value: data.date_of_birth },
+                    { label: t("father_name"), value: acc.father_name },
                   ]}
                 />
                 <InfoSection
-                  title="Contact Information"
+                  title={t("contact_info")}
                   icon={<Phone size={15} />}
                   className="acct-card"
                   rows={[
-                    { label: "Mobile Number", value: data.mobile, copy: true, field: "mobile", copiedField, onCopy: () => copyToClipboard(data.mobile, "mobile") },
-                    { label: "Email Address", value: data.email, copy: true, field: "email", copiedField, onCopy: () => copyToClipboard(data.email, "email") },
+                    { label: t("phone"), value: data.mobile, copy: true, field: "mobile", copiedField, onCopy: () => copyToClipboard(data.mobile, "mobile") },
+                    { label: t("email"), value: data.email, copy: true, field: "email", copiedField, onCopy: () => copyToClipboard(data.email, "email") },
                   ]}
                 />
                 <InfoSection
-                  title="KYC Information"
+                  title={t("kyc_info")}
                   icon={<Shield size={15} />}
                   className="acct-card"
-                  badge={{ label: "KYC Verified", color: "green" }}
+                  badge={{ label: t("kyc_verified"), color: "green" }}
                   rows={[
-                    { label: "Aadhaar Number", value: acc.aadhaar ? acc.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, "XXXX XXXX $3") : "—" },
-                    { label: "PAN Number",     value: acc.pan ? "XXXXX" + acc.pan.slice(5) : "—" },
+                    { label: t("aadhaar_number"), value: acc.aadhaar ? acc.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, "XXXX XXXX $3") : "—" },
+                    { label: t("pan_number"),     value: acc.pan ? "XXXXX" + acc.pan.slice(5) : "—" },
                   ]}
                 />
                 <InfoSection
-                  title="Nominee Information"
+                  title={t("nominee_info")}
                   icon={<Users size={15} />}
                   className="acct-card"
                   rows={[
-                    { label: "Nominee Name",     value: acc.nominee_name },
-                    { label: "Nominee Relation", value: acc.nominee_relation },
+                    { label: t("nominee_name"),     value: acc.nominee_name },
+                    { label: t("nominee_relation"), value: acc.nominee_relation },
                   ]}
                 />
               </div>
@@ -374,7 +376,7 @@ export default function AccountDetails() {
                     <div className="w-[30px] h-[30px] bg-blue-50 rounded-lg flex items-center justify-center text-blue-900 shrink-0">
                       <MapPin size={15} />
                     </div>
-                    <span className="serif font-semibold text-[#0f1e3c] text-sm">Registered Address</span>
+                    <span className="serif font-semibold text-[#0f1e3c] text-sm">{t("registered_address")}</span>
                   </div>
                   <div className="px-5 py-4">
                     <p className="text-slate-700 text-sm leading-relaxed m-0">{data.address || "—"}</p>
@@ -386,8 +388,7 @@ export default function AccountDetails() {
               <div className="fade-in-3 mt-5 px-4 sm:px-5 py-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5">
                 <AlertCircle size={15} className="text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-amber-900 text-[12px] leading-relaxed m-0">
-                  Sensitive information such as Aadhaar and PAN numbers are partially masked for your security.
-                  For full details, visit your nearest PayZen Bank branch with valid ID proof.
+                  {t("disclaimer_mask")}
                 </p>
               </div>
             </>
@@ -400,6 +401,7 @@ export default function AccountDetails() {
 
 /* ── CARD FIELD — inside blue bank card ── */
 function CardField({ label, value, onCopy, copied, className = "" }) {
+  const { t } = useContext(LanguageContext);
   return (
     <div className={className}>
       <p className="text-[10px] text-blue-200/60 font-black uppercase tracking-[0.15em] mb-2">
@@ -425,6 +427,7 @@ function CardField({ label, value, onCopy, copied, className = "" }) {
 
 /* ── INFO SECTION ── */
 function InfoSection({ title, icon, rows, badge, className }) {
+  const { t } = useContext(LanguageContext);
   return (
     <div className={`${className} bg-white rounded-2xl border border-[#e8edf5] overflow-hidden shadow-sm`}>
       {/* Header */}
@@ -469,8 +472,8 @@ function InfoSection({ title, icon, rows, badge, className }) {
                 onClick={row.onCopy}
               >
                 {row.copiedField === row.field
-                  ? <><CheckCheck size={12} /> Copied</>
-                  : <><Copy size={12} /> Copy</>
+                  ? <><CheckCheck size={12} /> {t("copied")}</>
+                  : <><Copy size={12} /> {t("copy")}</>
                 }
               </button>
             )}
