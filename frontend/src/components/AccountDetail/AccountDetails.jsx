@@ -17,6 +17,7 @@ export default function AccountDetails() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [copiedField, setCopiedField] = useState("");
 
   useEffect(() => {
@@ -36,6 +37,11 @@ export default function AccountDetails() {
       catch { setError("Something went wrong."); }
       setLoading(false);
     });
+
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(timer);
   }, [navigate]);
 
   const copyToClipboard = (value, field) => {
@@ -248,6 +254,19 @@ export default function AccountDetails() {
                 <ArrowDownToLineIcon size={16} />
                 <span>{t("download_statement_btn")}</span>
               </button>
+            </div>
+
+            {/* Live Verification Stamp */}
+            <div className="mt-4 flex items-center gap-3 bg-white/50 backdrop-blur-md border border-white rounded-xl px-4 py-2.5 w-fit shadow-sm">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-blue-900/50 uppercase tracking-widest leading-none mb-1">Live Verification</span>
+                <div className="flex items-center gap-2">
+                  <span className="serif text-xs font-bold text-slate-800">PayZen Bank</span>
+                  <span className="text-slate-300">|</span>
+                  <span className="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">{currentTime}</span>
+                </div>
+              </div>
             </div>
           </div>
 

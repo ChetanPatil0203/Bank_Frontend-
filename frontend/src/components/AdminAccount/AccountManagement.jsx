@@ -217,14 +217,14 @@ function Field({ label, placeholder, type = "text", value, onChange, options, re
         {label}{required && <span style={{ color: C.red }}> *</span>}
       </label>
       {options
-        ? <select value={value} onChange={onChange} style={base}>
+        ? <select value={value} onChange={onChange} style={base} required={required}>
             <option value="">Select {label}</option>
             {options.map(o => <option key={o} value={o}>{o}</option>)}
           </select>
         : type === "textarea"
           ? <textarea placeholder={placeholder} value={value} onChange={onChange} rows={3}
-              style={{ ...base, resize: "vertical", minHeight: 70 }} />
-          : <input type={type} placeholder={placeholder} value={value} onChange={onChange} style={base} />
+              style={{ ...base, resize: "vertical", minHeight: 70 }} required={required} />
+          : <input type={type} placeholder={placeholder} value={value} onChange={onChange} style={base} required={required} />
       }
       {hint && <p style={{ margin: "4px 0 0", fontSize: 10, color: C.muted }}>{hint}</p>}
     </div>
@@ -276,6 +276,7 @@ function CreateAccountModal({ onClose, onSuccess }) {
   const [showSigModal, setShowSigModal] = useState(false);
   const [sigName, setSigName] = useState("");
   const [sigPreview, setSigPreview] = useState(false);
+  const [error, setError] = useState("");
 
   const f = (key) => (e) => setForm(prev => ({ ...prev, [key]: e.target.value }));
   const fFile = (key) => (e) => setFiles(prev => ({ ...prev, [key]: e.target.files[0] || null }));
@@ -295,8 +296,39 @@ function CreateAccountModal({ onClose, onSuccess }) {
     setSigPreview(false);
   };
 
+  const validateStep = () => {
+    if (step === 1) {
+      if (!form.bank_holder_name || !form.father_name || !form.dob || !form.gender) return false;
+    } else if (step === 2) {
+      if (!form.mobile || !form.email || !form.address) return false;
+    } else if (step === 3) {
+      if (!form.aadhaar || !form.pan) return false;
+    } else if (step === 4) {
+      if (!form.account_type || !form.preferred_branch || !form.reason) return false;
+    } else if (step === 5) {
+      if (!form.nominee_name || !form.nominee_relation) return false;
+    } else if (step === 6) {
+      if (!files.photo || !files.aadhaar || !files.pan || !signatureData) return false;
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep()) {
+      setError("");
+      setStep(step + 1);
+    } else {
+      setError("Please fill all required fields in this step.");
+    }
+  };
+
   async function handleSubmit() {
+    if (!validateStep()) {
+      setError("Please fill all required fields before submitting.");
+      return;
+    }
     setLoading(true);
+    setError("");
     try {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => fd.append(k, v));
@@ -310,11 +342,11 @@ function CreateAccountModal({ onClose, onSuccess }) {
         onSuccess && onSuccess();
         onClose();
       } else {
-        alert("Failed to submit. Please try again.");
+        setError("Failed to submit. Please try again.");
       }
     } catch (err) {
       console.error(err);
-      alert("Network error. Please try again.");
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -634,6 +666,14 @@ function CreateAccountModal({ onClose, onSuccess }) {
               </div>
             </div>
           )}
+
+          {/* Error Message Display */}
+          {error && (
+            <div style={{ marginTop: 20, padding: "10px 14px", background: "#fee2e2", border: "1px solid #fecaca", borderRadius: 10, color: "#b91c1c", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 18, height: 18, borderRadius: "50%", background: "#ef4444", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>!</div>
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Footer Navigation */}
@@ -653,7 +693,7 @@ function CreateAccountModal({ onClose, onSuccess }) {
 
           {step < 6 ? (
             <button
-              onClick={() => setStep(step + 1)}
+              onClick={handleNext}
               style={{ padding: "10px 28px", borderRadius: 10, border: "none", background: C.navy, color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 14px rgba(15,31,75,0.2)" }}
             >
               Next →

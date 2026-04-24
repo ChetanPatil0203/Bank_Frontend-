@@ -6,7 +6,6 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMyTransactions } from "../../utils/apiServices";
-import { CardSkeleton, TableRowSkeleton } from "../Skeleton";
 
 /* ── Key Animations ── */
 const STYLES = `
@@ -147,7 +146,9 @@ export default function DashboardHome() {
         {/* ── BANK CARD ── */}
         <div className="anim-card-in mb-5 sm:mb-8">
           {loading ? (
-            <CardSkeleton />
+            <div className="w-full h-48 bg-slate-100 animate-pulse rounded-3xl flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+            </div>
           ) : (
             <div className="bank-card-outer rounded-[18px] sm:rounded-[28px] p-[2px] animate-zoom-in">
               <div className="bank-card-body relative rounded-[16px] sm:rounded-[26px] overflow-hidden min-h-[170px] sm:min-h-[220px] px-4 sm:px-10 pt-5 sm:pt-9 pb-5 sm:pb-8">
@@ -316,13 +317,13 @@ export default function DashboardHome() {
                 </thead>
                 <tbody>
                   {loading ? (
-                    [...Array(5)].map((_, i) => (
-                      <tr key={i}>
-                        <td colSpan="6">
-                          <TableRowSkeleton />
-                        </td>
-                      </tr>
-                    ))
+                    <tr>
+                      <td colSpan="6" className="py-10">
+                        <div className="flex justify-center">
+                          <div className="w-6 h-6 border-3 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                      </td>
+                    </tr>
                   ) : accountData.recentTxns.length === 0 ? (
                     <tr>
                       <td colSpan="6" className="py-10 text-slate-400 italic text-sm">No transactions found</td>

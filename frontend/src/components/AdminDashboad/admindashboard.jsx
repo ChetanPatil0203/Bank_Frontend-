@@ -24,6 +24,15 @@ const STAT_CONFIG = {
   "Account Requests":   { icon: Building2,  color: "text-cyan-600",   bgColor: "bg-cyan-500/10",    borderColor: "border-cyan-200",   border: "hover:border-cyan-500"   },
 };
 
+const DUMMY_STATS = [
+  { label: "Total Users", value: "0" },
+  { label: "Total Accounts", value: "0" },
+  { label: "Total Balance", value: "₹0" },
+  { label: "Total Transactions", value: "0" },
+  { label: "Pending KYC", value: "0" },
+  { label: "Account Requests", value: "0" },
+];
+
 const NAV = [
   { id: "dashboard",   label: "Dashboard",   icon: LayoutDashboard },
   { id: "accounts",    label: "Accounts",    icon: CreditCard       },
@@ -50,15 +59,6 @@ function Badge({ status }) {
 
 /* ── Dashboard View ── */
 function DashboardView({ stats, transactions, loading }) {
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-slate-500 font-medium animate-pulse">Fetching real-time data...</p>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="mb-3">
@@ -67,45 +67,36 @@ function DashboardView({ stats, transactions, loading }) {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-        {(stats && stats.length > 0) ? (
-          stats.map((s, i) => {
-            const config = STAT_CONFIG[s.label] || STAT_CONFIG["Total Users"];
-            const Icon = config.icon;
-            return (
-              <div
-                key={i}
-                className={`
-                  group relative overflow-hidden
-                  ${config.bgColor} border ${config.borderColor} ${config.border}
-                  rounded-2xl px-3 py-3 sm:px-4 sm:py-4
-                  shadow-sm flex flex-col gap-2 sm:gap-3
-                  transition-all duration-300
-                  hover:shadow-md hover:-translate-y-1
-                `}
-              >
-                <div className="flex justify-between items-start">
-                  <p className="text-[11px] sm:text-[13px] tracking-wide text-slate-500 font-bold leading-snug">
-                    {s.label}
-                  </p>
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${config.color} transition-transform duration-500 group-hover:rotate-[10deg]`}>
-                    <Icon size={20} className="opacity-90" />
-                  </div>
+        {(stats && stats.length > 0 ? stats : DUMMY_STATS).map((s, i) => {
+          const config = STAT_CONFIG[s.label] || STAT_CONFIG["Total Users"];
+          const Icon = config.icon;
+          return (
+            <div
+              key={i}
+              className={`
+                group relative overflow-hidden
+                ${config.bgColor} border ${config.borderColor} ${config.border}
+                rounded-2xl px-3 py-3 sm:px-4 sm:py-4
+                shadow-sm flex flex-col gap-2 sm:gap-3
+                transition-all duration-300
+                hover:shadow-md hover:-translate-y-1
+              `}
+            >
+              <div className="flex justify-between items-start">
+                <p className="text-[11px] sm:text-[13px] tracking-wide text-slate-500 font-bold leading-snug">
+                  {s.label}
+                </p>
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${config.color} transition-transform duration-500 group-hover:rotate-[10deg]`}>
+                  <Icon size={20} className="opacity-90" />
                 </div>
-                <h3 className="text-lg sm:text-[22px] font-black text-slate-800 tracking-tight">
-                  {s.value}
-                </h3>
-                <div className="absolute -inset-px bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
               </div>
-            );
-          })
-        ) : (
-          /* Empty State or Skeleton for Cards */
-          [1, 2, 3, 4, 5, 6].map((n) => (
-            <div key={n} className="bg-white/50 border border-slate-200 border-dashed rounded-2xl h-24 flex items-center justify-center">
-               <div className="w-8 h-8 border-2 border-slate-200 border-t-slate-400 rounded-full animate-spin"></div>
+              <h3 className="text-lg sm:text-[22px] font-black text-slate-800 tracking-tight">
+                {s.value}
+              </h3>
+              <div className="absolute -inset-px bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
             </div>
-          ))
-        )}
+          );
+        })}
       </div>
 
       {/* Transactions */}
