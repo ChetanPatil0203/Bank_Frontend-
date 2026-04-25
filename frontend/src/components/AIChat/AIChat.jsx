@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUp, Minus, Paperclip, MoreVertical, Trash2, ThumbsUp, ThumbsDown, ChevronRight } from 'lucide-react';
+import { ArrowUp, Minus, Paperclip, MoreVertical, Trash2, ThumbsUp, ThumbsDown, ChevronRight, Bot } from 'lucide-react';
 import { sendAIChatMessage } from '../../utils/apiServices';
 
 const GeminiStar = ({ size = 20, id = '' }) => (
@@ -68,13 +68,13 @@ export default function AIChat() {
     setIsTyping(true);
     try {
       const history = messages.map(m => ({ role: m.sender === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }));
-      
+
       const response = await sendAIChatMessage(text, history);
-      
+
       if (!response.ok || response.data?.error || !response.data?.success) {
-         throw new Error(response.data?.error || response.data?.message || 'Error from server');
+        throw new Error(response.data?.error || response.data?.message || 'Error from server');
       }
-      
+
       setMessages(p => [...p, { id: Date.now() + 1, text: response.data.response, sender: 'bot', feedback: true }]);
     } catch {
       setMessages(p => [...p, { id: Date.now() + 1, text: "I'm having trouble connecting. Please ensure the backend is running and the API key is active.", sender: 'bot', feedback: false }]);
@@ -117,6 +117,8 @@ export default function AIChat() {
         .pz-drop:hover{background:#fef2f2}
         .pz-attach{transition:opacity .15s}
         .pz-attach:hover{opacity:1 !important}
+        @keyframes pzPulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,0.4)}70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+        .pz-status{animation:pzPulse 2s infinite}
       `}</style>
 
       <input type="file" ref={fileRef} style={{ display: 'none' }} />
@@ -127,18 +129,15 @@ export default function AIChat() {
         onClick={() => setIsOpen(o => !o)}
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
-          display: isOpen ? 'none' : 'flex', alignItems: 'center', gap: 9,
-          padding: '12px 20px',
+          display: isOpen ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center',
+          width: 56, height: 56,
           background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
-          border: 'none', borderRadius: 50, cursor: 'pointer',
-          boxShadow: '0 10px 25px -5px rgba(124,58,237,0.4)',
+          border: 'none', borderRadius: '50%', cursor: 'pointer',
+          boxShadow: '0 10px 25px -5px rgba(124,58,237,0.5)',
           color: '#fff',
         }}
       >
-        <GeminiStar size={20} id="fab" />
-        <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
-          AI Assistant
-        </span>
+        <Bot size={30} strokeWidth={2} />
       </button>
 
       {/* Panel */}
@@ -146,9 +145,9 @@ export default function AIChat() {
         <div
           className="pz-panel"
           style={{
-            position: 'fixed', 
-            bottom: window.innerWidth < 640 ? 16 : 80, 
-            right: window.innerWidth < 640 ? 16 : 24, 
+            position: 'fixed',
+            bottom: window.innerWidth < 640 ? 16 : 80,
+            right: window.innerWidth < 640 ? 16 : 24,
             left: window.innerWidth < 640 ? 16 : 'auto',
             zIndex: 9998,
             width: window.innerWidth < 640 ? 'auto' : 385,

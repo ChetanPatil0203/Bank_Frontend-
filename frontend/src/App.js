@@ -40,8 +40,8 @@ function AppContent() {
       <AIChat />
       <div className="flex">
         {showLayout && <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
-        <div 
-          className={showLayout 
+        <div
+          className={showLayout
             ? `transition-all duration-[280ms] ease-in-out w-full p-0 md:p-6 ${sidebarOpen ? "md:ml-[230px]" : "md:ml-[60px]"}`
             : "w-full"
           }
