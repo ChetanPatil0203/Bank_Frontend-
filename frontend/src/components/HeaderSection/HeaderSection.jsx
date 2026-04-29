@@ -1,5 +1,5 @@
 import { Bell, Menu, X, Trash2, CheckCircle2, AlertCircle, Info, Clock } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getNotifications, markNotificationRead, deleteNotification } from "../../utils/apiServices";
 
 function HeaderSection({ onMenuClick, sidebarOpen }) {
@@ -33,9 +33,9 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [userId]);
+  }, [userId, fetchNotifications]);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     if (!userId) {
       console.warn("[Header] No userId found in localStorage");
       return;
@@ -48,7 +48,7 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
     } else {
       console.error("[Header] Failed to fetch notifications", data);
     }
-  };
+  }, [userId]);
 
   const handleMarkAsRead = async (id) => {
     const { ok } = await markNotificationRead(id);

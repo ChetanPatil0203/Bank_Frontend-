@@ -4,7 +4,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { jsPDF } from "jspdf";
 import { 
   Download, Wallet, CreditCard, User, Landmark, 
-  ChevronDown, CheckCircle2, ShieldCheck, ArrowRight,
+  ChevronDown, CheckCircle2, ArrowRight,
   Info, Loader
 } from "lucide-react";
 
