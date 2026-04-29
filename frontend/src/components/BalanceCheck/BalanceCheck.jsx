@@ -2,7 +2,11 @@ import { useState, useContext } from "react";
 import { getBalance } from "../../utils/apiServices";
 import { LanguageContext } from "../../context/LanguageContext";
 import { jsPDF } from "jspdf";
-import { Download } from "lucide-react";
+import { 
+  Download, Wallet, CreditCard, User, Landmark, 
+  ChevronDown, CheckCircle2, ShieldCheck, ArrowRight,
+  Info, Loader
+} from "lucide-react";
 
 export default function BalanceCheck() {
   const { t } = useContext(LanguageContext);
@@ -34,7 +38,7 @@ export default function BalanceCheck() {
     try {
       const response = await getBalance();
       if (response.ok && response.data.success) {
-        setBalance(`₹ ${response.data.balance.toLocaleString()}`);
+        setBalance(response.data.balance);
       } else {
         setError(response.data.message || "Failed to fetch balance.");
       }
@@ -71,7 +75,7 @@ export default function BalanceCheck() {
     
     doc.setFontSize(16);
     doc.setTextColor(16, 185, 129);
-    doc.text(`Available Balance: ${balance}`, 20, 95);
+    doc.text(`Available Balance: ₹ ${balance?.toLocaleString()}`, 20, 95);
     
     doc.setFontSize(10);
     doc.setTextColor(150);
@@ -81,105 +85,126 @@ export default function BalanceCheck() {
   };
 
   return (
-    <div className="min-h-screen py-6 sm:py-12 px-4 bg-slate-50 relative overflow-hidden" 
-         style={{ fontFamily: "'Sora', sans-serif" }}>
+    <div className="min-h-screen py-10 px-4 bg-white font-[Inter,sans-serif]">
       
-      {/* Ambient background accent */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50 -mr-32 -mt-32 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-100 rounded-full blur-3xl opacity-50 -ml-32 -mb-32 pointer-events-none" />
-
       <div 
-        className="max-w-xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-2xl shadow-blue-900/5 relative z-10 border border-slate-100
-        transform transition-all duration-700 
-        translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards]"
+        className="w-full mx-auto bg-white shadow-lg rounded-xl border border-gray-100"
+        style={{ maxWidth: 768, padding: "clamp(14px, 4vw, 20px)", boxSizing: "border-box" }}
       >
 
-        {/* HEADER */}
-        <div className="text-center mb-8 sm:mb-10">
+        {/* HEADER SECTION - Same as OpenAccount */}
+        <div className="text-center mb-6">
           <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100">
-            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m.599-1c.51-.51.901-1.141.901-1.854 0-1.105-1.343-2-3-2s-3 .895-3 2c0 .713.404 1.344.901 1.854M12 7a1 1 0 110-2h.01M12 17a1 1 0 110 2h.01" />
-            </svg>
+             <Wallet size={28} className="text-blue-600" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-base sm:text-lg font-semibold text-blue-900 leading-tight">
             {t("balance_check")}
           </h2>
-          <p className="text-slate-500 mt-2 text-sm sm:text-base font-medium">
-            Securely access your real-time account status
+          <p className="text-gray-500 mt-1 text-xs font-medium">
+            {t("secure_portal")}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
 
-          <div className="space-y-5">
-            <Input
-              label={t("account_number")}
-              name="accountNumber"
-              placeholder="0000 0000 0000 0000"
-              handleChange={handleChange}
-            />
+          <Section title="Account Identification">
+            <Field label={t("account_number")}>
+              <IconInput icon={<CreditCard size={14}/>}>
+                <input type="text" name="accountNumber" value={formData.accountNumber}
+                  onChange={handleChange} required placeholder="Enter your account number"/>
+              </IconInput>
+            </Field>
 
-            <Input
-              label={t("account_holder")}
-              name="accountHolder"
-              placeholder="Your full name"
-              handleChange={handleChange}
-            />
+            <Field label={t("account_holder")}>
+              <IconInput icon={<User size={14}/>}>
+                <input type="text" name="accountHolder" value={formData.accountHolder}
+                  onChange={handleChange} required placeholder="Enter full name"/>
+              </IconInput>
+            </Field>
 
-            <div>
-              <label className="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 px-1">
-                {t("account_type")}
-              </label>
-
-              <select
-                name="accountType"
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-slate-700 text-sm font-bold
-                focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 outline-none transition-all appearance-none"
-                style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 1rem center", backgroundSize: "1em" }}
-                required
-              >
-                <option value="">{t("select_account_type")}</option>
-                <option>{t("saving_account")}</option>
-                <option>{t("current_account")}</option>
-              </select>
-            </div>
-          </div>
+            <Field label={t("account_type")}>
+              <IconInput icon={<Landmark size={14}/>}>
+                <select name="accountType" value={formData.accountType} onChange={handleChange} required>
+                  <option value="">{t("select_account_type")}</option>
+                  <option>{t("saving_account")}</option>
+                  <option>{t("current_account")}</option>
+                </select>
+                <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                  <ChevronDown size={14} />
+                </div>
+              </IconInput>
+            </Field>
+          </Section>
 
           <button 
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-blue-900 hover:bg-blue-950 disabled:bg-blue-700 text-white rounded-2xl 
-            font-black text-sm uppercase tracking-[0.2em] shadow-lg shadow-blue-900/20 active:scale-[0.98] transition-all mt-4"
+            style={{
+              height: 48,
+              borderRadius: 12,
+              border: "none",
+              background: loading
+                ? "#94a3b8"
+                : "linear-gradient(180deg, #1e3a7b 0%, #152d68 60%, #0f1f4d 100%)",
+              color: "#fff",
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: loading ? "not-allowed" : "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              boxShadow: loading ? "none" : "0 4px 16px rgba(15,31,75,0.35)",
+              transition: "all 0.2s",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
           >
-            {loading ? t("checking_btn") : t("check_balance_btn")}
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <Loader size={16} className="animate-spin" />
+                <span>{t("checking_btn")}</span>
+              </div>
+            ) : (
+              <>
+                <span>{t("check_balance_btn")}</span>
+                <ArrowRight size={16} />
+              </>
+            )}
           </button>
 
           {error && (
-            <p className="text-red-600 text-sm font-medium mt-2 text-center">{error}</p>
+            <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg text-xs font-medium bg-red-50 border border-red-200 text-red-700">
+               <Info size={15} className="mt-0.5 flex-shrink-0" />
+               <span>{error}</span>
+            </div>
           )}
 
         </form>
 
-        {/* BALANCE DISPLAY */}
-        {balance && (
+        {/* BALANCE DISPLAY SECTION */}
+        {balance !== null && (
           <div 
-            className="mt-8 p-6 sm:p-8 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-3xl text-center
+            className="mt-6 p-6 sm:p-8 bg-[#0f1f4d] border border-white/10 rounded-2xl text-center
+            relative overflow-hidden shadow-xl
             transform transition-all duration-700 
-            translate-y-10 opacity-0 animate-[slideUp_0.7s_forwards] shadow-inner"
+            translate-y-6 opacity-0 animate-[slideUp_0.7s_forwards]"
           >
-            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-2">Available Balance</p>
-            <h3 className="text-4xl sm:text-5xl font-black text-emerald-900 tracking-tighter">
-              {balance}
+            {/* Background design elements */}
+            <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-xl -mr-12 -mt-12" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl -ml-12 -mb-12" />
+            
+            <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-3 relative z-10">Total Available Balance</p>
+            <h3 className="text-3xl sm:text-4xl font-bold text-white tracking-tight relative z-10 flex items-center justify-center gap-1.5">
+              <span className="text-blue-400 text-xl font-medium mt-1">₹</span>
+              {balance.toLocaleString()}
             </h3>
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-emerald-700 uppercase">Live from database</span>
+            
+            <div className="mt-5 flex items-center justify-center gap-2.5 py-1.5 px-4 bg-white/5 rounded-full w-fit mx-auto border border-white/5 relative z-10">
+              <CheckCircle2 size={13} className="text-emerald-400" />
+              <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">Verified Live</span>
             </div>
             
             <button 
               onClick={downloadPDF}
-              className="mt-6 mx-auto flex items-center justify-center gap-2 py-3 px-6 bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow-md active:scale-95"
+              className="mt-6 w-full flex items-center justify-center gap-2.5 py-3.5 bg-white hover:bg-gray-50 text-[#0f1f4d] rounded-xl font-bold text-sm transition-all active:scale-[0.98] shadow-lg relative z-10"
             >
               <Download size={18} />
               {t("download_statement")}
@@ -189,18 +214,11 @@ export default function BalanceCheck() {
 
       </div>
 
-      {/* Animation */}
       <style>
         {`
         @keyframes slideUp {
-          from {
-            transform: translateY(40px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
         }
         `}
       </style>
@@ -209,26 +227,43 @@ export default function BalanceCheck() {
   );
 }
 
+/* ── Reusable layout components (Matching OpenAccount) ── */
 
-
-/* ---------- Input ---------- */
-
-function Input({ label, type="text", name, placeholder, handleChange }) {
+function Section({ title, children }) {
   return (
-    <div>
-      <label className="block text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 px-1">
-        {label}
-      </label>
+    <div className="rounded-2xl p-4 sm:p-5 bg-slate-50/50 border border-slate-100">
+      <h3 className="text-[11px] sm:text-xs font-black text-blue-900/50 uppercase tracking-[0.2em] mb-4">{title}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">{children}</div>
+    </div>
+  );
+}
 
-      <input
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        onChange={handleChange}
-        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-slate-700 text-sm font-bold placeholder:text-slate-400
-        focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-500 outline-none transition-all"
-        required
-      />
+function Field({ label, children }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest">
+        {label} <span className="text-red-500">*</span>
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function IconInput({ icon, children }) {
+  return (
+    <div className="relative flex items-center group">
+      <span className="absolute left-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors pointer-events-none text-base z-10">{icon}</span>
+      <div className="w-full
+        [&>input]:rounded-2xl [&>input]:pl-10 [&>input]:pr-4 [&>input]:py-3.5
+        [&>input]:bg-white [&>input]:border-2 [&>input]:border-slate-100 [&>input]:w-full
+        [&>input]:focus:ring-4 [&>input]:focus:ring-blue-500/10 [&>input]:focus:border-blue-500
+        [&>input]:outline-none [&>input]:text-sm [&>input]:font-medium [&>input]:transition-all
+        [&>select]:rounded-2xl [&>select]:pl-10 [&>select]:pr-4 [&>select]:py-3.5
+        [&>select]:bg-white [&>select]:border-2 [&>select]:border-slate-100 [&>select]:w-full
+        [&>select]:focus:ring-4 [&>select]:focus:ring-blue-500/10 [&>select]:focus:border-blue-500
+        [&>select]:outline-none [&>select]:text-sm [&>select]:font-medium [&>select]:appearance-none [&>select]:transition-all">
+        {children}
+      </div>
     </div>
   );
 }

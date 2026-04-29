@@ -722,54 +722,55 @@ export default function OpenAccountPage() {
               </p>
             </div>
 
-            {/* ── Submit row: always stacked on mobile, side-by-side on sm+ ── */}
-            <div style={{ display:"flex", flexDirection:"column", gap: 10 }} className="sm:flex-row sm:items-center">
+            {/* ── Submit row: Better side-by-side grid ── */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginTop: 20 }}>
 
               {/* Signature field */}
               <div
                 onClick={() => setShowSignatureModal(true)}
                 style={{
-                  height: 48,
-                  borderRadius: 12,
+                  height: 52,
+                  borderRadius: 14,
                   border: `2px solid ${signature ? "#4ade80" : "#93c5fd"}`,
                   background: signature
                     ? "linear-gradient(135deg, #f0fdf4, #dcfce7)"
                     : "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                  display: "flex", alignItems: "center", gap: 10,
-                  padding: "0 16px",
+                  display: "flex", alignItems: "center",
+                  padding: "0 14px",
                   cursor: "pointer",
                   transition: "all 0.2s",
-                  boxShadow: signature ? "0 2px 8px rgba(74,222,128,0.2)" : "0 2px 8px rgba(147,197,253,0.2)",
+                  boxShadow: signature ? "0 4px 12px rgba(74,222,128,0.15)" : "0 4px 12px rgba(147,197,253,0.15)",
                   width: "100%",
                   boxSizing: "border-box",
-                  minWidth: 0,
-                  flex: 1,
                 }}
               >
                 {signature ? (
-                  <>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", overflow: "hidden" }}>
                     <div style={{
-                      width: 28, height: 28, borderRadius: "50%",
+                      width: 26, height: 26, borderRadius: "50%",
                       background: "#bbf7d0",
                       display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                     }}>
-                      <CheckCircle size={16} color="#15803d"/>
+                      <CheckCircle size={14} color="#15803d"/>
                     </div>
-                    <span style={{
-                      fontSize: 14, fontWeight: 700, color: "#15803d",
-                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-                      fontFamily: "Georgia, serif", fontStyle: "italic",
-                    }}>
-                      {signature.name}
-                    </span>
-                  </>
+                    <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontSize: 9, color: "#15803d", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1, marginBottom: 2 }}>Signature Saved</span>
+                      <span style={{
+                        fontSize: 14, fontWeight: 700, color: "#15803d",
+                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                        fontFamily: "Georgia, serif", fontStyle: "italic",
+                      }}>
+                        {signature.name}
+                      </span>
+                    </div>
+                  </div>
                 ) : (
-                  <>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <PenLine size={17} color="#2563eb"/>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: "#2563eb" }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: "#2563eb" }}>
                       {t("add_signature")}
                     </span>
-                  </>
+                  </div>
                 )}
               </div>
 
@@ -778,24 +779,22 @@ export default function OpenAccountPage() {
                 type="submit"
                 disabled={loading}
                 style={{
-                  height: 48,
-                  borderRadius: 12,
+                  height: 52,
+                  borderRadius: 14,
                   border: "none",
                   background: loading
                     ? "#94a3b8"
                     : "linear-gradient(180deg, #1e3a7b 0%, #152d68 60%, #0f1f4d 100%)",
                   color: "#fff",
-                  fontSize: 14,
-                  fontWeight: 700,
+                  fontSize: 15,
+                  fontWeight: 800,
                   cursor: loading ? "not-allowed" : "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: loading ? "none" : "0 4px 16px rgba(15,31,75,0.35)",
+                  boxShadow: loading ? "none" : "0 8px 20px rgba(15,31,75,0.25)",
                   transition: "all 0.2s",
                   whiteSpace: "nowrap",
-                  padding: "0 28px",
                   width: "100%",
                   boxSizing: "border-box",
-                  flexShrink: 0,
                 }}
                 onMouseEnter={e => { if (!loading) e.currentTarget.style.opacity = "0.9"; }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
