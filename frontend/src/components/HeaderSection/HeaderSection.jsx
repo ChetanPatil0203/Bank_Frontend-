@@ -20,21 +20,6 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
     .toUpperCase()
     .slice(0, 2);
 
-  useEffect(() => {
-    if (userId) {
-      fetchNotifications();
-    }
-    
-    // Close dropdown on outside click
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [userId, fetchNotifications]);
-
   const fetchNotifications = useCallback(async () => {
     if (!userId) {
       console.warn("[Header] No userId found in localStorage");
@@ -49,6 +34,21 @@ function HeaderSection({ onMenuClick, sidebarOpen }) {
       console.error("[Header] Failed to fetch notifications", data);
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchNotifications();
+    }
+    
+    // Close dropdown on outside click
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [userId, fetchNotifications]);
 
   const handleMarkAsRead = async (id) => {
     const { ok } = await markNotificationRead(id);
