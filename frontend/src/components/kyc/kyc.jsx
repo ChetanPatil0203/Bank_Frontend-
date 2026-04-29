@@ -5,7 +5,7 @@ import {
   Upload, Info, ArrowRight, ArrowLeft, Send,
   CheckCircle2, RefreshCw, KeyRound, Loader2
 } from "lucide-react";
-import { kycSendOtp, kycVerifyOtp, kycSubmit } from "../../utils/apiServices";
+import { kycSendOtp, kycVerifyOtp, kycSubmit, getProfile } from "../../utils/apiServices";
 import { messaging, getToken } from "../../firebase";
 import { LanguageContext } from "../../context/LanguageContext";
 
@@ -67,6 +67,32 @@ export default function KYCPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    // Fetch profile data to auto-fill
+    const fetchProfile = async () => {
+      setLoading(true);
+      const res = await getProfile();
+      if (res.ok && res.data.success) {
+        const p = res.data.data;
+        setFormData(prev => ({
+          ...prev,
+          fullName: p.name || "",
+          email: p.email || "",
+          mobile: p.mobile || "",
+          dob: p.date_of_birth || "",
+          gender: p.gender || "",
+          address: p.address && p.address !== "—" ? p.address : "",
+          // If they already have an account, pre-fill Aadhaar/PAN
+          aadhaar: p.account?.aadhaar || "",
+          pan: p.account?.pan || "",
+        }));
+      }
+      setLoading(false);
+    };
+
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     let interval;

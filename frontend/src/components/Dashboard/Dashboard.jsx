@@ -263,10 +263,10 @@ function Sidebar({ isOpen, onToggle }) {
         )}
       </div>
 
-      {/* ══ DESKTOP — fixed sidebar (md or above) ══ */}
+      {/* ══ DESKTOP — sidebar (md or above) ══ */}
       <aside className={`
         hidden md:flex
-        fixed top-0 left-0 h-screen flex-col z-50
+        h-full flex-col
         transition-[width] duration-[280ms] ease-in-out
         ${isOpen ? "w-[230px]" : "w-[60px]"}
       `}>

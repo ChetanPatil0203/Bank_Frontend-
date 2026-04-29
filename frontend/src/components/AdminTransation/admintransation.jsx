@@ -98,6 +98,9 @@ export default function AdminTransactionManager() {
   const [loading, setLoading] = useState(false);
   const [lastTxn, setLastTxn] = useState(null);
 
+  const [otpValue, setOtpValue] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
   // ── Search API Call ──
   async function handleSearch() {
     if (!query.trim()) return;
@@ -124,6 +127,8 @@ export default function AdminTransactionManager() {
     setAmount("");
     setNote("");
     setError("");
+    setOtpValue("");
+    setOtpSent(false);
   }
 
   // ── Open Txn Form ──
@@ -132,13 +137,42 @@ export default function AdminTransactionManager() {
     setAmount("");
     setNote("");
     setError("");
+    setOtpValue("");
+    setOtpSent(false);
     setModal(type);
+  }
+
+  // ── Send OTP API Call ──
+  async function handleSendOtp() {
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      setError("Please enter a valid amount.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const { sendTransactionOtp } = await import("../../utils/apiServices");
+      const res = await sendTransactionOtp(selected.account_number);
+      if (res.ok && res.data.success) {
+        setOtpSent(true);
+      } else {
+        setError(res.data?.message || "Failed to send OTP.");
+      }
+    } catch (err) {
+      setError("Error sending OTP.");
+    }
+    setLoading(false);
   }
 
   // ── Submit Transaction API Call ──
   async function handleSubmit() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      setError("Please enter a valid amount.");
+    if (!otpSent) {
+      await handleSendOtp();
+      return;
+    }
+
+    if (!otpValue || otpValue.length !== 6) {
+      setError("Please enter 6-digit OTP.");
       return;
     }
     
@@ -149,7 +183,8 @@ export default function AdminTransactionManager() {
         account_number: selected.account_number,
         type: txnType,
         amount: Number(amount),
-        note: note
+        note: note,
+        otp: otpValue
       });
 
       if (res.ok && res.data.success) {
@@ -312,13 +347,28 @@ export default function AdminTransactionManager() {
               style={{ width: "100%", boxSizing: "border-box", padding: "12px", border: `2px solid ${modal === "deposit" ? "#bbf7d0" : "#fecaca"}`, borderRadius: 10, fontSize: 20, fontWeight: 800, outline: "none", background: modal === "deposit" ? "#f0fdf4" : "#fef2f2" }}
             />
           </div>
-          <div style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 16 }}>
             <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", display: "block", marginBottom: 6 }}>Note</label>
             <input placeholder="e.g. Cash payment..." value={note} onChange={e => setNote(e.target.value)} style={{ width: "100%", boxSizing: "border-box", padding: "10px", border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 13 }} />
           </div>
+
+          {otpSent && (
+            <div style={{ marginBottom: 20, background: "#fdf4ff", border: `1.5px solid #f5d0fe`, padding: 16, borderRadius: 14 }}>
+               <label style={{ fontSize: 11, fontWeight: 800, color: "#86198f", textTransform: "uppercase", display: "block", marginBottom: 8, letterSpacing: "0.05em" }}>📧 Enter OTP sent to user email</label>
+               <input
+                 type="text" maxLength={6} value={otpValue} onChange={e => setOtpValue(e.target.value)}
+                 placeholder="000000" autoFocus
+                 style={{ width: "100%", boxSizing: "border-box", padding: "12px", border: `2px solid #f5d0fe`, borderRadius: 10, fontSize: 24, fontWeight: 900, textAlign: "center", outline: "none", background: "#fff", color: "#86198f", letterSpacing: "10px" }}
+               />
+               <p style={{ fontSize: 10, color: "#a21caf", marginTop: 8, textAlign: "center", fontWeight: 600 }}>Ask the customer for the 6-digit code</p>
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={() => { setModal("options"); setError(""); }} style={{ flex: 1, padding: "11px", borderRadius: 10, border: `1.5px solid ${C.border}`, background: "#fff", fontWeight: 700 }}>Back</button>
-            <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: "11px", borderRadius: 10, border: "none", background: modal === "deposit" ? C.green : C.red, color: "#fff", fontWeight: 700, opacity: loading ? 0.7 : 1 }}>{loading ? "Processing..." : "Confirm"}</button>
+            <button onClick={handleSubmit} disabled={loading} style={{ flex: 2, padding: "11px", borderRadius: 10, border: "none", background: modal === "deposit" ? C.green : C.red, color: "#fff", fontWeight: 700, opacity: loading ? 0.7 : 1 }}>
+              {loading ? "Processing..." : otpSent ? "Verify & Confirm" : "Get OTP"}
+            </button>
           </div>
         </Modal>
       )}

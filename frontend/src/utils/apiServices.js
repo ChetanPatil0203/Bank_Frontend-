@@ -148,6 +148,9 @@ export const getAdminAccounts = (search = "") =>
 export const processTransaction = (data) =>
   request("/admin/transactions", "POST", data, true);
 
+export const sendTransactionOtp = (account_number) =>
+  request("/admin/send-txn-otp", "POST", { account_number }, true);
+
 // ─── TRANSACTION HISTORY (USER) ───────────────────────────────────────────────
 export const getMyTransactions = () =>
   request("/auth/transactions", "GET", null, true);
@@ -175,3 +178,8 @@ export const performTransfer = (data) => request("/auth/transfer", "POST", data,
 
 // ─── BALANCE CHECK ────────────────────────────────────────────────────────────
 export const getBalance = () => request("/auth/balance", "GET", null, true);
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────────
+export const getNotifications = (userId) => request(`/notifications/?user_id=${userId}`, "GET", null, true);
+export const markNotificationRead = (id) => request(`/notifications/${id}/read`, "PUT", null, true);
+export const deleteNotification = (id) => request(`/notifications/${id}`, "DELETE", null, true);
